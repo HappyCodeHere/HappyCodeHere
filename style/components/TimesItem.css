@@ -1,0 +1,13 @@
+.times-item {
+	text-align: justify;
+}
+.times-item ul li {
+	list-style: none;
+	display: inline-block;
+	margin: 0px 10px ;
+}
+
+a:hover {
+	border-bottom: 2px solid orange;
+	border: 2px;
+}
