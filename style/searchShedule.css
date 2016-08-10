@@ -1,0 +1,37 @@
+/* .search-bar-div {
+	text-align: center;
+}
+
+.search-bar {
+	border-radius: 15px;
+	width: 200px;
+	color: white;
+	border: 1px solid #ea7b2c;
+	background-color: #eeef59;
+	height: 30px;
+	padding-left: 10px;
+	
+
+}
+
+.search-bar:focus {
+	border: none;
+} */
+
+.shedule-search {
+	text-align: center;
+}
+
+.shedule-search input {
+	width: 400px;
+	/* margin-left: 30%; */
+	margin-bottom: 20px;
+	margin-top: 15px;
+	display: inline-block;
+}
+
+.shedule-search h3{
+	color: #fb317a;
+	font-size: 30px;
+}
+

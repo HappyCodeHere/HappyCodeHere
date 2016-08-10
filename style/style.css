@@ -1,4 +1,5 @@
 @import url(./toastr.min.css);
+@import url(./searchShedule.css);
 
 @import url(./components/Main.css);
 
@@ -7,6 +8,8 @@
 @import url(./components/TimesInfo.css);
 
 @import url(./components/Create.css);
+
+@import url(./components/Shedule.css);
 
 
 
@@ -19,7 +22,7 @@ body {
 	background-image: url('http://www.mannersmentor.com/wp-content/uploads/2016/01/Monthly-Goals-Page-1024x683-1024x683.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;
-	height: 908px;
+	min-height: 1000px;
 
 }
 
@@ -55,4 +58,5 @@ footer h2 {
 	left: 35%;
 	bottom: 10px;
 	font-size: 15px; */
+	font-size: 15px;
 }
