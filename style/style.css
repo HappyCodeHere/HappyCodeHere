@@ -1,20 +1,13 @@
 @import url(./toastr.min.css);
-@import url(./searchShedule.css);
+
 
 @import url(./components/Main.css);
 
-@import url(./components/TimesList.css);
-@import url(./components/TimesItem.css);
-@import url(./components/TimesInfo.css);
+@import url(./components/topics/Shift.css);
+@import url(./components/topics/Schedule.css);
+@import url(./components/topics/News.css);
 
-@import url(./components/Create.css);
-
-@import url(./components/Shedule.css);
-
-
-
-@import url(./components/News/NewsContainer.css);
-
+@import url(./components/topics/Create.css);
 
 
 body {
@@ -59,4 +52,9 @@ footer h2 {
 	bottom: 10px;
 	font-size: 15px; */
 	font-size: 15px;
+}
+
+
+.navbar-link {
+	border-bottom: 2px solid orange;
 }

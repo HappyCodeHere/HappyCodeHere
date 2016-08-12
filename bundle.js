@@ -79,7 +79,7 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _routes = __webpack_require__(311);
+	var _routes = __webpack_require__(309);
 
 	var _routes2 = _interopRequireDefault(_routes);
 
@@ -27285,42 +27285,33 @@
 
 	var _redux = __webpack_require__(167);
 
-	var _selectDateReducer = __webpack_require__(251);
+	var _DateReducer = __webpack_require__(251);
 
-	var _selectDateReducer2 = _interopRequireDefault(_selectDateReducer);
+	var _DateReducer2 = _interopRequireDefault(_DateReducer);
 
-	var _loadDateReducer = __webpack_require__(257);
+	var _NewsReducer = __webpack_require__(257);
 
-	var _loadDateReducer2 = _interopRequireDefault(_loadDateReducer);
+	var _NewsReducer2 = _interopRequireDefault(_NewsReducer);
 
-	var _sendDateReducer = __webpack_require__(258);
+	var _SheduleReducer = __webpack_require__(258);
 
-	var _sendDateReducer2 = _interopRequireDefault(_sendDateReducer);
+	var _SheduleReducer2 = _interopRequireDefault(_SheduleReducer);
 
-	var _loadNewsReducer = __webpack_require__(259);
+	var _SuggestReducer = __webpack_require__(259);
 
-	var _loadNewsReducer2 = _interopRequireDefault(_loadNewsReducer);
+	var _SuggestReducer2 = _interopRequireDefault(_SuggestReducer);
 
-	var _loadSheduleReducer = __webpack_require__(260);
-
-	var _loadSheduleReducer2 = _interopRequireDefault(_loadSheduleReducer);
-
-	var _loadSuggestReducer = __webpack_require__(261);
-
-	var _loadSuggestReducer2 = _interopRequireDefault(_loadSuggestReducer);
-
-	var _reduxForm = __webpack_require__(262);
+	var _reduxForm = __webpack_require__(260);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var rootReducer = (0, _redux.combineReducers)({
-	  selectDate: _selectDateReducer2.default,
-	  loadDate: _loadDateReducer2.default,
-	  sendDate: _sendDateReducer2.default,
+	  loadDate: _DateReducer2.default,
+	  sendDate: _DateReducer2.default,
 	  form: _reduxForm.reducer,
-	  loadNews: _loadNewsReducer2.default,
-	  loadShedule: _loadSheduleReducer2.default,
-	  loadSuggest: _loadSuggestReducer2.default
+	  loadNews: _NewsReducer2.default,
+	  loadShedule: _SheduleReducer2.default,
+	  loadSuggest: _SuggestReducer2.default
 	});
 
 	exports.default = rootReducer;
@@ -27340,7 +27331,10 @@
 		var action = arguments[1];
 
 		switch (action.type) {
-			case _types.SELECT_DATE:
+			case _types.LOAD_DATE:
+				return [action.payload];
+
+			case _types.SEND_DATE:
 				return [].concat(_toConsumableArray(state), [action.payload]);
 		}
 
@@ -27368,7 +27362,7 @@
 	exports.selectDate = selectDate;
 	exports.loadDate = loadDate;
 	exports.sendDate = sendDate;
-	exports.loadSelectedDate = loadSelectedDate;
+	exports.deleteDate = deleteDate;
 	exports.sendNews = sendNews;
 	exports.loadNews = loadNews;
 	exports.deleteNews = deleteNews;
@@ -27376,6 +27370,7 @@
 	exports.sendShedule = sendShedule;
 	exports.sendSuggest = sendSuggest;
 	exports.loadSuggest = loadSuggest;
+	exports.deleteSuggest = deleteSuggest;
 
 	var _types = __webpack_require__(253);
 
@@ -27408,7 +27403,7 @@
 
 	function loadDate() {
 		return function (dispatch) {
-			firebase.database().ref('shedule-app').on('value', function (data) {
+			firebase.database().ref('shedule-app/shift/create').on('value', function (data) {
 				console.log(data.val());
 				return dispatch({
 					type: _types.LOAD_DATE,
@@ -27419,7 +27414,7 @@
 	}
 
 	function sendDate(props) {
-		var info = firebase.database().ref('shedule-app').push(_extends({}, props));
+		var info = firebase.database().ref('shedule-app/shift/create').push(_extends({}, props));
 		console.log(info);
 		return {
 			type: _types.SEND_DATE,
@@ -27427,9 +27422,9 @@
 		};
 	}
 
-	function loadSelectedDate(data) {
+	function deleteDate(data) {
 		console.log('data here:', data);
-		var info = firebase.database().ref('shedule-app/' + data).remove();
+		var info = firebase.database().ref('shedule-app/shift/create/' + data).remove();
 		console.log(info);
 		console.log('think success');
 		return {
@@ -27497,7 +27492,7 @@
 	}
 
 	function sendSuggest(props) {
-		var info = firebase.database().ref('shedule-app/replacement').push(_extends({}, props));
+		var info = firebase.database().ref('shedule-app/shift/suggest').push(_extends({}, props));
 		console.log(info);
 		return {
 			type: _types.SEND_SUGGEST,
@@ -27507,7 +27502,7 @@
 
 	function loadSuggest() {
 		return function (dispatch) {
-			firebase.database().ref('shedule-app/replacement').on('value', function (data) {
+			firebase.database().ref('shedule-app/shift/suggest').on('value', function (data) {
 				console.log(data.val());
 				return dispatch({
 					type: _types.LOAD_SUGGEST,
@@ -27516,6 +27511,17 @@
 			});
 		};
 	}
+
+	function deleteSuggest(data) {
+		console.log('data here:', data);
+		var info = firebase.database().ref('shedule-app/shift/suggest/' + data).remove();
+		console.log(info);
+		console.log('think success');
+		return {
+			type: _types.DELETE_DATE,
+			payload: [].concat(_toConsumableArray(data))
+		};
+	};
 
 /***/ },
 /* 253 */
@@ -28585,15 +28591,7 @@
 		var action = arguments[1];
 
 		switch (action.type) {
-			case _types.LOAD_DATE:
-				console.log('lllll');
-				var my_data = action.payload;
-				console.log(my_data);
-				var i;
-				for (i in my_data) {
-
-					console.log(i);
-				}
+			case _types.LOAD_NEWS:
 				return [action.payload];
 
 		}
@@ -28620,61 +28618,6 @@
 		var action = arguments[1];
 
 		switch (action.type) {
-			case _types.SEND_DATE:
-				return [].concat(_toConsumableArray(state), [action.payload]);
-		}
-
-		return state;
-	};
-
-	var _index = __webpack_require__(252);
-
-	var _types = __webpack_require__(253);
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	exports.default = function () {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-		var action = arguments[1];
-
-		switch (action.type) {
-			case _types.LOAD_NEWS:
-				return [action.payload];
-
-		}
-
-		return state;
-	};
-
-	var _index = __webpack_require__(252);
-
-	var _types = __webpack_require__(253);
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	exports.default = function () {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-		var action = arguments[1];
-
-		switch (action.type) {
 			case _types.LOAD_SHEDULE:
 				return [action.payload];
 
@@ -28688,7 +28631,7 @@
 	var _types = __webpack_require__(253);
 
 /***/ },
-/* 261 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28715,7 +28658,7 @@
 	var _types = __webpack_require__(253);
 
 /***/ },
-/* 262 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28729,7 +28672,7 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _createAll2 = __webpack_require__(263);
+	var _createAll2 = __webpack_require__(261);
 
 	var _createAll3 = _interopRequireDefault(_createAll2);
 
@@ -28793,7 +28736,7 @@
 	exports.untouchWithKey = untouchWithKey;
 
 /***/ },
-/* 263 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28804,35 +28747,35 @@
 
 	exports.default = createAll;
 
-	var _reducer = __webpack_require__(264);
+	var _reducer = __webpack_require__(262);
 
 	var _reducer2 = _interopRequireDefault(_reducer);
 
-	var _createReduxForm = __webpack_require__(275);
+	var _createReduxForm = __webpack_require__(273);
 
 	var _createReduxForm2 = _interopRequireDefault(_createReduxForm);
 
-	var _mapValues = __webpack_require__(266);
+	var _mapValues = __webpack_require__(264);
 
 	var _mapValues2 = _interopRequireDefault(_mapValues);
 
-	var _bindActionData = __webpack_require__(285);
+	var _bindActionData = __webpack_require__(283);
 
 	var _bindActionData2 = _interopRequireDefault(_bindActionData);
 
-	var _actions = __webpack_require__(284);
+	var _actions = __webpack_require__(282);
 
 	var actions = _interopRequireWildcard(_actions);
 
-	var _actionTypes = __webpack_require__(265);
+	var _actionTypes = __webpack_require__(263);
 
 	var actionTypes = _interopRequireWildcard(_actionTypes);
 
-	var _createPropTypes = __webpack_require__(310);
+	var _createPropTypes = __webpack_require__(308);
 
 	var _createPropTypes2 = _interopRequireDefault(_createPropTypes);
 
-	var _getValuesFromState = __webpack_require__(269);
+	var _getValuesFromState = __webpack_require__(267);
 
 	var _getValuesFromState2 = _interopRequireDefault(_getValuesFromState);
 
@@ -28949,7 +28892,7 @@
 	}
 
 /***/ },
-/* 264 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28961,39 +28904,39 @@
 
 	var _initialState, _behaviors;
 
-	var _actionTypes = __webpack_require__(265);
+	var _actionTypes = __webpack_require__(263);
 
-	var _mapValues = __webpack_require__(266);
+	var _mapValues = __webpack_require__(264);
 
 	var _mapValues2 = _interopRequireDefault(_mapValues);
 
-	var _read = __webpack_require__(267);
+	var _read = __webpack_require__(265);
 
 	var _read2 = _interopRequireDefault(_read);
 
-	var _write = __webpack_require__(268);
+	var _write = __webpack_require__(266);
 
 	var _write2 = _interopRequireDefault(_write);
 
-	var _getValuesFromState = __webpack_require__(269);
+	var _getValuesFromState = __webpack_require__(267);
 
 	var _getValuesFromState2 = _interopRequireDefault(_getValuesFromState);
 
-	var _initializeState = __webpack_require__(271);
+	var _initializeState = __webpack_require__(269);
 
 	var _initializeState2 = _interopRequireDefault(_initializeState);
 
-	var _resetState = __webpack_require__(272);
+	var _resetState = __webpack_require__(270);
 
 	var _resetState2 = _interopRequireDefault(_resetState);
 
-	var _setErrors = __webpack_require__(273);
+	var _setErrors = __webpack_require__(271);
 
 	var _setErrors2 = _interopRequireDefault(_setErrors);
 
-	var _fieldValue = __webpack_require__(270);
+	var _fieldValue = __webpack_require__(268);
 
-	var _normalizeFields = __webpack_require__(274);
+	var _normalizeFields = __webpack_require__(272);
 
 	var _normalizeFields2 = _interopRequireDefault(_normalizeFields);
 
@@ -29287,7 +29230,7 @@
 	exports.default = decorate(formReducer);
 
 /***/ },
-/* 265 */
+/* 263 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29312,7 +29255,7 @@
 	var UNTOUCH = exports.UNTOUCH = 'redux-form/UNTOUCH';
 
 /***/ },
-/* 266 */
+/* 264 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29334,7 +29277,7 @@
 	}
 
 /***/ },
-/* 267 */
+/* 265 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29380,7 +29323,7 @@
 	exports.default = read;
 
 /***/ },
-/* 268 */
+/* 266 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29486,14 +29429,14 @@
 	exports.default = write;
 
 /***/ },
-/* 269 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _fieldValue = __webpack_require__(270);
+	var _fieldValue = __webpack_require__(268);
 
 	/**
 	 * A different version of getValues() that does not need the fields array
@@ -29532,7 +29475,7 @@
 	exports.default = getValuesFromState;
 
 /***/ },
-/* 270 */
+/* 268 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29564,7 +29507,7 @@
 	}
 
 /***/ },
-/* 271 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29573,7 +29516,7 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _fieldValue = __webpack_require__(270);
+	var _fieldValue = __webpack_require__(268);
 
 	var makeEntry = function makeEntry(value, previousValue, overwriteValues) {
 	  if (value === undefined && previousValue === undefined) return (0, _fieldValue.makeFieldValue)({});
@@ -29646,14 +29589,14 @@
 	exports.default = initializeState;
 
 /***/ },
-/* 272 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _fieldValue = __webpack_require__(270);
+	var _fieldValue = __webpack_require__(268);
 
 	var reset = function reset(value) {
 	  return (0, _fieldValue.makeFieldValue)(value === undefined || value && value.initial === undefined ? {} : { initial: value.initial, value: value.initial });
@@ -29685,7 +29628,7 @@
 	exports.default = resetState;
 
 /***/ },
-/* 273 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29694,7 +29637,7 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _fieldValue = __webpack_require__(270);
+	var _fieldValue = __webpack_require__(268);
 
 	var isMetaKey = function isMetaKey(key) {
 	  return key[0] === '_';
@@ -29779,7 +29722,7 @@
 	exports.default = setErrors;
 
 /***/ },
-/* 274 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29790,7 +29733,7 @@
 
 	exports.default = normalizeFields;
 
-	var _fieldValue = __webpack_require__(270);
+	var _fieldValue = __webpack_require__(268);
 
 	function extractKey(field) {
 	  var dotIndex = field.indexOf('.');
@@ -29876,7 +29819,7 @@
 	}
 
 /***/ },
-/* 275 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29885,11 +29828,11 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _createReduxFormConnector = __webpack_require__(276);
+	var _createReduxFormConnector = __webpack_require__(274);
 
 	var _createReduxFormConnector2 = _interopRequireDefault(_createReduxFormConnector);
 
-	var _hoistNonReactStatics = __webpack_require__(309);
+	var _hoistNonReactStatics = __webpack_require__(307);
 
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 
@@ -29950,22 +29893,22 @@
 	exports.default = createReduxForm;
 
 /***/ },
-/* 276 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _noGetters = __webpack_require__(277);
+	var _noGetters = __webpack_require__(275);
 
 	var _noGetters2 = _interopRequireDefault(_noGetters);
 
-	var _getDisplayName = __webpack_require__(282);
+	var _getDisplayName = __webpack_require__(280);
 
 	var _getDisplayName2 = _interopRequireDefault(_getDisplayName);
 
-	var _createHigherOrderComponent = __webpack_require__(283);
+	var _createHigherOrderComponent = __webpack_require__(281);
 
 	var _createHigherOrderComponent2 = _interopRequireDefault(_createHigherOrderComponent);
 
@@ -30055,14 +29998,14 @@
 	exports.default = createReduxFormConnector;
 
 /***/ },
-/* 277 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(278);
+	module.exports = __webpack_require__(276);
 
 
 /***/ },
-/* 278 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30075,7 +30018,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _deepEqual = __webpack_require__(279);
+	var _deepEqual = __webpack_require__(277);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
@@ -30157,12 +30100,12 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 279 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(280);
-	var isArguments = __webpack_require__(281);
+	var objectKeys = __webpack_require__(278);
+	var isArguments = __webpack_require__(279);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -30257,7 +30200,7 @@
 
 
 /***/ },
-/* 280 */
+/* 278 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -30272,7 +30215,7 @@
 
 
 /***/ },
-/* 281 */
+/* 279 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -30298,7 +30241,7 @@
 
 
 /***/ },
-/* 282 */
+/* 280 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30310,7 +30253,7 @@
 	}
 
 /***/ },
-/* 283 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30319,57 +30262,57 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _actions = __webpack_require__(284);
+	var _actions = __webpack_require__(282);
 
 	var importedActions = _interopRequireWildcard(_actions);
 
-	var _getDisplayName = __webpack_require__(282);
+	var _getDisplayName = __webpack_require__(280);
 
 	var _getDisplayName2 = _interopRequireDefault(_getDisplayName);
 
-	var _reducer = __webpack_require__(264);
+	var _reducer = __webpack_require__(262);
 
-	var _deepEqual = __webpack_require__(279);
+	var _deepEqual = __webpack_require__(277);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
-	var _bindActionData = __webpack_require__(285);
+	var _bindActionData = __webpack_require__(283);
 
 	var _bindActionData2 = _interopRequireDefault(_bindActionData);
 
-	var _getValues = __webpack_require__(286);
+	var _getValues = __webpack_require__(284);
 
 	var _getValues2 = _interopRequireDefault(_getValues);
 
-	var _isValid = __webpack_require__(287);
+	var _isValid = __webpack_require__(285);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
-	var _readFields = __webpack_require__(288);
+	var _readFields = __webpack_require__(286);
 
 	var _readFields2 = _interopRequireDefault(_readFields);
 
-	var _handleSubmit2 = __webpack_require__(303);
+	var _handleSubmit2 = __webpack_require__(301);
 
 	var _handleSubmit3 = _interopRequireDefault(_handleSubmit2);
 
-	var _asyncValidation = __webpack_require__(304);
+	var _asyncValidation = __webpack_require__(302);
 
 	var _asyncValidation2 = _interopRequireDefault(_asyncValidation);
 
-	var _silenceEvents = __webpack_require__(305);
+	var _silenceEvents = __webpack_require__(303);
 
 	var _silenceEvents2 = _interopRequireDefault(_silenceEvents);
 
-	var _silenceEvent = __webpack_require__(306);
+	var _silenceEvent = __webpack_require__(304);
 
 	var _silenceEvent2 = _interopRequireDefault(_silenceEvent);
 
-	var _wrapMapDispatchToProps = __webpack_require__(307);
+	var _wrapMapDispatchToProps = __webpack_require__(305);
 
 	var _wrapMapDispatchToProps2 = _interopRequireDefault(_wrapMapDispatchToProps);
 
-	var _wrapMapStateToProps = __webpack_require__(308);
+	var _wrapMapStateToProps = __webpack_require__(306);
 
 	var _wrapMapStateToProps2 = _interopRequireDefault(_wrapMapStateToProps);
 
@@ -30681,7 +30624,7 @@
 	exports.default = createHigherOrderComponent;
 
 /***/ },
-/* 284 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30689,7 +30632,7 @@
 	exports.__esModule = true;
 	exports.untouch = exports.touch = exports.swapArrayValues = exports.submitFailed = exports.stopSubmit = exports.stopAsyncValidation = exports.startSubmit = exports.startAsyncValidation = exports.reset = exports.removeArrayValue = exports.initialize = exports.focus = exports.destroy = exports.change = exports.blur = exports.autofill = exports.addArrayValue = undefined;
 
-	var _actionTypes = __webpack_require__(265);
+	var _actionTypes = __webpack_require__(263);
 
 	var addArrayValue = exports.addArrayValue = function addArrayValue(path, value, index, fields) {
 	  return { type: _actionTypes.ADD_ARRAY_VALUE, path: path, value: value, index: index, fields: fields };
@@ -30773,7 +30716,7 @@
 	};
 
 /***/ },
-/* 285 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30784,7 +30727,7 @@
 
 	exports.default = bindActionData;
 
-	var _mapValues = __webpack_require__(266);
+	var _mapValues = __webpack_require__(264);
 
 	var _mapValues2 = _interopRequireDefault(_mapValues);
 
@@ -30808,7 +30751,7 @@
 	}
 
 /***/ },
-/* 286 */
+/* 284 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30878,7 +30821,7 @@
 	exports.default = getValues;
 
 /***/ },
-/* 287 */
+/* 285 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30900,7 +30843,7 @@
 	}
 
 /***/ },
-/* 288 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30909,19 +30852,19 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _readField = __webpack_require__(289);
+	var _readField = __webpack_require__(287);
 
 	var _readField2 = _interopRequireDefault(_readField);
 
-	var _write = __webpack_require__(268);
+	var _write = __webpack_require__(266);
 
 	var _write2 = _interopRequireDefault(_write);
 
-	var _getValues = __webpack_require__(286);
+	var _getValues = __webpack_require__(284);
 
 	var _getValues2 = _interopRequireDefault(_getValues);
 
-	var _removeField = __webpack_require__(302);
+	var _removeField = __webpack_require__(300);
 
 	var _removeField2 = _interopRequireDefault(_removeField);
 
@@ -30971,7 +30914,7 @@
 	exports.default = readFields;
 
 /***/ },
-/* 289 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30980,39 +30923,39 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _createOnBlur = __webpack_require__(290);
+	var _createOnBlur = __webpack_require__(288);
 
 	var _createOnBlur2 = _interopRequireDefault(_createOnBlur);
 
-	var _createOnChange = __webpack_require__(293);
+	var _createOnChange = __webpack_require__(291);
 
 	var _createOnChange2 = _interopRequireDefault(_createOnChange);
 
-	var _createOnDragStart = __webpack_require__(294);
+	var _createOnDragStart = __webpack_require__(292);
 
 	var _createOnDragStart2 = _interopRequireDefault(_createOnDragStart);
 
-	var _createOnDrop = __webpack_require__(295);
+	var _createOnDrop = __webpack_require__(293);
 
 	var _createOnDrop2 = _interopRequireDefault(_createOnDrop);
 
-	var _createOnFocus = __webpack_require__(296);
+	var _createOnFocus = __webpack_require__(294);
 
 	var _createOnFocus2 = _interopRequireDefault(_createOnFocus);
 
-	var _silencePromise = __webpack_require__(297);
+	var _silencePromise = __webpack_require__(295);
 
 	var _silencePromise2 = _interopRequireDefault(_silencePromise);
 
-	var _read = __webpack_require__(267);
+	var _read = __webpack_require__(265);
 
 	var _read2 = _interopRequireDefault(_read);
 
-	var _updateField = __webpack_require__(299);
+	var _updateField = __webpack_require__(297);
 
 	var _updateField2 = _interopRequireDefault(_updateField);
 
-	var _isChecked = __webpack_require__(301);
+	var _isChecked = __webpack_require__(299);
 
 	var _isChecked2 = _interopRequireDefault(_isChecked);
 
@@ -31205,14 +31148,14 @@
 	exports.default = readField;
 
 /***/ },
-/* 290 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _getValue = __webpack_require__(291);
+	var _getValue = __webpack_require__(289);
 
 	var _getValue2 = _interopRequireDefault(_getValue);
 
@@ -31230,14 +31173,14 @@
 	exports.default = createOnBlur;
 
 /***/ },
-/* 291 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isEvent = __webpack_require__(292);
+	var _isEvent = __webpack_require__(290);
 
 	var _isEvent2 = _interopRequireDefault(_isEvent);
 
@@ -31293,7 +31236,7 @@
 	exports.default = getValue;
 
 /***/ },
-/* 292 */
+/* 290 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31306,14 +31249,14 @@
 	exports.default = isEvent;
 
 /***/ },
-/* 293 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _getValue = __webpack_require__(291);
+	var _getValue = __webpack_require__(289);
 
 	var _getValue2 = _interopRequireDefault(_getValue);
 
@@ -31327,7 +31270,7 @@
 	exports.default = createOnChange;
 
 /***/ },
-/* 294 */
+/* 292 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31343,14 +31286,14 @@
 	exports.default = createOnDragStart;
 
 /***/ },
-/* 295 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _createOnDragStart = __webpack_require__(294);
+	var _createOnDragStart = __webpack_require__(292);
 
 	var createOnDrop = function createOnDrop(name, change) {
 	  return function (event) {
@@ -31360,7 +31303,7 @@
 	exports.default = createOnDrop;
 
 /***/ },
-/* 296 */
+/* 294 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31374,14 +31317,14 @@
 	exports.default = createOnFocus;
 
 /***/ },
-/* 297 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isPromise = __webpack_require__(298);
+	var _isPromise = __webpack_require__(296);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
@@ -31398,7 +31341,7 @@
 	exports.default = silencePromise;
 
 /***/ },
-/* 298 */
+/* 296 */
 /***/ function(module, exports) {
 
 	module.exports = isPromise;
@@ -31409,7 +31352,7 @@
 
 
 /***/ },
-/* 299 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31418,15 +31361,15 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _isPristine = __webpack_require__(300);
+	var _isPristine = __webpack_require__(298);
 
 	var _isPristine2 = _interopRequireDefault(_isPristine);
 
-	var _isValid = __webpack_require__(287);
+	var _isValid = __webpack_require__(285);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
-	var _isChecked = __webpack_require__(301);
+	var _isChecked = __webpack_require__(299);
 
 	var _isChecked2 = _interopRequireDefault(_isChecked);
 
@@ -31488,7 +31431,7 @@
 	exports.default = updateField;
 
 /***/ },
-/* 300 */
+/* 298 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31526,7 +31469,7 @@
 	}
 
 /***/ },
-/* 301 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31551,7 +31494,7 @@
 	exports.default = isChecked;
 
 /***/ },
-/* 302 */
+/* 300 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31631,18 +31574,18 @@
 	exports.default = removeField;
 
 /***/ },
-/* 303 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isPromise = __webpack_require__(298);
+	var _isPromise = __webpack_require__(296);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
-	var _isValid = __webpack_require__(287);
+	var _isValid = __webpack_require__(285);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
@@ -31713,18 +31656,18 @@
 	exports.default = handleSubmit;
 
 /***/ },
-/* 304 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isPromise = __webpack_require__(298);
+	var _isPromise = __webpack_require__(296);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
-	var _isValid = __webpack_require__(287);
+	var _isValid = __webpack_require__(285);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
@@ -31755,14 +31698,14 @@
 	exports.default = asyncValidation;
 
 /***/ },
-/* 305 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _silenceEvent = __webpack_require__(306);
+	var _silenceEvent = __webpack_require__(304);
 
 	var _silenceEvent2 = _interopRequireDefault(_silenceEvent);
 
@@ -31781,14 +31724,14 @@
 	exports.default = silenceEvents;
 
 /***/ },
-/* 306 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isEvent = __webpack_require__(292);
+	var _isEvent = __webpack_require__(290);
 
 	var _isEvent2 = _interopRequireDefault(_isEvent);
 
@@ -31805,7 +31748,7 @@
 	exports.default = silenceEvent;
 
 /***/ },
-/* 307 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31848,7 +31791,7 @@
 	exports.default = wrapMapDispatchToProps;
 
 /***/ },
-/* 308 */
+/* 306 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31885,7 +31828,7 @@
 	exports.default = wrapMapStateToProps;
 
 /***/ },
-/* 309 */
+/* 307 */
 /***/ function(module, exports) {
 
 	/**
@@ -31941,7 +31884,7 @@
 
 
 /***/ },
-/* 310 */
+/* 308 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31987,7 +31930,7 @@
 	exports.default = createPropTypes;
 
 /***/ },
-/* 311 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32002,43 +31945,43 @@
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _App = __webpack_require__(312);
+	var _App = __webpack_require__(310);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Main = __webpack_require__(313);
+	var _Main = __webpack_require__(311);
 
 	var _Main2 = _interopRequireDefault(_Main);
 
-	var _TimesList = __webpack_require__(315);
+	var _ShiftContainer = __webpack_require__(313);
 
-	var _TimesList2 = _interopRequireDefault(_TimesList);
+	var _ShiftContainer2 = _interopRequireDefault(_ShiftContainer);
 
-	var _TimesItem = __webpack_require__(316);
+	var _ShiftList = __webpack_require__(314);
 
-	var _TimesItem2 = _interopRequireDefault(_TimesItem);
+	var _ShiftList2 = _interopRequireDefault(_ShiftList);
 
-	var _TimesInfo = __webpack_require__(317);
+	var _ShiftInfo = __webpack_require__(316);
 
-	var _TimesInfo2 = _interopRequireDefault(_TimesInfo);
+	var _ShiftInfo2 = _interopRequireDefault(_ShiftInfo);
 
-	var _create = __webpack_require__(321);
+	var _create = __webpack_require__(320);
 
 	var _create2 = _interopRequireDefault(_create);
 
-	var _Suggest = __webpack_require__(322);
+	var _Suggest = __webpack_require__(321);
 
 	var _Suggest2 = _interopRequireDefault(_Suggest);
 
-	var _Shedule = __webpack_require__(323);
+	var _Schedule = __webpack_require__(322);
 
-	var _Shedule2 = _interopRequireDefault(_Shedule);
+	var _Schedule2 = _interopRequireDefault(_Schedule);
 
-	var _NewsContainer = __webpack_require__(326);
+	var _NewsContainer = __webpack_require__(325);
 
 	var _NewsContainer2 = _interopRequireDefault(_NewsContainer);
 
-	var _NotFound = __webpack_require__(330);
+	var _NotFound = __webpack_require__(329);
 
 	var _NotFound2 = _interopRequireDefault(_NotFound);
 
@@ -32048,20 +31991,19 @@
 			_reactRouter.Route,
 			{ path: '/', component: _App2.default },
 			_react2.default.createElement(_reactRouter.IndexRoute, { component: _Main2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/select', component: _TimesList2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/create', component: _create2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/suggest', component: _Suggest2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/news', component: _NewsContainer2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/shedule', component: _Shedule2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/:id', component: _TimesInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift', component: _ShiftContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift/select', component: _ShiftList2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift/create', component: _create2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift/suggest', component: _Suggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift/select/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'news', component: _NewsContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'schedule', component: _Schedule2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/:id', component: _ShiftInfo2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
 	);
 
-	/*import Registration from './components/Registration.js';
-	import Login from './components/Login.js';*/
-
 /***/ },
-/* 312 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32076,13 +32018,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Main = __webpack_require__(313);
+	var _Main = __webpack_require__(311);
 
 	var _Main2 = _interopRequireDefault(_Main);
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _NavBar = __webpack_require__(314);
+	var _NavBar = __webpack_require__(312);
 
 	var _NavBar2 = _interopRequireDefault(_NavBar);
 
@@ -32126,7 +32068,7 @@
 	exports.default = App;
 
 /***/ },
-/* 313 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32142,10 +32084,6 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(186);
-
-	var _reactRedux = __webpack_require__(160);
-
-	var _index = __webpack_require__(252);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32165,32 +32103,25 @@
 		}
 
 		_createClass(Main, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				this.props.loadDate();
-				/*this.props.loadSuggest();*/
-				/*setTimeout(function(){  console.log('lll')}, 3000);*/
-			}
-		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
 					{ className: 'main' },
 					_react2.default.createElement(
-						'h2',
-						null,
-						' Я хочу... '
+						_reactRouter.Link,
+						{ to: 'shift', className: 'btn btn-lg btn-success shift' },
+						' Замены '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/select', className: 'btn btn-warning select-button' },
-						' Найти смену '
+						{ to: 'schedule', className: 'btn btn-lg btn-warning schedule' },
+						' Расписание '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/create', className: 'btn btn-info select-button' },
-						' Отдать смену '
+						{ to: 'news', className: 'btn btn-lg btn-info news' },
+						' Новости '
 					)
 				);
 			}
@@ -32199,19 +32130,10 @@
 		return Main;
 	}(_react.Component);
 
-	;
-
-	function mapStateToProps(state) {
-		return {
-			date: state.selectDate,
-			loaddate: state.loadDate
-		};
-	}
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(Main);
+	exports.default = Main;
 
 /***/ },
-/* 314 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32255,8 +32177,8 @@
 							null,
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: 'news', className: 'news' },
-								' Новости '
+								{ to: '/shift', activeClassName: 'navbar-link' },
+								' Замены '
 							)
 						)
 					),
@@ -32268,8 +32190,21 @@
 							null,
 							_react2.default.createElement(
 								_reactRouter.Link,
-								{ to: 'shedule', className: 'news' },
+								{ to: '/schedule', activeClassName: 'navbar-link' },
 								' Расписание '
+							)
+						)
+					),
+					_react2.default.createElement(
+						'ul',
+						{ className: 'nav navbar-nav' },
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								_reactRouter.Link,
+								{ to: '/news', activeClassName: 'navbar-link' },
+								' Новости '
 							)
 						)
 					),
@@ -32282,7 +32217,7 @@
 	exports.default = NavBar;
 
 /***/ },
-/* 315 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32297,13 +32232,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TimesItem = __webpack_require__(316);
-
-	var _TimesItem2 = _interopRequireDefault(_TimesItem);
-
 	var _reactRouter = __webpack_require__(186);
 
 	var _reactRedux = __webpack_require__(160);
+
+	var _index = __webpack_require__(252);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32313,70 +32246,182 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TimesList = function (_Component) {
-		_inherits(TimesList, _Component);
+	var ShiftContainer = function (_Component) {
+		_inherits(ShiftContainer, _Component);
 
-		function TimesList() {
-			_classCallCheck(this, TimesList);
+		function ShiftContainer(props) {
+			_classCallCheck(this, ShiftContainer);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(TimesList).apply(this, arguments));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(ShiftContainer).call(this, props));
 		}
 
-		_createClass(TimesList, [{
+		_createClass(ShiftContainer, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				/*this.props.loadDate();*/
-				/*this.props.loadSuggest();*/
-				/*setTimeout(function(){  console.log('lll')}, 3000);*/
+				this.props.loadDate();
+				this.props.loadSuggest();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'shift-container' },
+					_react2.default.createElement(
+						'h2',
+						null,
+						' Я хочу... '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'shift/select', className: 'btn btn-warning select-button' },
+						' Найти смену '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'shift/create', className: 'btn btn-info select-button' },
+						' Отдать смену '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'shift/suggest', className: 'btn btn-primary select-button' },
+						' Предложить смену '
+					)
+				);
+			}
+		}]);
 
+		return ShiftContainer;
+	}(_react.Component);
+
+	;
+
+	exports.default = (0, _reactRedux.connect)(null, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(ShiftContainer);
+
+/***/ },
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(186);
+
+	var _reactRedux = __webpack_require__(160);
+
+	var _ShiftItem = __webpack_require__(315);
+
+	var _ShiftItem2 = _interopRequireDefault(_ShiftItem);
+
+	var _index = __webpack_require__(252);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ShiftList = function (_Component) {
+		_inherits(ShiftList, _Component);
+
+		function ShiftList(props) {
+			_classCallCheck(this, ShiftList);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(ShiftList).call(this, props));
+		}
+
+		_createClass(ShiftList, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				this.props.loadDate();
+				this.props.loadSuggest();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
 				var load = this.props.load || {};
 
-				var list = Object.keys(load).map(function (value, index) {
+				var list = Object.keys(load).map(function (value) {
 					console.log(value);
 					return _react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/' + value, params: { name: load[value].name } },
+						{ to: '/shift/select/' + value, params: { name: load[value].name } },
 						' ',
-						_react2.default.createElement(_TimesItem2.default, { date: load[value].date, position: load[value].position, time: load[value].time }),
+						_react2.default.createElement(_ShiftItem2.default, { date: load[value].date, position: load[value].position, time: load[value].time }),
 						' '
 					);
 				});
 
 				var suggest = this.props.suggest || {};
 
-				var suggest2 = Object.keys(suggest).map(function (value, index) {
+				var suggest2 = Object.keys(suggest).map(function (value) {
 					console.log(value);
 					return _react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/' + value, params: { name: suggest[value].name } },
+						{ to: '/shift/select/' + value, params: { name: suggest[value].name } },
 						' ',
-						_react2.default.createElement(_TimesItem2.default, { date: suggest[value].date, position: suggest[value].position, time: suggest[value].time }),
+						_react2.default.createElement(_ShiftItem2.default, { date: suggest[value].date, position: suggest[value].position, time: suggest[value].time }),
 						' '
 					);
 				});
 				return _react2.default.createElement(
 					'div',
-					{ className: 'times-list' },
+					{ className: 'shift-list' },
 					_react2.default.createElement(
 						'h2',
 						null,
 						' Текущие замены '
 					),
-					list,
+					_react2.default.createElement(
+						'div',
+						{ className: 'row' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-md-6 list' },
+							_react2.default.createElement(
+								'h4',
+								null,
+								' Желающие отдохнуть '
+							),
+							list
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'col-md-6 suggest' },
+							_react2.default.createElement(
+								'h4',
+								null,
+								' Желающие поработать '
+							),
+							suggest2
+						)
+					),
+					_react2.default.createElement(
+						'h4',
+						null,
+						' И давайте активнее =) '
+					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/', className: 'btn btn-danger' },
+						{ to: '/shift', className: 'btn btn-danger' },
 						' Назад '
 					)
 				);
 			}
 		}]);
 
-		return TimesList;
+		return ShiftList;
 	}(_react.Component);
 
 	;
@@ -32388,10 +32433,10 @@
 		};
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(TimesList);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(ShiftList);
 
 /***/ },
-/* 316 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32406,10 +32451,10 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var TimesItem = function TimesItem(props) {
+	var ShiftItem = function ShiftItem(props) {
 		return _react2.default.createElement(
 			"div",
-			{ className: "times-item" },
+			{ className: "shift-item" },
 			_react2.default.createElement(
 				"ul",
 				null,
@@ -32437,10 +32482,10 @@
 		);
 	};
 
-	exports.default = TimesItem;
+	exports.default = ShiftItem;
 
 /***/ },
-/* 317 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32457,11 +32502,11 @@
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _toastr = __webpack_require__(318);
+	var _reactRedux = __webpack_require__(160);
+
+	var _toastr = __webpack_require__(317);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
-
-	var _reactRedux = __webpack_require__(160);
 
 	var _index = __webpack_require__(252);
 
@@ -32473,65 +32518,32 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var TimesInfo = function (_Component) {
-		_inherits(TimesInfo, _Component);
+	var ShiftInfo = function (_Component) {
+		_inherits(ShiftInfo, _Component);
 
-		function TimesInfo(props) {
-			_classCallCheck(this, TimesInfo);
+		function ShiftInfo(props) {
+			_classCallCheck(this, ShiftInfo);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimesInfo).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ShiftInfo).call(this, props));
 
 			_this.redirect = _this.redirect.bind(_this);
 			return _this;
 		}
 
-		/*componentWillMount() {
-	 	this.props.loadDate();
-	 }*/
-
-		/*componentWillMount() {
-	 	this.props.loadSelectedDate(this.props.params.id);
-	 }*/
-
-		/*this.props.loading == underfined ? {console.log('lll') : */
-
-		_createClass(TimesInfo, [{
+		_createClass(ShiftInfo, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				this.props.loadDate();
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
-
 				var id = this.props.params.id;
-				var to = id;
-				console.log(to);
-				console.log(this.props.params.name);
-				console.log(this.props.name);
-				console.log(this.props);
-				console.log(this.props.params);
-				console.log(this.props.params.id);
-				console.log(this.props.loading);
-
-				var lll = Object.keys(this.props.loading).map(function (value, index) {
-					if (value == id) {
-						console.log('llll', value);
-						var info = _this2.props.loading[value];
-						console.log(info);
-						return info;
-					}
-					return info;
-				});
-				console.log(lll);
-
-				lll = lll.filter(function (element) {
-					return element !== undefined;
-				});
-
-				var info = lll[0];
-
-				console.log(lll);
-
+				console.log(id);
+				var info = this.props.loading[id] || this.props.loadingSuggest[id];
 				return _react2.default.createElement(
 					'div',
-					{ className: 'times-info' },
+					{ className: 'shift-info' },
 					_react2.default.createElement(
 						'h2',
 						null,
@@ -32619,7 +32631,7 @@
 								_react2.default.createElement(
 									'td',
 									null,
-									'Доп комменты:'
+									'Комментарии:'
 								),
 								_react2.default.createElement(
 									'td',
@@ -32636,7 +32648,7 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: '/select', className: 'btn btn-danger' },
+						{ to: '/shift/select', className: 'btn btn-danger' },
 						' Назад '
 					)
 				);
@@ -32645,14 +32657,15 @@
 			key: 'redirect',
 			value: function redirect() {
 				_toastr2.default.error('Смена удалена!', 'Готово');
-				this.props.loadSelectedDate(this.props.params.id);
+				this.props.deleteDate(this.props.params.id);
+				this.props.deleteSuggest(this.props.params.id);
 				setTimeout(function () {
-					_reactRouter.browserHistory.push('/');
+					_reactRouter.browserHistory.push('/shift');
 				}, 2000);
 			}
 		}]);
 
-		return TimesInfo;
+		return ShiftInfo;
 	}(_react.Component);
 
 	;
@@ -32664,10 +32677,10 @@
 		};
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, loadSelectedDate: _index.loadSelectedDate, loadSuggest: _index.loadSuggest })(TimesInfo);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, deleteDate: _index.deleteDate, deleteSuggest: _index.deleteSuggest, loadSuggest: _index.loadSuggest })(ShiftInfo);
 
 /***/ },
-/* 318 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -32684,7 +32697,7 @@
 	 */
 	/* global define */
 	; (function (define) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(319)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(318)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
 	        return (function () {
 	            var $container;
 	            var listener;
@@ -33098,11 +33111,11 @@
 
 	        })();
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	}(__webpack_require__(320)));
+	}(__webpack_require__(319)));
 
 
 /***/ },
-/* 319 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -42922,14 +42935,14 @@
 
 
 /***/ },
-/* 320 */
+/* 319 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 321 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42946,13 +42959,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TimesList = __webpack_require__(315);
-
-	var _TimesList2 = _interopRequireDefault(_TimesList);
-
 	var _reactRouter = __webpack_require__(186);
 
-	var _toastr = __webpack_require__(318);
+	var _toastr = __webpack_require__(317);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -42960,7 +42969,7 @@
 
 	var _index = __webpack_require__(252);
 
-	var _reduxForm = __webpack_require__(262);
+	var _reduxForm = __webpack_require__(260);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43058,6 +43067,21 @@
 										'option',
 										null,
 										'Доставка'
+									),
+									_react2.default.createElement(
+										'option',
+										null,
+										'Админ'
+									),
+									_react2.default.createElement(
+										'option',
+										null,
+										'MR'
+									),
+									_react2.default.createElement(
+										'option',
+										null,
+										'Манагер;)'
 									)
 								)
 							)
@@ -43129,7 +43153,7 @@
 						),
 						_react2.default.createElement(
 							_reactRouter.Link,
-							{ to: '/', className: 'btn btn-danger' },
+							{ to: '/shift', className: 'btn btn-danger' },
 							' Назад '
 						)
 					)
@@ -43140,7 +43164,7 @@
 			value: function redirect() {
 				_toastr2.default.success('Замена опубликована!', 'Готово');
 				setTimeout(function () {
-					_reactRouter.browserHistory.push('/');
+					_reactRouter.browserHistory.push('/shift');
 				}, 2000);
 			}
 
@@ -43161,7 +43185,7 @@
 	}, null, { sendDate: _index.sendDate })(Create);
 
 /***/ },
-/* 322 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43178,13 +43202,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TimesList = __webpack_require__(315);
-
-	var _TimesList2 = _interopRequireDefault(_TimesList);
-
 	var _reactRouter = __webpack_require__(186);
 
-	var _toastr = __webpack_require__(318);
+	var _toastr = __webpack_require__(317);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -43192,7 +43212,7 @@
 
 	var _index = __webpack_require__(252);
 
-	var _reduxForm = __webpack_require__(262);
+	var _reduxForm = __webpack_require__(260);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43333,7 +43353,7 @@
 						),
 						_react2.default.createElement(
 							_reactRouter.Link,
-							{ to: '/', className: 'btn btn-danger' },
+							{ to: '/shift', className: 'btn btn-danger' },
 							' Назад '
 						)
 					)
@@ -43344,7 +43364,7 @@
 			value: function redirect() {
 				_toastr2.default.success('Предложение опубликовано!', 'Готово');
 				setTimeout(function () {
-					_reactRouter.browserHistory.push('/');
+					_reactRouter.browserHistory.push('/shift');
 				}, 2000);
 			}
 
@@ -43365,7 +43385,7 @@
 	}, null, { sendSuggest: _index.sendSuggest })(Suggest);
 
 /***/ },
-/* 323 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43382,15 +43402,15 @@
 
 	var _reactRedux = __webpack_require__(160);
 
+	var _ScheduleSearch = __webpack_require__(323);
+
+	var _ScheduleSearch2 = _interopRequireDefault(_ScheduleSearch);
+
+	var _ScheduleRow = __webpack_require__(324);
+
+	var _ScheduleRow2 = _interopRequireDefault(_ScheduleRow);
+
 	var _index = __webpack_require__(252);
-
-	var _SheduleRow = __webpack_require__(324);
-
-	var _SheduleRow2 = _interopRequireDefault(_SheduleRow);
-
-	var _SheduleSearch = __webpack_require__(325);
-
-	var _SheduleSearch2 = _interopRequireDefault(_SheduleSearch);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43400,28 +43420,24 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Shedule = function (_Component) {
-		_inherits(Shedule, _Component);
+	var Schedule = function (_Component) {
+		_inherits(Schedule, _Component);
 
-		function Shedule(props) {
-			_classCallCheck(this, Shedule);
+		function Schedule(props) {
+			_classCallCheck(this, Schedule);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Shedule).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Schedule).call(this, props));
 
 			_this.state = {
-				currentSearch: '',
-				bs: ''
+				currentSearch: ''
 			};
 			return _this;
 		}
 
-		_createClass(Shedule, [{
+		_createClass(Schedule, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
 				this.props.loadShedule();
-				/*let urlName = window.location.href.substring(32, );
-	   urlName = decodeURIComponent(urlName);*/
-				/*this.setState({bs: urlName}, () => console.log(this.state.currentSearch));*/
 			}
 		}, {
 			key: 'render',
@@ -43441,10 +43457,10 @@
 
 							var item2 = kkk[item]['Имя'].toLowerCase();
 
-							return item2.indexOf(_this2.state.currentSearch) != -1;
+							return item2.indexOf(_this2.state.currentSearch.toLowerCase()) != -1;
 						}).map(function (item) {
 
-							return _react2.default.createElement(_SheduleRow2.default, {
+							return _react2.default.createElement(_ScheduleRow2.default, {
 								name: kkk[item]['Имя'],
 
 								Monday: kkk[item]['пн 8'],
@@ -43460,8 +43476,8 @@
 				}
 				return _react2.default.createElement(
 					'div',
-					{ className: 'shedule' },
-					_react2.default.createElement(_SheduleSearch2.default, { search: this.mySearch.bind(this), bs: this.state.bs }),
+					{ className: 'schedule' },
+					_react2.default.createElement(_ScheduleSearch2.default, { search: this.mySearch.bind(this) }),
 					_react2.default.createElement(
 						'table',
 						{ className: 'table table-hover' },
@@ -43523,15 +43539,12 @@
 			}
 		}, {
 			key: 'mySearch',
-			value: function mySearch(data) {
-				console.log('it is data from shedule', data);
-				this.setState({ currentSearch: data });
-				console.log('lll', this.state.currentSearch);
-				return data;
+			value: function mySearch(search) {
+				this.setState({ currentSearch: search });
 			}
 		}]);
 
-		return Shedule;
+		return Schedule;
 	}(_react.Component);
 
 	function mapStateToProps(state) {
@@ -43540,7 +43553,90 @@
 		};
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadShedule: _index.loadShedule })(Shedule);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadShedule: _index.loadShedule })(Schedule);
+
+/***/ },
+/* 323 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ScheduleSearch = function (_Component) {
+		_inherits(ScheduleSearch, _Component);
+
+		function ScheduleSearch(props) {
+			_classCallCheck(this, ScheduleSearch);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScheduleSearch).call(this, props));
+
+			_this.state = {
+				search: ''
+			};
+
+			_this.handleSearch = _this.handleSearch.bind(_this);
+			return _this;
+		}
+
+		_createClass(ScheduleSearch, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _this2 = this;
+
+				var urlName = window.location.href.substring(45);
+				urlName = decodeURIComponent(urlName);
+				console.log('lllll', urlName);
+				this.setState({ search: urlName }, function () {
+					return _this2.props.search(_this2.state.search);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'schedule-search' },
+					_react2.default.createElement(
+						'h3',
+						null,
+						' Расписание на 8-14 августа '
+					),
+					_react2.default.createElement('input', { value: this.state.search || this.props.bs, onChange: this.handleSearch, className: 'form-control', placeholder: 'Поиск' })
+				);
+			}
+		}, {
+			key: 'handleSearch',
+			value: function handleSearch(event) {
+				var _this3 = this;
+
+				this.setState({ search: event.target.value }, function () {
+					return _this3.props.search(_this3.state.search);
+				});
+			}
+		}]);
+
+		return ScheduleSearch;
+	}(_react.Component);
+
+	exports.default = ScheduleSearch;
 
 /***/ },
 /* 324 */
@@ -43558,10 +43654,10 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var SheduleRow = function SheduleRow(props) {
+	var ScheduleRow = function ScheduleRow(props) {
 		return _react2.default.createElement(
 			"tr",
-			{ className: "shedule-row" },
+			{ className: "schedule-row" },
 			_react2.default.createElement(
 				"td",
 				null,
@@ -43621,7 +43717,7 @@
 		);
 	};
 
-	exports.default = SheduleRow;
+	exports.default = ScheduleRow;
 
 /***/ },
 /* 325 */
@@ -43639,96 +43735,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SheduleSearch = function (_Component) {
-		_inherits(SheduleSearch, _Component);
-
-		function SheduleSearch(props) {
-			_classCallCheck(this, SheduleSearch);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SheduleSearch).call(this, props));
-
-			_this.state = {
-				search: ''
-			};
-
-			_this.handleSearch = _this.handleSearch.bind(_this);
-			return _this;
-		}
-
-		_createClass(SheduleSearch, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _this2 = this;
-
-				var urlName = window.location.href.substring(45);
-				urlName = decodeURIComponent(urlName);
-				console.log('lllll', urlName);
-				this.setState({ search: urlName }, function () {
-					return _this2.props.search(_this2.state.search);
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'shedule-search' },
-					_react2.default.createElement(
-						'h3',
-						null,
-						' Расписание на 8-14 августа '
-					),
-					_react2.default.createElement('input', { value: this.state.search || this.props.bs, onChange: this.handleSearch, className: 'form-control', placeholder: 'Поиск' })
-				);
-			}
-		}, {
-			key: 'handleSearch',
-			value: function handleSearch(event) {
-				var _this3 = this;
-
-				this.setState({ search: event.target.value }, function () {
-					return _this3.props.search(_this3.state.search);
-				});
-			}
-		}]);
-
-		return SheduleSearch;
-	}(_react.Component);
-
-	exports.default = SheduleSearch;
-
-/***/ },
-/* 326 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
 	var _reactRedux = __webpack_require__(160);
 
-	var _NewsForm = __webpack_require__(327);
+	var _NewsForm = __webpack_require__(326);
 
 	var _NewsForm2 = _interopRequireDefault(_NewsForm);
 
-	var _NewsList = __webpack_require__(328);
+	var _NewsList = __webpack_require__(327);
 
 	var _NewsList2 = _interopRequireDefault(_NewsList);
 
@@ -43774,12 +43787,17 @@
 					_react2.default.createElement(
 						'h3',
 						null,
-						' Новости '
+						' Какие то новости '
+					),
+					_react2.default.createElement(
+						'h4',
+						null,
+						' или можно сделать чатик '
 					),
 					_react2.default.createElement(
 						'button',
 						{ onClick: this.toggleForm, className: 'btn btn-success' },
-						' Добавить новость '
+						' Написать '
 					),
 					this.state.showingForm ? _react2.default.createElement(_NewsForm2.default, { showForm: this.showForm }) : null,
 					_react2.default.createElement(_NewsList2.default, { data: this.props.loadNewsData, 'delete': this.props.deleteNews })
@@ -43803,13 +43821,14 @@
 	function mapStateToProps(state) {
 		return {
 			loadNewsData: state.loadNews[0]
+
 		};
 	}
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadNews: _index.loadNews, deleteNews: _index.deleteNews, sendShedule: _index.sendShedule })(NewsContainer);
 
 /***/ },
-/* 327 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43826,7 +43845,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reduxForm = __webpack_require__(262);
+	var _reduxForm = __webpack_require__(260);
 
 	var _index = __webpack_require__(252);
 
@@ -43867,7 +43886,7 @@
 						{ onSubmit: handleSubmit(this.props.sendNews) },
 						_react2.default.createElement(
 							'div',
-							null,
+							{ className: 'll' },
 							_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: 'Название новости' }, title))
 						),
 						_react2.default.createElement(
@@ -43908,7 +43927,7 @@
 	}, null, { sendNews: _index.sendNews })(NewsForm);
 
 /***/ },
-/* 328 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43923,7 +43942,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NewsItem = __webpack_require__(329);
+	var _NewsItem = __webpack_require__(328);
 
 	var _NewsItem2 = _interopRequireDefault(_NewsItem);
 
@@ -43950,7 +43969,7 @@
 				var _this2 = this;
 
 				var data = this.props.data || {};
-				var news = Object.keys(data).map(function (news) {
+				var news = Object.keys(data).reverse().map(function (news) {
 					return _react2.default.createElement(_NewsItem2.default, { title: data[news].title, text: data[news].text, id: news, 'delete': _this2.props.delete });
 				});
 
@@ -43968,7 +43987,7 @@
 	exports.default = NewsList;
 
 /***/ },
-/* 329 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -44004,11 +44023,6 @@
 				" ",
 				props.text,
 				" "
-			),
-			_react2.default.createElement(
-				"button",
-				{ onClick: deleteItem, className: "btn btn-danger" },
-				" X "
 			)
 		);
 	};
@@ -44016,7 +44030,7 @@
 	exports.default = NewsItem;
 
 /***/ },
-/* 330 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

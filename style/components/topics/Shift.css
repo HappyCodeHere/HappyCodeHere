@@ -1,0 +1,85 @@
+.shift-container {
+	background-color: rgba(255,255,255, 0.7);
+	text-align: center;
+	padding: 20px;
+	box-shadow: 10x 10px 5px black;
+	border: 1px solid orange;
+}
+
+.select-button {
+	margin-top: 70px;
+	width: 200px;
+}
+
+
+
+.shift-list {
+	background-color: rgba(255,255,255, 0.7);
+	text-align: center;
+	padding: 20px;
+	box-shadow: 10x 10px 5px black;
+	border: 1px solid orange;
+}
+
+a:hover {
+	
+	border: 2px;
+}
+
+.shift-list a {
+	width: 150px;
+	margin: 10px 0;
+}
+
+.shift-list .list {
+	
+}
+
+.shift-list .suggest {
+
+	
+}
+
+
+.shift-item ul {
+	/*text-align: center;
+	border: 2px solid;*/
+	margin-left: -50px;
+	
+}
+
+.shift-item ul li {
+	list-style: none;
+	display: inline-block;
+	margin: 0px 10px;
+
+	
+
+}
+
+a:hover {
+	border-bottom: 2px solid orange;
+	border: 2px;
+}
+
+
+.shift-info {
+	background-color: rgba(255,255,255, 0.7);
+	text-align: center;
+	padding: 20px;
+	box-shadow: 10x 10px 5px black;
+	border: 1px solid orange;
+}
+
+.shift-info table {
+	margin-top: 10px;
+	/* border: 2px solid black; */
+}
+
+.shift-info a {
+	width: 150px;
+}
+
+.shift-info button {
+	width: 150px;
+}
