@@ -43617,7 +43617,7 @@
 					_react2.default.createElement(
 						'h3',
 						null,
-						' Расписание на 8-14 августа '
+						' Расписание на 15-21 августа '
 					),
 					_react2.default.createElement('input', { value: this.state.search || this.props.bs, onChange: this.handleSearch, className: 'form-control', placeholder: 'Поиск' })
 				);
