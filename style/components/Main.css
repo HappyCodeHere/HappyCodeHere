@@ -2,7 +2,7 @@
 	text-align: center;
 }
 
-/*.main a {
+/* .main a {
 	display: inline-block;
 	height: 50px;
 	width: 600px;
@@ -11,25 +11,29 @@
 	text-decoration: none;
 	color: #333333;
 	margin: 0;
-}
+} */
 
 
-.main .shift {
+.main  .shift {
 	background-color: #CA219A;
 }
 
-.main .schedule {
+.main  .schedule {
 	background-color: #E29F1D;
 }
 
-.main .news {
+.main  .news {
 	background-color: #9FE21D;
 }
 
-.main a:hover {
-	opacity: 0.7;
-}*/
+/* .main  .news {
+	background-color: #9FE21D;
+} */
 
-.main a {
+
+
+.main .my-button {
+	margin: 0px;
 	width: 600px;
+	height: 50px;
 }

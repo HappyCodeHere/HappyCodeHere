@@ -1,85 +1,36 @@
 .shift-container {
-	background-color: rgba(255,255,255, 0.7);
-	text-align: center;
-	padding: 20px;
-	box-shadow: 10x 10px 5px black;
-	border: 1px solid orange;
+	padding: 30px 20px 20px 20px;
 }
 
-.select-button {
-	margin-top: 70px;
+.shift-container .select-button {
+	margin-top: 50px;
 	width: 200px;
 }
 
-
-
 .shift-list {
-	background-color: rgba(255,255,255, 0.7);
-	text-align: center;
-	padding: 20px;
-	box-shadow: 10x 10px 5px black;
-	border: 1px solid orange;
+	padding: 30px 20px 20px 20px;
 }
 
-a:hover {
-	
-	border: 2px;
+.shift-list h4 {
+	margin-bottom: -5px;
 }
-
-.shift-list a {
-	width: 150px;
-	margin: 10px 0;
-}
-
-.shift-list .list {
-	
-}
-
-.shift-list .suggest {
-
-	
-}
-
 
 .shift-item ul {
-	/*text-align: center;
-	border: 2px solid;*/
+	margin-top: 0px;
 	margin-left: -50px;
-	
+	margin-bottom: -10px;
 }
 
 .shift-item ul li {
 	list-style: none;
 	display: inline-block;
-	margin: 0px 10px;
-
-	
-
+	margin: 0 10px;
 }
-
-a:hover {
-	border-bottom: 2px solid orange;
-	border: 2px;
-}
-
 
 .shift-info {
-	background-color: rgba(255,255,255, 0.7);
-	text-align: center;
-	padding: 20px;
-	box-shadow: 10x 10px 5px black;
-	border: 1px solid orange;
+	padding: 30px 20px 20px 20px;
 }
 
-.shift-info table {
-	margin-top: 10px;
-	/* border: 2px solid black; */
-}
-
-.shift-info a {
-	width: 150px;
-}
-
-.shift-info button {
-	width: 150px;
+.shift-create, .shift-suggest {
+	padding: 30px 20px 20px 20px;
 }

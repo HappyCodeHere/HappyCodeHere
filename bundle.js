@@ -79,7 +79,7 @@
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _routes = __webpack_require__(309);
+	var _routes = __webpack_require__(310);
 
 	var _routes2 = _interopRequireDefault(_routes);
 
@@ -27289,29 +27289,35 @@
 
 	var _DateReducer2 = _interopRequireDefault(_DateReducer);
 
-	var _NewsReducer = __webpack_require__(257);
-
-	var _NewsReducer2 = _interopRequireDefault(_NewsReducer);
-
-	var _SheduleReducer = __webpack_require__(258);
-
-	var _SheduleReducer2 = _interopRequireDefault(_SheduleReducer);
-
-	var _SuggestReducer = __webpack_require__(259);
+	var _SuggestReducer = __webpack_require__(257);
 
 	var _SuggestReducer2 = _interopRequireDefault(_SuggestReducer);
 
-	var _reduxForm = __webpack_require__(260);
+	var _NewsReducer = __webpack_require__(258);
+
+	var _NewsReducer2 = _interopRequireDefault(_NewsReducer);
+
+	var _ScheduleReducer = __webpack_require__(259);
+
+	var _ScheduleReducer2 = _interopRequireDefault(_ScheduleReducer);
+
+	var _TimesReducer = __webpack_require__(260);
+
+	var _TimesReducer2 = _interopRequireDefault(_TimesReducer);
+
+	var _reduxForm = __webpack_require__(261);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var rootReducer = (0, _redux.combineReducers)({
 	  loadDate: _DateReducer2.default,
-	  sendDate: _DateReducer2.default,
-	  form: _reduxForm.reducer,
+	  loadSuggest: _SuggestReducer2.default,
+
 	  loadNews: _NewsReducer2.default,
-	  loadShedule: _SheduleReducer2.default,
-	  loadSuggest: _SuggestReducer2.default
+	  loadSchedule: _ScheduleReducer2.default,
+	  loadTimes: _TimesReducer2.default,
+
+	  form: _reduxForm.reducer
 	});
 
 	exports.default = rootReducer;
@@ -27333,9 +27339,6 @@
 		switch (action.type) {
 			case _types.LOAD_DATE:
 				return [action.payload];
-
-			case _types.SEND_DATE:
-				return [].concat(_toConsumableArray(state), [action.payload]);
 		}
 
 		return state;
@@ -27344,8 +27347,6 @@
 	var _index = __webpack_require__(252);
 
 	var _types = __webpack_require__(253);
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /***/ },
 /* 252 */
@@ -27359,18 +27360,20 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	exports.selectDate = selectDate;
 	exports.loadDate = loadDate;
 	exports.sendDate = sendDate;
 	exports.deleteDate = deleteDate;
-	exports.sendNews = sendNews;
-	exports.loadNews = loadNews;
-	exports.deleteNews = deleteNews;
-	exports.loadShedule = loadShedule;
-	exports.sendShedule = sendShedule;
-	exports.sendSuggest = sendSuggest;
 	exports.loadSuggest = loadSuggest;
+	exports.sendSuggest = sendSuggest;
 	exports.deleteSuggest = deleteSuggest;
+	exports.loadNews = loadNews;
+	exports.sendNews = sendNews;
+	exports.deleteNews = deleteNews;
+	exports.loadSchedule = loadSchedule;
+	exports.sendSchedule = sendSchedule;
+	exports.loadTimes = loadTimes;
+	exports.sendTimes = sendTimes;
+	exports.deleteTimes = deleteTimes;
 
 	var _types = __webpack_require__(253);
 
@@ -27378,11 +27381,9 @@
 
 	var _firebase2 = _interopRequireDefault(_firebase);
 
-	var _shedule = __webpack_require__(256);
+	var _schedule = __webpack_require__(256);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	var config = {
 		apiKey: "AIzaSyAlM5kvRzYCaP3466WtLpKdtiZBTTyARYo",
@@ -27393,18 +27394,9 @@
 
 	firebase.initializeApp(config);
 
-	function selectDate(date) {
-		console.log('action recieve', date);
-		return {
-			type: _types.SELECT_DATE,
-			payload: date
-		};
-	}
-
 	function loadDate() {
 		return function (dispatch) {
 			firebase.database().ref('shedule-app/shift/create').on('value', function (data) {
-				console.log(data.val());
 				return dispatch({
 					type: _types.LOAD_DATE,
 					payload: data.val()
@@ -27413,97 +27405,25 @@
 		};
 	}
 
-	function sendDate(props) {
-		var info = firebase.database().ref('shedule-app/shift/create').push(_extends({}, props));
-		console.log(info);
+	function sendDate(data) {
+		firebase.database().ref('shedule-app/shift/create').push(_extends({}, data));
 		return {
 			type: _types.SEND_DATE,
-			payload: [].concat(_toConsumableArray(props))
+			payload: data
 		};
 	}
 
 	function deleteDate(data) {
-		console.log('data here:', data);
-		var info = firebase.database().ref('shedule-app/shift/create/' + data).remove();
-		console.log(info);
-		console.log('think success');
+		firebase.database().ref('shedule-app/shift/create/' + data).remove();
 		return {
 			type: _types.DELETE_DATE,
-			payload: [].concat(_toConsumableArray(data))
+			payload: data
 		};
 	};
-
-	function sendNews(news) {
-		var _console;
-
-		var my_news = firebase.database().ref('shedule-app/news').push(_extends({}, news));
-		console.log(my_news);
-		(_console = console).log.apply(_console, _toConsumableArray(news));
-		return {
-			type: _types.SEND_NEWS,
-			payload: news
-		};
-	}
-
-	function loadNews() {
-		return function (dispatch) {
-			firebase.database().ref('shedule-app/news').on('value', function (data) {
-				console.log(data.val());
-				return dispatch({
-					type: _types.LOAD_NEWS,
-					payload: data.val()
-				});
-			});
-		};
-	}
-
-	function deleteNews(data) {
-		firebase.database().ref('shedule-app/news/' + data).remove();
-		return {
-			type: _types.DELETE_NEWS,
-			payload: [].concat(_toConsumableArray(data))
-		};
-	};
-
-	function loadShedule() {
-		return function (dispatch) {
-			firebase.database().ref('shedule-app/shedule').on('value', function (data) {
-				console.log(data.val());
-				return dispatch({
-					type: _types.LOAD_SHEDULE,
-					payload: data.val()
-				});
-			});
-		};
-	}
-
-	function sendShedule() {
-		var _console2;
-
-		var my_news = firebase.database().ref('shedule-app/shedule').set({
-			names: _shedule.names
-		});
-		console.log(my_news);
-		(_console2 = console).log.apply(_console2, _toConsumableArray(news));
-		return {
-			type: _types.SEND_SHEDULE,
-			payload: news
-		};
-	}
-
-	function sendSuggest(props) {
-		var info = firebase.database().ref('shedule-app/shift/suggest').push(_extends({}, props));
-		console.log(info);
-		return {
-			type: _types.SEND_SUGGEST,
-			payload: [].concat(_toConsumableArray(props))
-		};
-	}
 
 	function loadSuggest() {
 		return function (dispatch) {
 			firebase.database().ref('shedule-app/shift/suggest').on('value', function (data) {
-				console.log(data.val());
 				return dispatch({
 					type: _types.LOAD_SUGGEST,
 					payload: data.val()
@@ -27512,14 +27432,93 @@
 		};
 	}
 
-	function deleteSuggest(data) {
-		console.log('data here:', data);
-		var info = firebase.database().ref('shedule-app/shift/suggest/' + data).remove();
-		console.log(info);
-		console.log('think success');
+	function sendSuggest(data) {
+		firebase.database().ref('shedule-app/shift/suggest').push(_extends({}, data));
 		return {
-			type: _types.DELETE_DATE,
-			payload: [].concat(_toConsumableArray(data))
+			type: _types.SEND_SUGGEST,
+			payload: data
+		};
+	}
+
+	function deleteSuggest(data) {
+		firebase.database().ref('shedule-app/shift/suggest/' + data).remove();
+		return {
+			type: _types.DELETE_SUGGEST,
+			payload: data
+		};
+	};
+
+	function loadNews() {
+		return function (dispatch) {
+			firebase.database().ref('shedule-app/news').on('value', function (data) {
+				return dispatch({
+					type: _types.LOAD_NEWS,
+					payload: data.val()
+				});
+			});
+		};
+	}
+
+	function sendNews(news) {
+		firebase.database().ref('shedule-app/news').push(_extends({}, news));
+		return {
+			type: _types.SEND_NEWS,
+			payload: news
+		};
+	}
+
+	function deleteNews(data) {
+		firebase.database().ref('shedule-app/news/' + data).remove();
+		return {
+			type: _types.DELETE_NEWS,
+			payload: data
+		};
+	};
+
+	function loadSchedule() {
+		return function (dispatch) {
+			firebase.database().ref('shedule-app/schedule').on('value', function (data) {
+				return dispatch({
+					type: _types.LOAD_SCHEDULE,
+					payload: data.val()
+				});
+			});
+		};
+	}
+
+	function sendSchedule() {
+		firebase.database().ref('shedule-app/schedule').push(_extends({}, _schedule.schedule));
+		return {
+			type: _types.SEND_SCHEDULE,
+			payload: _schedule.schedule
+		};
+	}
+
+	function loadTimes() {
+		return function (dispatch) {
+			firebase.database().ref('shedule-app/times').on('value', function (data) {
+				console.log(data.val());
+				return dispatch({
+					type: _types.LOAD_TIMES,
+					payload: data.val()
+				});
+			});
+		};
+	}
+
+	function sendTimes(times) {
+		firebase.database().ref('shedule-app/times').push(_extends({}, times));
+		return {
+			type: _types.SEND_TIMES,
+			payload: times
+		};
+	}
+
+	function deleteTimes(data) {
+		firebase.database().ref('shedule-app/times/' + data).remove();
+		return {
+			type: _types.DELETE_TIMES,
+			payload: data
 		};
 	};
 
@@ -27532,21 +27531,24 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var SELECT_DATE = exports.SELECT_DATE = 'SELECT_DATE';
-
 	var LOAD_DATE = exports.LOAD_DATE = 'LOAD_DATE';
 	var SEND_DATE = exports.SEND_DATE = 'SEND_DATE';
 	var DELETE_DATE = exports.DELETE_DATE = 'DELETE_DATE';
 
-	var SEND_NEWS = exports.SEND_NEWS = 'SEND_NEWS';
+	var LOAD_SUGGEST = exports.LOAD_SUGGEST = 'LOAD_SUGGEST';
+	var SEND_SUGGEST = exports.SEND_SUGGEST = 'SEND_SUGGEST';
+	var DELETE_SUGGEST = exports.DELETE_SUGGEST = 'DELETE_SUGGEST';
+
 	var LOAD_NEWS = exports.LOAD_NEWS = 'LOAD_NEWS';
+	var SEND_NEWS = exports.SEND_NEWS = 'SEND_NEWS';
 	var DELETE_NEWS = exports.DELETE_NEWS = 'DELETE_NEWS';
 
-	var SEND_SHEDULE = exports.SEND_SHEDULE = 'SEND_SHEDULE';
-	var LOAD_SHEDULE = exports.LOAD_SHEDULE = 'LOAD_SHEDULE';
+	var LOAD_SCHEDULE = exports.LOAD_SCHEDULE = 'LOAD_SCHEDULE';
+	var SEND_SCHEDULE = exports.SEND_SCHEDULE = 'SEND_SCHEDULE';
 
-	var SEND_SUGGEST = exports.SEND_SUGGEST = 'SEND_SUGGEST';
-	var LOAD_SUGGEST = exports.LOAD_SUGGEST = 'LOAD_SUGGEST';
+	var LOAD_TIMES = exports.LOAD_TIMES = 'LOAD_TIMES';
+	var SEND_TIMES = exports.SEND_TIMES = 'SEND_TIMES';
+	var DELETE_TIMES = exports.DELETE_TIMES = 'DELETE_TIMES';
 
 /***/ },
 /* 254 */
@@ -28146,492 +28148,459 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var names = exports.names = {
-	  "Расписание": [{
-	    "Имя": "Кузнецова Александра",
-	    "Телефон": "80293677399",
-	    "пн 8": "выходной",
-	    "вт 9": "10:30 - 17:30 admin",
-	    "ср 10": "10:30 - 17:30 admin",
-	    "чт 11": "10:30 - 17:30 admin",
-	    "пт 12": "10:30 - 17:30 admin",
-	    "сб 13": "10:30 - 17:30 admin",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Ранцевич Артем",
-	    "Телефон": "80447822183",
-	    "пн 8": "отпуск",
-	    "вт 9": "отпуск",
-	    "ср 10": "отпуск",
-	    "чт 11": "отпуск",
-	    "пт 12": "отпуск",
-	    "сб 13": "отпуск",
-	    "вс 14": "отпуск"
-	  }, {
-	    "Имя": "Агеенко Михаил",
-	    "Телефон": "80291785018",
-	    "пн 8": "10:30 - 19:00 admin/trn",
-	    "вт 9": "17:00 - 24:00 admin",
-	    "ср 10": "17:00 - 24:00 admin",
-	    "чт 11": "13:00 - 17:00 trn c 2/17:00 - 21:00 k",
-	    "пт 12": "выходной",
-	    "сб 13": "17:00 - 24:00 admin",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Шедко Елизавета",
-	    "Телефон": "80296910722",
-	    "пн 8": "18:30 - 23:30 admin",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "17:00 - 24:00 admin",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "10:30 - 16:00 admin"
-	  }, {
-	    "Имя": "Зеньчик Анна",
-	    "Телефон": "80259208895",
-	    "пн 8": "15:00 - 23:30 mr/trn",
-	    "вт 9": "15:00 - 23:00 k",
-	    "ср 10": "13:00 - 17:00 trn KM/ 17:00 -21:00 c",
-	    "чт 11": "15:00 - 23:30 mr",
-	    "пт 12": "13:00 - 17:00 trn c/17:00 - 21:00 c",
-	    "сб 13": "15:00 - 23:30 mr",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Стыпутько Виктор",
-	    "Телефон": "80292587869",
-	    "пн 8": "выходной",
-	    "вт 9": "6:30 - 14:30 dell trn",
-	    "ср 10": "6:30 - 14:30 dell trn",
-	    "чт 11": "выходной",
-	    "пт 12": "17:00 - 24:00 admin",
-	    "сб 13": "16:30 - 01:00 dell",
-	    "вс 14": "17:00 - 24:00 admin"
-	  }, {
-	    "Имя": "Стельмах Мария",
-	    "Телефон": "80291396391",
-	    "пн 8": "6:30 - 15:00 mr",
-	    "вт 9": "6:30 - 15:00 mr",
-	    "ср 10": "6:30 - 15:00 mr",
-	    "чт 11": "6:30 - 15:00 mr",
-	    "пт 12": "6:30 - 15:00 mr",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Цуп Анастасия",
-	    "пн 8": "выходной",
-	    "вт 9": "15:00 - 23:30 mr",
-	    "ср 10": "15:00 - 23:30 mr",
-	    "чт 11": "выходной",
-	    "пт 12": "15:00 - 23:30 mr",
-	    "сб 13": "13:00 - 21:00 c",
-	    "вс 14": "15:00 - 23:30 mr"
-	  }, {
-	    "Имя": "Брыкова Анастасия",
-	    "Телефон": "80291737304",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "17:00 - 21:00 c",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "6:30 - 15:00 mr",
-	    "вс 14": "6:30 - 15:00 mr"
-	  }, {
-	    "Имя": "Борушко Илья",
-	    "Телефон": "80295095032",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "6:30 - 15:00 k",
-	    "чт 11": "выходной",
-	    "пт 12": "12:00 -18:00 k",
-	    "сб 13": "6:30 - 15:00 k",
-	    "вс 14": "6:30 - 15:00 k"
-	  }, {
-	    "Имя": "Мороз Алена",
-	    "Телефон": "80333005227",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "12:00 -18:00 k",
-	    "чт 11": "15:00 - 21:00 k",
-	    "пт 12": "отпуск",
-	    "сб 13": "отпуск",
-	    "вс 14": "отпуск"
-	  }, {
-	    "Имя": "Журавский Чеслав",
-	    "Телефон": "80256942155",
-	    "пн 8": "выходной",
-	    "вт 9": "15:00 - 21:00 k",
-	    "ср 10": "выходной",
-	    "чт 11": "выходной",
-	    "пт 12": "14:00 - 22:00 k ",
-	    "сб 13": "15:00 - 22:00 k",
-	    "вс 14": "15:00 - 22:00 K"
-	  }, {
-	    "Имя": "Ильченко Ярослава",
-	    "Телефон": "80336342597",
-	    "пн 8": "15:00 - 23:00 k",
-	    "вт 9": "18:00 -24:00 k",
-	    "ср 10": "выходной",
-	    "чт 11": "17:00- 24:00 k",
-	    "пт 12": "выходной",
-	    "сб 13": "18:00 - 24:00 LL",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Мазурич Ольга",
-	    "пн 8": "6:30 - 15:00 k",
-	    "вт 9": "6:30 - 15:00 k",
-	    "ср 10": "выходной",
-	    "чт 11": "6:30 - 15:00 k",
-	    "пт 12": "6:30 - 15:00 k",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Шамара Дарья",
-	    "Телефон": "80259811202",
-	    "пн 8": "12:00 - 19:00 k",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "15:00 - 23:30 k",
-	    "пт 12": "15:00 -23:30 k",
-	    "сб 13": "16:00 -24:00 k",
-	    "вс 14": "12:00 - 20:00 K"
-	  }, {
-	    "Имя": "Щелканова Виктория",
-	    "Телефон": "80333270965",
-	    "пн 8": "выходной",
-	    "вт 9": "16:00 -23:00 LL",
-	    "ср 10": "выходной",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "10:00 - 18:00 LL",
-	    "вс 14": "16:00 - 23:00 LL"
-	  }, {
-	    "Имя": "Закревский Алексей",
-	    "Телефон": "80291285776",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "15:00 -21:00 k",
-	    "чт 11": "выходной",
-	    "пт 12": "16:00 -23:00 LL",
-	    "сб 13": "12:00 - 20:30 k",
-	    "вс 14": "15:00 - 22:00 K"
-	  }, {
-	    "Имя": "Щекочихин Виктор",
-	    "Телефон": "80298138795",
-	    "пн 8": "15:00 - 21:00 k",
-	    "вт 9": "выходной",
-	    "ср 10": "15:00 -21:00 k",
-	    "чт 11": "12:00 - 17:00 k",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Борисевич Екатерина",
-	    "Телефон": "80259428237",
-	    "пн 8": "выходной",
-	    "вт 9": "10:00 - 16:00 LL",
-	    "ср 10": "выходной",
-	    "чт 11": "16:00 - 22:30 LL",
-	    "пт 12": "10:00 - 16:00 LL",
-	    "сб 13": "выходной",
-	    "вс 14": "10:00 - 16:00 LL"
-	  }, {
-	    "Имя": "Кондратенкова Ядвига",
-	    "Телефон": "80292979271",
-	    "пн 8": "отпуск",
-	    "вт 9": "отпуск",
-	    "ср 10": "отпуск",
-	    "чт 11": "отпуск",
-	    "пт 12": "отпуск",
-	    "сб 13": "отпуск",
-	    "вс 14": "отпуск"
-	  }, {
-	    "Имя": "Занько Василий",
-	    "Телефон": "80255212537",
-	    "пн 8": "19:00 - 01:00 k",
-	    "вт 9": "выходной",
-	    "ср 10": "18:00 - 01:00 k",
-	    "чт 11": "выходной",
-	    "пт 12": "18:00 - 01:00 k",
-	    "сб 13": "17:00 - 01:00 k",
-	    "вс 14": "18:00 - 01:00 k"
-	  }, {
-	    "Имя": "Першлевич Вячеслав",
-	    "Телефон": "80292569515",
-	    "пн 8": "выходной",
-	    "вт 9": "18:30 - 01:00 car/c",
-	    "ср 10": "выходной",
-	    "чт 11": "17:00 - 01:00 k/c",
-	    "пт 12": "17:00 - 01:00 c",
-	    "сб 13": "17:00 - 01:00 c",
-	    "вс 14": "16:00 - 24:00 c"
-	  }, {
-	    "Имя": "Тиханович Констанстин",
-	    "Телефон": "80291354378",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "14:00 - 22:00 dell",
-	    "чт 11": "выходной",
-	    "пт 12": "15:00 - 23:30 dell",
-	    "сб 13": "12:00 -17:00 k",
-	    "вс 14": "14:00 - 22:00 dell"
-	  }, {
-	    "Имя": "Давидовская Наталья ",
-	    "Телефон": "80255101980",
-	    "пн 8": "выходной",
-	    "вт 9": "13:00 - 18:00 c",
-	    "ср 10": "выходной",
-	    "чт 11": "выходной",
-	    "пт 12": "14:00 - 22:00 c",
-	    "сб 13": "13:00 - 21:30 LL",
-	    "вс 14": "13:00 - 21:00 c"
-	  }, {
-	    "Имя": "Любецкая Ольга",
-	    "Телефон": "80297731388",
-	    "пн 8": "11:00 - 17:00 c",
-	    "вт 9": "11:00 - 17:00 c",
-	    "ср 10": "11:00 - 17:00 c",
-	    "чт 11": "11:00 - 17:00 c",
-	    "пт 12": "11:00 - 17:00 c",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Михайлова Анастасия",
-	    "Телефон": "80259071205",
-	    "пн 8": "выходной",
-	    "вт 9": "16:00 - 23:00 c",
-	    "ср 10": "17:00 -23:00 c",
-	    "чт 11": "16:00 - 21:00 c",
-	    "пт 12": "14:00 - 22:00 c",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Мокрик Ангелина",
-	    "Телефон": "80447303282",
-	    "пн 8": "17:00 -24:00 c",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "выходной",
-	    "пт 12": "17:00 - 24:00 c",
-	    "сб 13": "16:00 - 24:00 c",
-	    "вс 14": "17:00 - 24:00 c"
-	  }, {
-	    "Имя": "Шадура Артем",
-	    "Телефон": "80445375128",
-	    "пн 8": "13:00 - 21:00 c",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Артемчик Илья",
-	    "Телефон": "80291916381",
-	    "пн 8": "17:00 - 23:00 c",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "16:00 - 23:00 c",
-	    "пт 12": "выходной",
-	    "сб 13": "15:00 - 23:00 c",
-	    "вс 14": "16:00 - 23:00 c"
-	  }, {
-	    "Имя": "Барташевич Дмитрий",
-	    "Телефон": "80293088742",
-	    "пн 8": "выходной",
-	    "вт 9": "6:30 - 14:30 dell trn",
-	    "ср 10": "6:30 - 14:30 dell trn",
-	    "чт 11": "выходной",
-	    "пт 12": "6:30 - 15:00 dell",
-	    "сб 13": "12:00 - 20:00 c",
-	    "вс 14": "6:30 - 14:30 dell"
-	  }, {
-	    "Имя": "Cадыков Михаил",
-	    "Телефон": "80255368132",
-	    "пн 8": "6:30 - 14:30 dell",
-	    "вт 9": "14:00 - 22:30 dell",
-	    "ср 10": "выходной",
-	    "чт 11": "6:30 - 14:30 dell",
-	    "пт 12": "выходной",
-	    "сб 13": "6:30 - 15:00 dell",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Садыков Павел",
-	    "Телефон": "80257019315",
-	    "пн 8": "14:00 - 22:00 dell",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "14:00 - 22:00 dell",
-	    "пт 12": "18:30 - 24:00 car",
-	    "сб 13": "14:00 - 21:00 k",
-	    "вс 14": "11:00 - 19:00 c"
-	  }, {
-	    "Имя": "Чехович Егор",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "12:00 -20:33",
-	    "пт 12": "16:00 - 24:30 ",
-	    "сб 13": "16:00 - 24:30",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Мицкевич Кирилл",
-	    "пн 8": "12:00 -20:30",
-	    "вт 9": "12:00 -20:30",
-	    "ср 10": "12:00 -20:30",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Хамутовская Алина",
-	    "Телефон": "80291854170",
-	    "пн 8": "выходной",
-	    "вт 9": "17:00 - 24:00 c",
-	    "ср 10": "17:00 - 24:00 c",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "13:00 - 21:30 c",
-	    "вс 14": "19:00 - 24:00 c"
-	  }, {
-	    "Имя": "Левданчик Снежана",
-	    "Телефон": "8025-6046639",
-	    "пн 8": "16:00 - 21:00 c",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "10:00 - 16:00 LL",
-	    "пт 12": "выходной",
-	    "сб 13": "11:00 - 17:00 c",
-	    "вс 14": "12:00 - 19:00 c"
-	  }, {
-	    "Имя": "Лютова Анна",
-	    "Телефон": "8025-9861733",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "13:00 - 17:00 trn c 2",
-	    "пт 12": "13:00 - 17:00 trn c 3",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Прудников Аркадий",
-	    "Телефон": "8029-9917080",
-	    "пн 8": "выходной",
-	    "вт 9": "выходной",
-	    "ср 10": "выходной",
-	    "чт 11": "13:00 - 17:00 trn c 2",
-	    "пт 12": "13:00 - 17:00 trn c 3",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Хомбак Егор",
-	    "Телефон": "8025-7753896",
-	    "пн 8": "11:00 - 15:00 trn KM",
-	    "вт 9": "выходной",
-	    "ср 10": "11:00 - 15:00 trn KM",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Ржеутская Диана",
-	    "Телефон": "8025-5313395",
-	    "пн 8": "11:00 - 15:00 trn KM",
-	    "вт 9": "выходной",
-	    "ср 10": "11:00 - 15:00 trn KM",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Васильев Дмитрий",
-	    "Телефон": "8025-5219503",
-	    "пн 8": "15:00 - 19:00 trn KM",
-	    "вт 9": "выходной",
-	    "ср 10": "15:00 - 19:00 trn KM",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Коханский Сергей",
-	    "Телефон": "8029-7541963",
-	    "пн 8": "15:00 - 19:00 trn KM",
-	    "вт 9": "выходной",
-	    "ср 10": "15:00 - 19:00 trn KM",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }, {
-	    "Имя": "Семянченя Максим",
-	    "Телефон": "8033-6867349",
-	    "пн 8": "19:00 - 23:00 trn KM",
-	    "вт 9": "выходной",
-	    "ср 10": "19:00 - 23:00 trn KM",
-	    "чт 11": "выходной",
-	    "пт 12": "выходной",
-	    "сб 13": "выходной",
-	    "вс 14": "выходной"
-	  }]
-	};
+	var schedule = exports.schedule = [{
+	  "name": "Кузнецова Александра",
+	  "number": "80293677399",
+	  "mon": "10:30 - 17:30 admin/trn",
+	  "tue": "10:30 - 17:30 admin/trn",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "17:30 - 24:00 admin",
+	  "sat": "15:00 - 23:30 mr",
+	  "sun": "17:30 - 24:00 admin"
+	}, {
+	  "name": "Ранцевич Артем",
+	  "number": "80447822183",
+	  "mon": "отпуск",
+	  "tue": "отпуск",
+	  "wed": "10:30 - 17:30 admin",
+	  "thu": "10:30 - 17:30 admin",
+	  "fri": "10:30 - 17:30 admin",
+	  "sat": "18:00 - 24:00 c",
+	  "sun": "17:00 - 24:00 c"
+	}, {
+	  "name": "Агеенко Михаил",
+	  "number": "80291785018",
+	  "mon": "17:30 - 24:00 admin",
+	  "tue": "17:30 - 24:00 admin/trn",
+	  "wed": "17:30 - 24:00 admin/trn",
+	  "thu": "17:30 - 24:00 admin/trn",
+	  "fri": "выходной",
+	  "sat": "17:30 - 24:00 admin/trn",
+	  "sun": "выходной"
+	}, {
+	  "name": "Шедко Елизавета",
+	  "number": "80296910722",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "10:30 - 17:30 admin",
+	  "sun": "10:30 - 17:30 admin"
+	}, {
+	  "name": "Зеньчик Анна",
+	  "number": "80259208895",
+	  "mon": "15:00 - 23:30 mr/trn",
+	  "tue": "15:00 - 23:30 mr",
+	  "wed": "выходной",
+	  "thu": "6:30 - 15:00 mr/trn",
+	  "fri": "6:30 - 15:00 mr",
+	  "sat": "6:30 - 15:00 mr",
+	  "sun": "выходной"
+	}, {
+	  "name": "Стыпутько Виктор",
+	  "number": "80292587869",
+	  "mon": "выходной",
+	  "tue": "6:30 - 14:30 dell",
+	  "wed": "6:30 - 14:30 dell/trn",
+	  "thu": "6:30 - 14:30 dell",
+	  "fri": "6:30 - 14:30 dell",
+	  "sat": "16:30 - 01:00 dell",
+	  "sun": "выходной"
+	}, {
+	  "name": "Стельмах Мария",
+	  "number": "80291396391",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "15:00 - 23:30 mr",
+	  "thu": "15:00 - 23:30 mr",
+	  "fri": "15:00 - 23:30 mr",
+	  "sat": "выходной",
+	  "sun": "15:00 - 23:30 mr"
+	}, {
+	  "name": "Брыкова Анастасия",
+	  "number": "80291737304",
+	  "mon": "6:30 - 15:00 mr",
+	  "tue": "6:30 - 15:00 mr",
+	  "wed": "6:30 - 15:00 mr",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "13:00 - 19:00 c",
+	  "sun": "6:30 - 15:00 mr"
+	}, {
+	  "name": "Борушко Илья",
+	  "number": "80295095032",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "12:00 - 18:00 k",
+	  "fri": "выходной",
+	  "sat": "6:30 - 15:00 k",
+	  "sun": "6:30 - 15:00 k"
+	}, {
+	  "name": "Мороз Алена",
+	  "number": "80333005227",
+	  "mon": "12:00 - 19:00 k",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "12:00 - 18:00 k",
+	  "sat": "12:00 - 17:00 k",
+	  "sun": "12:00 - 18:00 k"
+	}, {
+	  "name": "Журавский Чеслав",
+	  "number": "80256942155",
+	  "mon": "выходной",
+	  "tue": "13:00 - 18:00 k",
+	  "wed": "выходной",
+	  "thu": "18:00 - 24:00 k",
+	  "fri": "18:00 - 24:00 k",
+	  "sat": "15:00 - 22:00 k",
+	  "sun": "15:00 - 22:00 k"
+	}, {
+	  "name": "Ильченко Ярослава",
+	  "number": "80336342597",
+	  "mon": "выходной",
+	  "tue": "18:00 - 24:00 k",
+	  "wed": "18:00 - 24:00 k",
+	  "thu": "15:00 - 23:00 k",
+	  "fri": "выходной",
+	  "sat": "17:00 - 23:00 k",
+	  "sun": "15:00 - 23:00 k"
+	}, {
+	  "name": "Мазурич Ольга",
+	  "mon": "6:30 - 15:00 k",
+	  "tue": "6:30 - 13:00 k",
+	  "wed": "6:30 - 15:00 k",
+	  "thu": "6:30 - 15:00 k",
+	  "fri": "6:30 - 15:00 k",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Шамара Дарья",
+	  "number": "80259811202",
+	  "mon": "15:00 - 23:00 k",
+	  "tue": "15:00 - 23:00 k",
+	  "wed": "15:00 - 23:00 k",
+	  "thu": "выходной",
+	  "fri": "15:00 - 23:00 k",
+	  "sat": "17:00 - 24:00 k",
+	  "sun": "выходной"
+	}, {
+	  "name": "Щелканова Виктория",
+	  "number": "80333270965",
+	  "mon": "выходной",
+	  "tue": "17:00 - 23:00 LL",
+	  "wed": "выходной",
+	  "thu": "17:00 - 23:00 LL",
+	  "fri": "14:00 -22:00 k",
+	  "sat": "12:00 - 18:00 k",
+	  "sun": "выходной"
+	}, {
+	  "name": "Закревский Алексей",
+	  "number": "80291285776",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "12:00 - 18:00 k",
+	  "thu": "выходной",
+	  "fri": "17:00 -23:00 LL",
+	  "sat": "15:00 - 23:00 LL",
+	  "sun": "17:00 - 23:00 LL"
+	}, {
+	  "name": "Щекочихин Виктор",
+	  "number": "80298138795",
+	  "mon": "15:00 - 22:00 k",
+	  "tue": "выходной",
+	  "wed": "15:00 - 22:00 k",
+	  "thu": "15:00 - 22:00 k",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Борисевич Екатерина",
+	  "number": "80259428237",
+	  "mon": "выходной",
+	  "tue": "11:00 - 17:00 LL",
+	  "wed": "выходной",
+	  "thu": "11:00 -17:00 LL",
+	  "fri": "11:00 -17:00 LL",
+	  "sat": "11:00 - 19:00 LL",
+	  "sun": "11:00 - 17:00 LL"
+	}, {
+	  "name": "Кондратенкова Ядвига",
+	  "number": "80292979271",
+	  "mon": "отпуск",
+	  "tue": "отпуск",
+	  "wed": "отпуск",
+	  "thu": "отпуск",
+	  "fri": "отпуск",
+	  "sat": "отпуск",
+	  "sun": "отпуск"
+	}, {
+	  "name": "Занько Василий",
+	  "number": "80255212537",
+	  "mon": "18:00 - 01:00 k",
+	  "tue": "18:30 - 01:00 car",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "16:30 - 01:00 dell",
+	  "sat": "19:00 - 01:00 c",
+	  "sun": "18:00 - 01:00 k"
+	}, {
+	  "name": "Першлевич Вячеслав",
+	  "number": "80292569515",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "19:00 - 01:00 c",
+	  "thu": "18:00 - 01:00 c",
+	  "fri": "18:00 - 01:00 c",
+	  "sat": "18:00 - 01:00 c",
+	  "sun": "18:00 - 01:00 c"
+	}, {
+	  "name": "Тиханович Констанстин",
+	  "number": "80291354378",
+	  "mon": "14:00 - 22:00 dell",
+	  "tue": "14:00 - 22:00 dell",
+	  "wed": "выходной",
+	  "thu": "14:00 - 22:00 dell",
+	  "fri": "18:30 - 24:00 car",
+	  "sat": "выходной",
+	  "sun": "14:00 - 22:00 dell"
+	}, {
+	  "name": "Давидовская Наталья ",
+	  "number": "80255101980",
+	  "mon": "15:00 - 20:00 c",
+	  "tue": "16:00 - 22:00 c",
+	  "wed": "12:00 - 19:00 c",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "11:00 - 19:00 c",
+	  "sun": "11:00 - 17:00 c"
+	}, {
+	  "name": "Любецкая Ольга",
+	  "number": "80297731388",
+	  "mon": "11:00 - 17:00 c",
+	  "tue": "11:00 - 17:00 c",
+	  "wed": "11:00 - 17:00 c",
+	  "thu": "11:00 - 17:00 c",
+	  "fri": "11:00 - 17:00 c",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Михайлова Анастасия",
+	  "number": "80259071205",
+	  "mon": "выходной",
+	  "tue": "15:00 - 20:00 c",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "14:00 - 22:00 c",
+	  "sat": "12:00 - 18:00 c",
+	  "sun": "выходной"
+	}, {
+	  "name": "Лютова Анна",
+	  "number": "8025-9861733",
+	  "mon": "17:00 - 23:00 c",
+	  "tue": "выходной",
+	  "wed": "16:00 - 23:00 c",
+	  "thu": "15:00 - 20:00 c",
+	  "fri": "12:00 - 18:00 c",
+	  "sat": "14:00 - 22:00 c",
+	  "sun": "12:00 - 18:00 c"
+	}, {
+	  "name": "Мокрик Ангелина",
+	  "number": "80447303282",
+	  "mon": "18:00 - 23:30 c",
+	  "tue": "18:00 - 23:30 c",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "17:00 - 23:00 c",
+	  "sat": "19:00 - 24:00 c",
+	  "sun": "15:00 - 20:00 c"
+	}, {
+	  "name": "Шадура Артем",
+	  "number": "80445375128",
+	  "mon": "12:00 - 18:00 c",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Артемчик Илья",
+	  "number": "80291916381",
+	  "mon": "16:00 - 23:00 c",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "16:00 - 23:00 c",
+	  "fri": "17:00 - 23:00 c",
+	  "sat": "15:00 - 23:00 c",
+	  "sun": "16:00 - 23:00 c"
+	}, {
+	  "name": "Хамутовская Алина",
+	  "number": "80291854170",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "17:00 - 23:00 c",
+	  "thu": "17:00 - 23:00 c",
+	  "fri": "18:00 - 23:30 c",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Левданчик Снежана",
+	  "number": "8025-6046639",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "12:00 -18:00 c",
+	  "fri": "13:00 - 18:00 c",
+	  "sat": "выходной",
+	  "sun": "13:00 - 21:00 LL"
+	}, {
+	  "name": "Барташевич Дмитрий",
+	  "number": "80293088742",
+	  "mon": "6:30 - 14:30 dell",
+	  "tue": "12:00 - 18:00 c",
+	  "wed": "14:00 - 22:00 dell",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "6:30 - 15:00 dell",
+	  "sun": "6:30 - 14:30 dell"
+	}, {
+	  "name": "Чехович Егор",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "16:30 - 24:30",
+	  "sun": "выходной"
+	}, {
+	  "name": "Мицкевич Кирилл",
+	  "mon": "выходной",
+	  "tue": "12:30 - 21:01",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "14:00 - 22:30",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Хамутовская Алина",
+	  "number": "80291854170",
+	  "mon": "выходной",
+	  "tue": "17:00 - 23:00 c",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Левданчик Снежана",
+	  "number": "8025-6046639",
+	  "mon": "выходной",
+	  "tue": "выходной",
+	  "wed": "выходной",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Прудников Аркадий",
+	  "number": "8029-9917080",
+	  "mon": "11:00 - 15:00 trn c 3",
+	  "tue": "выходной",
+	  "wed": "11:00 - 15:00 c 4",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "19:00 - 23:00 c 5"
+	}, {
+	  "name": "Хомбак Егор",
+	  "number": "8025-7753896",
+	  "mon": "выходной",
+	  "tue": "19:00 - 23:00 k 2",
+	  "wed": "выходной",
+	  "thu": "19:00 - 23:00 k 3",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Ржеутская Диана",
+	  "number": "8025-5313395",
+	  "mon": "15:00 - 19:00 c 2",
+	  "tue": "выходной",
+	  "wed": "15:00 - 19:00 c 3",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Васильев Дмитрий",
+	  "number": "8025-5219503",
+	  "mon": "выходной",
+	  "tue": "15:00 - 19:00 k 2",
+	  "wed": "выходной",
+	  "thu": "15:00 -19:00 k 3",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Коханский Сергей",
+	  "number": "8029-7541963",
+	  "mon": "выходной",
+	  "tue": "11:00 - 15:00 k 2",
+	  "wed": "выходной",
+	  "thu": "11:00 -15:00 k 3",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Семянченя Максим",
+	  "number": "8033-6867349",
+	  "mon": "15:00 - 19:00 c 2",
+	  "tue": "выходной",
+	  "wed": "15:00 - 19:00 c 3",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Котович Николай",
+	  "number": "8044-7445074",
+	  "mon": "11:00 - 15:00 trn ГЗ1",
+	  "tue": "выходной",
+	  "wed": "11:00 - 15:00 ГЗ 3",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "выходной",
+	  "sun": "выходной"
+	}, {
+	  "name": "Елисеева Мария",
+	  "number": "8029-3125204",
+	  "mon": "15:00 - 19:00 trn 1",
+	  "tue": "выходной",
+	  "wed": "15:00 - 19:00 12 КФ",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "19:00 - 24:00 trn KM",
+	  "sun": "выходной"
+	}, {
+	  "name": "Башмаков Александр",
+	  "number": "8029-6394887",
+	  "mon": "19:00 - 23:00 trn 1",
+	  "tue": "выходной",
+	  "wed": "19:00 - 23:00 12 КФ",
+	  "thu": "выходной",
+	  "fri": "выходной",
+	  "sat": "17:00 - 24:00 trn KM",
+	  "sun": "выходной"
+	}, {
+	  "sat": " -"
+	}];
 
 /***/ },
 /* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	exports.default = function () {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-		var action = arguments[1];
-
-		switch (action.type) {
-			case _types.LOAD_NEWS:
-				return [action.payload];
-
-		}
-
-		return state;
-	};
-
-	var _index = __webpack_require__(252);
-
-	var _types = __webpack_require__(253);
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	exports.default = function () {
-		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-		var action = arguments[1];
-
-		switch (action.type) {
-			case _types.LOAD_SHEDULE:
-				return [action.payload];
-
-		}
-
-		return state;
-	};
-
-	var _index = __webpack_require__(252);
-
-	var _types = __webpack_require__(253);
-
-/***/ },
-/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28658,7 +28627,90 @@
 	var _types = __webpack_require__(253);
 
 /***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	exports.default = function () {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case _types.LOAD_NEWS:
+				return [action.payload];
+
+		}
+
+		return state;
+	};
+
+	var _index = __webpack_require__(252);
+
+	var _types = __webpack_require__(253);
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.default = function () {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case _types.LOAD_SCHEDULE:
+				return _extends({}, action.payload);
+
+		}
+
+		return state;
+	};
+
+	var _index = __webpack_require__(252);
+
+	var _types = __webpack_require__(253);
+
+/***/ },
 /* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	exports.default = function () {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case _types.LOAD_TIMES:
+				return [action.payload];
+
+		}
+
+		return state;
+	};
+
+	var _index = __webpack_require__(252);
+
+	var _types = __webpack_require__(253);
+
+/***/ },
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28672,7 +28724,7 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _createAll2 = __webpack_require__(261);
+	var _createAll2 = __webpack_require__(262);
 
 	var _createAll3 = _interopRequireDefault(_createAll2);
 
@@ -28736,7 +28788,7 @@
 	exports.untouchWithKey = untouchWithKey;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28747,35 +28799,35 @@
 
 	exports.default = createAll;
 
-	var _reducer = __webpack_require__(262);
+	var _reducer = __webpack_require__(263);
 
 	var _reducer2 = _interopRequireDefault(_reducer);
 
-	var _createReduxForm = __webpack_require__(273);
+	var _createReduxForm = __webpack_require__(274);
 
 	var _createReduxForm2 = _interopRequireDefault(_createReduxForm);
 
-	var _mapValues = __webpack_require__(264);
+	var _mapValues = __webpack_require__(265);
 
 	var _mapValues2 = _interopRequireDefault(_mapValues);
 
-	var _bindActionData = __webpack_require__(283);
+	var _bindActionData = __webpack_require__(284);
 
 	var _bindActionData2 = _interopRequireDefault(_bindActionData);
 
-	var _actions = __webpack_require__(282);
+	var _actions = __webpack_require__(283);
 
 	var actions = _interopRequireWildcard(_actions);
 
-	var _actionTypes = __webpack_require__(263);
+	var _actionTypes = __webpack_require__(264);
 
 	var actionTypes = _interopRequireWildcard(_actionTypes);
 
-	var _createPropTypes = __webpack_require__(308);
+	var _createPropTypes = __webpack_require__(309);
 
 	var _createPropTypes2 = _interopRequireDefault(_createPropTypes);
 
-	var _getValuesFromState = __webpack_require__(267);
+	var _getValuesFromState = __webpack_require__(268);
 
 	var _getValuesFromState2 = _interopRequireDefault(_getValuesFromState);
 
@@ -28892,7 +28944,7 @@
 	}
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28904,39 +28956,39 @@
 
 	var _initialState, _behaviors;
 
-	var _actionTypes = __webpack_require__(263);
+	var _actionTypes = __webpack_require__(264);
 
-	var _mapValues = __webpack_require__(264);
+	var _mapValues = __webpack_require__(265);
 
 	var _mapValues2 = _interopRequireDefault(_mapValues);
 
-	var _read = __webpack_require__(265);
+	var _read = __webpack_require__(266);
 
 	var _read2 = _interopRequireDefault(_read);
 
-	var _write = __webpack_require__(266);
+	var _write = __webpack_require__(267);
 
 	var _write2 = _interopRequireDefault(_write);
 
-	var _getValuesFromState = __webpack_require__(267);
+	var _getValuesFromState = __webpack_require__(268);
 
 	var _getValuesFromState2 = _interopRequireDefault(_getValuesFromState);
 
-	var _initializeState = __webpack_require__(269);
+	var _initializeState = __webpack_require__(270);
 
 	var _initializeState2 = _interopRequireDefault(_initializeState);
 
-	var _resetState = __webpack_require__(270);
+	var _resetState = __webpack_require__(271);
 
 	var _resetState2 = _interopRequireDefault(_resetState);
 
-	var _setErrors = __webpack_require__(271);
+	var _setErrors = __webpack_require__(272);
 
 	var _setErrors2 = _interopRequireDefault(_setErrors);
 
-	var _fieldValue = __webpack_require__(268);
+	var _fieldValue = __webpack_require__(269);
 
-	var _normalizeFields = __webpack_require__(272);
+	var _normalizeFields = __webpack_require__(273);
 
 	var _normalizeFields2 = _interopRequireDefault(_normalizeFields);
 
@@ -29230,7 +29282,7 @@
 	exports.default = decorate(formReducer);
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29255,7 +29307,7 @@
 	var UNTOUCH = exports.UNTOUCH = 'redux-form/UNTOUCH';
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -29277,7 +29329,7 @@
 	}
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29323,7 +29375,7 @@
 	exports.default = read;
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29429,14 +29481,14 @@
 	exports.default = write;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _fieldValue = __webpack_require__(268);
+	var _fieldValue = __webpack_require__(269);
 
 	/**
 	 * A different version of getValues() that does not need the fields array
@@ -29475,7 +29527,7 @@
 	exports.default = getValuesFromState;
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29507,7 +29559,7 @@
 	}
 
 /***/ },
-/* 269 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29516,7 +29568,7 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _fieldValue = __webpack_require__(268);
+	var _fieldValue = __webpack_require__(269);
 
 	var makeEntry = function makeEntry(value, previousValue, overwriteValues) {
 	  if (value === undefined && previousValue === undefined) return (0, _fieldValue.makeFieldValue)({});
@@ -29589,14 +29641,14 @@
 	exports.default = initializeState;
 
 /***/ },
-/* 270 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _fieldValue = __webpack_require__(268);
+	var _fieldValue = __webpack_require__(269);
 
 	var reset = function reset(value) {
 	  return (0, _fieldValue.makeFieldValue)(value === undefined || value && value.initial === undefined ? {} : { initial: value.initial, value: value.initial });
@@ -29628,7 +29680,7 @@
 	exports.default = resetState;
 
 /***/ },
-/* 271 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29637,7 +29689,7 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _fieldValue = __webpack_require__(268);
+	var _fieldValue = __webpack_require__(269);
 
 	var isMetaKey = function isMetaKey(key) {
 	  return key[0] === '_';
@@ -29722,7 +29774,7 @@
 	exports.default = setErrors;
 
 /***/ },
-/* 272 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29733,7 +29785,7 @@
 
 	exports.default = normalizeFields;
 
-	var _fieldValue = __webpack_require__(268);
+	var _fieldValue = __webpack_require__(269);
 
 	function extractKey(field) {
 	  var dotIndex = field.indexOf('.');
@@ -29819,7 +29871,7 @@
 	}
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29828,11 +29880,11 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _createReduxFormConnector = __webpack_require__(274);
+	var _createReduxFormConnector = __webpack_require__(275);
 
 	var _createReduxFormConnector2 = _interopRequireDefault(_createReduxFormConnector);
 
-	var _hoistNonReactStatics = __webpack_require__(307);
+	var _hoistNonReactStatics = __webpack_require__(308);
 
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 
@@ -29893,22 +29945,22 @@
 	exports.default = createReduxForm;
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _noGetters = __webpack_require__(275);
+	var _noGetters = __webpack_require__(276);
 
 	var _noGetters2 = _interopRequireDefault(_noGetters);
 
-	var _getDisplayName = __webpack_require__(280);
+	var _getDisplayName = __webpack_require__(281);
 
 	var _getDisplayName2 = _interopRequireDefault(_getDisplayName);
 
-	var _createHigherOrderComponent = __webpack_require__(281);
+	var _createHigherOrderComponent = __webpack_require__(282);
 
 	var _createHigherOrderComponent2 = _interopRequireDefault(_createHigherOrderComponent);
 
@@ -29998,14 +30050,14 @@
 	exports.default = createReduxFormConnector;
 
 /***/ },
-/* 275 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(276);
+	module.exports = __webpack_require__(277);
 
 
 /***/ },
-/* 276 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30018,7 +30070,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _deepEqual = __webpack_require__(277);
+	var _deepEqual = __webpack_require__(278);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
@@ -30100,12 +30152,12 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pSlice = Array.prototype.slice;
-	var objectKeys = __webpack_require__(278);
-	var isArguments = __webpack_require__(279);
+	var objectKeys = __webpack_require__(279);
+	var isArguments = __webpack_require__(280);
 
 	var deepEqual = module.exports = function (actual, expected, opts) {
 	  if (!opts) opts = {};
@@ -30200,7 +30252,7 @@
 
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports) {
 
 	exports = module.exports = typeof Object.keys === 'function'
@@ -30215,7 +30267,7 @@
 
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports) {
 
 	var supportsArgumentsClass = (function(){
@@ -30241,7 +30293,7 @@
 
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30253,7 +30305,7 @@
 	}
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30262,57 +30314,57 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _actions = __webpack_require__(282);
+	var _actions = __webpack_require__(283);
 
 	var importedActions = _interopRequireWildcard(_actions);
 
-	var _getDisplayName = __webpack_require__(280);
+	var _getDisplayName = __webpack_require__(281);
 
 	var _getDisplayName2 = _interopRequireDefault(_getDisplayName);
 
-	var _reducer = __webpack_require__(262);
+	var _reducer = __webpack_require__(263);
 
-	var _deepEqual = __webpack_require__(277);
+	var _deepEqual = __webpack_require__(278);
 
 	var _deepEqual2 = _interopRequireDefault(_deepEqual);
 
-	var _bindActionData = __webpack_require__(283);
+	var _bindActionData = __webpack_require__(284);
 
 	var _bindActionData2 = _interopRequireDefault(_bindActionData);
 
-	var _getValues = __webpack_require__(284);
+	var _getValues = __webpack_require__(285);
 
 	var _getValues2 = _interopRequireDefault(_getValues);
 
-	var _isValid = __webpack_require__(285);
+	var _isValid = __webpack_require__(286);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
-	var _readFields = __webpack_require__(286);
+	var _readFields = __webpack_require__(287);
 
 	var _readFields2 = _interopRequireDefault(_readFields);
 
-	var _handleSubmit2 = __webpack_require__(301);
+	var _handleSubmit2 = __webpack_require__(302);
 
 	var _handleSubmit3 = _interopRequireDefault(_handleSubmit2);
 
-	var _asyncValidation = __webpack_require__(302);
+	var _asyncValidation = __webpack_require__(303);
 
 	var _asyncValidation2 = _interopRequireDefault(_asyncValidation);
 
-	var _silenceEvents = __webpack_require__(303);
+	var _silenceEvents = __webpack_require__(304);
 
 	var _silenceEvents2 = _interopRequireDefault(_silenceEvents);
 
-	var _silenceEvent = __webpack_require__(304);
+	var _silenceEvent = __webpack_require__(305);
 
 	var _silenceEvent2 = _interopRequireDefault(_silenceEvent);
 
-	var _wrapMapDispatchToProps = __webpack_require__(305);
+	var _wrapMapDispatchToProps = __webpack_require__(306);
 
 	var _wrapMapDispatchToProps2 = _interopRequireDefault(_wrapMapDispatchToProps);
 
-	var _wrapMapStateToProps = __webpack_require__(306);
+	var _wrapMapStateToProps = __webpack_require__(307);
 
 	var _wrapMapStateToProps2 = _interopRequireDefault(_wrapMapStateToProps);
 
@@ -30624,7 +30676,7 @@
 	exports.default = createHigherOrderComponent;
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30632,7 +30684,7 @@
 	exports.__esModule = true;
 	exports.untouch = exports.touch = exports.swapArrayValues = exports.submitFailed = exports.stopSubmit = exports.stopAsyncValidation = exports.startSubmit = exports.startAsyncValidation = exports.reset = exports.removeArrayValue = exports.initialize = exports.focus = exports.destroy = exports.change = exports.blur = exports.autofill = exports.addArrayValue = undefined;
 
-	var _actionTypes = __webpack_require__(263);
+	var _actionTypes = __webpack_require__(264);
 
 	var addArrayValue = exports.addArrayValue = function addArrayValue(path, value, index, fields) {
 	  return { type: _actionTypes.ADD_ARRAY_VALUE, path: path, value: value, index: index, fields: fields };
@@ -30716,7 +30768,7 @@
 	};
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30727,7 +30779,7 @@
 
 	exports.default = bindActionData;
 
-	var _mapValues = __webpack_require__(264);
+	var _mapValues = __webpack_require__(265);
 
 	var _mapValues2 = _interopRequireDefault(_mapValues);
 
@@ -30751,7 +30803,7 @@
 	}
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30821,7 +30873,7 @@
 	exports.default = getValues;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -30843,7 +30895,7 @@
 	}
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30852,19 +30904,19 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _readField = __webpack_require__(287);
+	var _readField = __webpack_require__(288);
 
 	var _readField2 = _interopRequireDefault(_readField);
 
-	var _write = __webpack_require__(266);
+	var _write = __webpack_require__(267);
 
 	var _write2 = _interopRequireDefault(_write);
 
-	var _getValues = __webpack_require__(284);
+	var _getValues = __webpack_require__(285);
 
 	var _getValues2 = _interopRequireDefault(_getValues);
 
-	var _removeField = __webpack_require__(300);
+	var _removeField = __webpack_require__(301);
 
 	var _removeField2 = _interopRequireDefault(_removeField);
 
@@ -30914,7 +30966,7 @@
 	exports.default = readFields;
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30923,39 +30975,39 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _createOnBlur = __webpack_require__(288);
+	var _createOnBlur = __webpack_require__(289);
 
 	var _createOnBlur2 = _interopRequireDefault(_createOnBlur);
 
-	var _createOnChange = __webpack_require__(291);
+	var _createOnChange = __webpack_require__(292);
 
 	var _createOnChange2 = _interopRequireDefault(_createOnChange);
 
-	var _createOnDragStart = __webpack_require__(292);
+	var _createOnDragStart = __webpack_require__(293);
 
 	var _createOnDragStart2 = _interopRequireDefault(_createOnDragStart);
 
-	var _createOnDrop = __webpack_require__(293);
+	var _createOnDrop = __webpack_require__(294);
 
 	var _createOnDrop2 = _interopRequireDefault(_createOnDrop);
 
-	var _createOnFocus = __webpack_require__(294);
+	var _createOnFocus = __webpack_require__(295);
 
 	var _createOnFocus2 = _interopRequireDefault(_createOnFocus);
 
-	var _silencePromise = __webpack_require__(295);
+	var _silencePromise = __webpack_require__(296);
 
 	var _silencePromise2 = _interopRequireDefault(_silencePromise);
 
-	var _read = __webpack_require__(265);
+	var _read = __webpack_require__(266);
 
 	var _read2 = _interopRequireDefault(_read);
 
-	var _updateField = __webpack_require__(297);
+	var _updateField = __webpack_require__(298);
 
 	var _updateField2 = _interopRequireDefault(_updateField);
 
-	var _isChecked = __webpack_require__(299);
+	var _isChecked = __webpack_require__(300);
 
 	var _isChecked2 = _interopRequireDefault(_isChecked);
 
@@ -31148,14 +31200,14 @@
 	exports.default = readField;
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _getValue = __webpack_require__(289);
+	var _getValue = __webpack_require__(290);
 
 	var _getValue2 = _interopRequireDefault(_getValue);
 
@@ -31173,14 +31225,14 @@
 	exports.default = createOnBlur;
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isEvent = __webpack_require__(290);
+	var _isEvent = __webpack_require__(291);
 
 	var _isEvent2 = _interopRequireDefault(_isEvent);
 
@@ -31236,7 +31288,7 @@
 	exports.default = getValue;
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31249,14 +31301,14 @@
 	exports.default = isEvent;
 
 /***/ },
-/* 291 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _getValue = __webpack_require__(289);
+	var _getValue = __webpack_require__(290);
 
 	var _getValue2 = _interopRequireDefault(_getValue);
 
@@ -31270,7 +31322,7 @@
 	exports.default = createOnChange;
 
 /***/ },
-/* 292 */
+/* 293 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31286,14 +31338,14 @@
 	exports.default = createOnDragStart;
 
 /***/ },
-/* 293 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _createOnDragStart = __webpack_require__(292);
+	var _createOnDragStart = __webpack_require__(293);
 
 	var createOnDrop = function createOnDrop(name, change) {
 	  return function (event) {
@@ -31303,7 +31355,7 @@
 	exports.default = createOnDrop;
 
 /***/ },
-/* 294 */
+/* 295 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31317,14 +31369,14 @@
 	exports.default = createOnFocus;
 
 /***/ },
-/* 295 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isPromise = __webpack_require__(296);
+	var _isPromise = __webpack_require__(297);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
@@ -31341,7 +31393,7 @@
 	exports.default = silencePromise;
 
 /***/ },
-/* 296 */
+/* 297 */
 /***/ function(module, exports) {
 
 	module.exports = isPromise;
@@ -31352,7 +31404,7 @@
 
 
 /***/ },
-/* 297 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31361,15 +31413,15 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _isPristine = __webpack_require__(298);
+	var _isPristine = __webpack_require__(299);
 
 	var _isPristine2 = _interopRequireDefault(_isPristine);
 
-	var _isValid = __webpack_require__(285);
+	var _isValid = __webpack_require__(286);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
-	var _isChecked = __webpack_require__(299);
+	var _isChecked = __webpack_require__(300);
 
 	var _isChecked2 = _interopRequireDefault(_isChecked);
 
@@ -31431,7 +31483,7 @@
 	exports.default = updateField;
 
 /***/ },
-/* 298 */
+/* 299 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31469,7 +31521,7 @@
 	}
 
 /***/ },
-/* 299 */
+/* 300 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31494,7 +31546,7 @@
 	exports.default = isChecked;
 
 /***/ },
-/* 300 */
+/* 301 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31574,18 +31626,18 @@
 	exports.default = removeField;
 
 /***/ },
-/* 301 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isPromise = __webpack_require__(296);
+	var _isPromise = __webpack_require__(297);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
-	var _isValid = __webpack_require__(285);
+	var _isValid = __webpack_require__(286);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
@@ -31656,18 +31708,18 @@
 	exports.default = handleSubmit;
 
 /***/ },
-/* 302 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isPromise = __webpack_require__(296);
+	var _isPromise = __webpack_require__(297);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
-	var _isValid = __webpack_require__(285);
+	var _isValid = __webpack_require__(286);
 
 	var _isValid2 = _interopRequireDefault(_isValid);
 
@@ -31698,14 +31750,14 @@
 	exports.default = asyncValidation;
 
 /***/ },
-/* 303 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _silenceEvent = __webpack_require__(304);
+	var _silenceEvent = __webpack_require__(305);
 
 	var _silenceEvent2 = _interopRequireDefault(_silenceEvent);
 
@@ -31724,14 +31776,14 @@
 	exports.default = silenceEvents;
 
 /***/ },
-/* 304 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	exports.__esModule = true;
 
-	var _isEvent = __webpack_require__(290);
+	var _isEvent = __webpack_require__(291);
 
 	var _isEvent2 = _interopRequireDefault(_isEvent);
 
@@ -31748,7 +31800,7 @@
 	exports.default = silenceEvent;
 
 /***/ },
-/* 305 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31791,7 +31843,7 @@
 	exports.default = wrapMapDispatchToProps;
 
 /***/ },
-/* 306 */
+/* 307 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -31828,7 +31880,7 @@
 	exports.default = wrapMapStateToProps;
 
 /***/ },
-/* 307 */
+/* 308 */
 /***/ function(module, exports) {
 
 	/**
@@ -31884,7 +31936,7 @@
 
 
 /***/ },
-/* 308 */
+/* 309 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -31930,7 +31982,7 @@
 	exports.default = createPropTypes;
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31945,43 +31997,47 @@
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _App = __webpack_require__(310);
+	var _App = __webpack_require__(311);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Main = __webpack_require__(311);
+	var _Main = __webpack_require__(312);
 
 	var _Main2 = _interopRequireDefault(_Main);
 
-	var _ShiftContainer = __webpack_require__(313);
+	var _ShiftContainer = __webpack_require__(314);
 
 	var _ShiftContainer2 = _interopRequireDefault(_ShiftContainer);
 
-	var _ShiftList = __webpack_require__(314);
+	var _ShiftList = __webpack_require__(315);
 
 	var _ShiftList2 = _interopRequireDefault(_ShiftList);
 
-	var _ShiftInfo = __webpack_require__(316);
+	var _ShiftInfo = __webpack_require__(317);
 
 	var _ShiftInfo2 = _interopRequireDefault(_ShiftInfo);
 
-	var _create = __webpack_require__(320);
+	var _ShiftCreate = __webpack_require__(321);
 
-	var _create2 = _interopRequireDefault(_create);
+	var _ShiftCreate2 = _interopRequireDefault(_ShiftCreate);
 
-	var _Suggest = __webpack_require__(321);
+	var _ShiftSuggest = __webpack_require__(322);
 
-	var _Suggest2 = _interopRequireDefault(_Suggest);
+	var _ShiftSuggest2 = _interopRequireDefault(_ShiftSuggest);
 
-	var _Schedule = __webpack_require__(322);
-
-	var _Schedule2 = _interopRequireDefault(_Schedule);
-
-	var _NewsContainer = __webpack_require__(325);
+	var _NewsContainer = __webpack_require__(323);
 
 	var _NewsContainer2 = _interopRequireDefault(_NewsContainer);
 
-	var _NotFound = __webpack_require__(329);
+	var _ScheduleContainer = __webpack_require__(327);
+
+	var _ScheduleContainer2 = _interopRequireDefault(_ScheduleContainer);
+
+	var _TimesContainer = __webpack_require__(331);
+
+	var _TimesContainer2 = _interopRequireDefault(_TimesContainer);
+
+	var _NotFound = __webpack_require__(335);
 
 	var _NotFound2 = _interopRequireDefault(_NotFound);
 
@@ -31993,17 +32049,18 @@
 			_react2.default.createElement(_reactRouter.IndexRoute, { component: _Main2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'shift', component: _ShiftContainer2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'shift/select', component: _ShiftList2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift/create', component: _create2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift/suggest', component: _Suggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift/create', component: _ShiftCreate2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'shift/suggest', component: _ShiftSuggest2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'shift/select/:id', component: _ShiftInfo2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: 'news', component: _NewsContainer2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'schedule', component: _Schedule2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'schedule', component: _ScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'times', component: _TimesContainer2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: '/:id', component: _ShiftInfo2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
 	);
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32018,13 +32075,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Main = __webpack_require__(311);
+	var _Main = __webpack_require__(312);
 
 	var _Main2 = _interopRequireDefault(_Main);
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _NavBar = __webpack_require__(312);
+	var _NavBar = __webpack_require__(313);
 
 	var _NavBar2 = _interopRequireDefault(_NavBar);
 
@@ -32056,8 +32113,7 @@
 	          'div',
 	          { className: 'top' },
 	          this.props.children
-	        ),
-	        _react2.default.createElement('footer', null)
+	        )
 	      );
 	    }
 	  }]);
@@ -32068,7 +32124,7 @@
 	exports.default = App;
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32110,17 +32166,22 @@
 					{ className: 'main' },
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'shift', className: 'btn btn-lg btn-success shift' },
+						{ to: 'shift', className: 'my-button shift' },
 						' Замены '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'schedule', className: 'btn btn-lg btn-warning schedule' },
+						{ to: 'times', className: 'my-button times' },
+						' Заказ выходных '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'schedule', className: 'my-button schedule' },
 						' Расписание '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'news', className: 'btn btn-lg btn-info news' },
+						{ to: 'news', className: 'my-button news' },
 						' Новости '
 					)
 				);
@@ -32133,13 +32194,13 @@
 	exports.default = Main;
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(2);
@@ -32151,73 +32212,80 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var NavBar = function NavBar() {
-		return _react2.default.createElement(
-			'nav',
-			{ className: 'navbar navbar-default' },
-			_react2.default.createElement(
-				'div',
-				{ className: 'container-fluid' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'navbar-header' },
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/', className: 'navbar-brand' },
-						' На главную '
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'collapse navbar-collapse', id: 'bs-example-navbar-collapse-1' },
-					_react2.default.createElement(
-						'ul',
-						{ className: 'nav navbar-nav' },
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: '/shift', activeClassName: 'navbar-link' },
-								' Замены '
-							)
-						)
-					),
-					_react2.default.createElement(
-						'ul',
-						{ className: 'nav navbar-nav' },
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: '/schedule', activeClassName: 'navbar-link' },
-								' Расписание '
-							)
-						)
-					),
-					_react2.default.createElement(
-						'ul',
-						{ className: 'nav navbar-nav' },
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								_reactRouter.Link,
-								{ to: '/news', activeClassName: 'navbar-link' },
-								' Новости '
-							)
-						)
-					),
-					_react2.default.createElement('ul', { className: 'nav navbar-nav navbar-right' })
-				)
-			)
-		);
+	  return _react2.default.createElement(
+	    'nav',
+	    { className: 'navbar navbar-default' },
+	    _react2.default.createElement(
+	      'div',
+	      { className: 'container-fluid' },
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'navbar-header' },
+	        _react2.default.createElement(
+	          'button',
+	          { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#bs-example-navbar-collapse-1', 'aria-expanded': 'true' },
+	          _react2.default.createElement('span', { className: 'icon-bar' }),
+	          _react2.default.createElement('span', { className: 'icon-bar' }),
+	          _react2.default.createElement('span', { className: 'icon-bar' })
+	        ),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/', className: 'navbar-brand' },
+	          ' На главную '
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'div',
+	        { className: 'collapse navbar-collapse', id: 'bs-example-navbar-collapse-1' },
+	        _react2.default.createElement(
+	          'ul',
+	          { className: 'nav navbar-nav' },
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/shift', activeClassName: 'navbar-link' },
+	              ' Замены '
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/times', activeClassName: 'navbar-link' },
+	              ' Заказать выходные '
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/schedule', activeClassName: 'navbar-link' },
+	              ' Расписание '
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'li',
+	            null,
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/news', activeClassName: 'navbar-link' },
+	              ' Новости '
+	            )
+	          )
+	        )
+	      )
+	    )
+	  );
 	};
 
 	exports.default = NavBar;
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32266,9 +32334,9 @@
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
-					{ className: 'shift-container' },
+					{ className: 'shift-container my-box' },
 					_react2.default.createElement(
-						'h2',
+						'h3',
 						null,
 						' Я хочу... '
 					),
@@ -32284,8 +32352,8 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'shift/suggest', className: 'btn btn-primary select-button' },
-						' Предложить смену '
+						{ to: 'shift/suggest', className: 'btn btn-success select-button' },
+						' Предложить поработать '
 					)
 				);
 			}
@@ -32299,7 +32367,7 @@
 	exports.default = (0, _reactRedux.connect)(null, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(ShiftContainer);
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32318,7 +32386,7 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _ShiftItem = __webpack_require__(315);
+	var _ShiftItem = __webpack_require__(316);
 
 	var _ShiftItem2 = _interopRequireDefault(_ShiftItem);
 
@@ -32377,9 +32445,9 @@
 				});
 				return _react2.default.createElement(
 					'div',
-					{ className: 'shift-list' },
+					{ className: 'shift-list my-box' },
 					_react2.default.createElement(
-						'h2',
+						'h3',
 						null,
 						' Текущие замены '
 					),
@@ -32388,7 +32456,7 @@
 						{ className: 'row' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-6 list' },
+							{ className: 'col-md-6' },
 							_react2.default.createElement(
 								'h4',
 								null,
@@ -32398,7 +32466,7 @@
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-6 suggest' },
+							{ className: 'col-md-6' },
 							_react2.default.createElement(
 								'h4',
 								null,
@@ -32436,7 +32504,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(ShiftList);
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32485,7 +32553,7 @@
 	exports.default = ShiftItem;
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32504,7 +32572,7 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _toastr = __webpack_require__(317);
+	var _toastr = __webpack_require__(318);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -32543,9 +32611,9 @@
 				var info = this.props.loading[id] || this.props.loadingSuggest[id];
 				return _react2.default.createElement(
 					'div',
-					{ className: 'shift-info' },
+					{ className: 'shift-info my-box' },
 					_react2.default.createElement(
-						'h2',
+						'h3',
 						null,
 						' Подробная информация '
 					),
@@ -32680,7 +32748,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, deleteDate: _index.deleteDate, deleteSuggest: _index.deleteSuggest, loadSuggest: _index.loadSuggest })(ShiftInfo);
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -32697,7 +32765,7 @@
 	 */
 	/* global define */
 	; (function (define) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(318)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(319)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
 	        return (function () {
 	            var $container;
 	            var listener;
@@ -33111,11 +33179,11 @@
 
 	        })();
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	}(__webpack_require__(319)));
+	}(__webpack_require__(320)));
 
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -42935,14 +43003,14 @@
 
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 320 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42961,15 +43029,15 @@
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _toastr = __webpack_require__(317);
+	var _reactRedux = __webpack_require__(160);
+
+	var _toastr = __webpack_require__(318);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
-	var _reactRedux = __webpack_require__(160);
-
 	var _index = __webpack_require__(252);
 
-	var _reduxForm = __webpack_require__(260);
+	var _reduxForm = __webpack_require__(261);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42979,19 +43047,19 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Create = function (_Component) {
-		_inherits(Create, _Component);
+	var ShiftCreate = function (_Component) {
+		_inherits(ShiftCreate, _Component);
 
-		function Create(props) {
-			_classCallCheck(this, Create);
+		function ShiftCreate(props) {
+			_classCallCheck(this, ShiftCreate);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Create).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ShiftCreate).call(this, props));
 
-			_this.redirect = _this.redirect.bind(_this);
+			_this.handleFormSuccess = _this.handleFormSuccess.bind(_this);
 			return _this;
 		}
 
-		_createClass(Create, [{
+		_createClass(ShiftCreate, [{
 			key: 'render',
 			value: function render() {
 				var _props = this.props;
@@ -43004,37 +43072,43 @@
 				var comments = _props$fields.comments;
 				var handleSubmit = _props.handleSubmit;
 
+
 				return _react2.default.createElement(
 					'div',
-					{ className: 'create' },
+					{ className: 'shift-create my-box' },
 					_react2.default.createElement(
-						'h2',
+						'h3',
 						null,
 						' Отдать смену '
 					),
 					_react2.default.createElement(
 						'form',
-						{ className: 'form-horizontal', onSubmit: handleSubmit(this.props.sendDate) },
+						{ className: 'form-horizontal', onSubmit: handleSubmit(this.handleFormSuccess) },
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (date.touched && date.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'date', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'date', className: 'col-sm-2 control-label' },
 								'Дата:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '05/08' }, date))
+								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '17/08' }, date))
+							),
+							date.touched && date.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								date.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (position.touched && position.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'position', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'position', className: 'col-sm-2 control-label' },
 								'Позиция:'
 							),
 							_react2.default.createElement(
@@ -43084,66 +43158,87 @@
 										'Манагер;)'
 									)
 								)
+							),
+							position.touched && position.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								position.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (time.touched && time.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'time', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'time', className: 'col-sm-2 control-label' },
 								'Время:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'time', placeholder: '12:00 - 20:00' }, time))
+							),
+							time.touched && time.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								time.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (name.touched && name.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'name', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'name', className: 'col-sm-2 control-label' },
 								'Имя:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'name', placeholder: 'Мефодий' }, name))
+							),
+							name.touched && name.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								name.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (number.touched && number.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'number', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'number', className: 'col-sm-2 control-label' },
 								'Телефон:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'number', placeholder: '375294444444' }, number))
+							),
+							number.touched && number.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								number.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (comments.touched && comments.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'comments', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'comments', className: 'col-sm-2 control-label' },
 								'Комментарии:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement(
-									'textarea',
-									_extends({ className: 'form-control', id: 'comments', placeholder: 'что нибудь интересное' }, comments),
-									' '
-								)
+								_react2.default.createElement('textarea', _extends({ className: 'form-control', id: 'comments', placeholder: 'что нибудь интересное' }, comments))
+							),
+							comments.touched && comments.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								comments.error
 							)
 						),
 						_react2.default.createElement(
@@ -43160,32 +43255,63 @@
 				);
 			}
 		}, {
-			key: 'redirect',
-			value: function redirect() {
-				_toastr2.default.success('Замена опубликована!', 'Готово');
+			key: 'handleFormSuccess',
+			value: function handleFormSuccess(data) {
+				this.props.sendDate(data);
+				_toastr2.default.success('Смена опубликована!', 'Готово');
 				setTimeout(function () {
 					_reactRouter.browserHistory.push('/shift');
 				}, 2000);
 			}
-
-			/*back() {
-	  	browserHistory.push('/');
-	  }*/
-
 		}]);
 
-		return Create;
+		return ShiftCreate;
 	}(_react.Component);
 
 	;
 
-	exports.default = Create = (0, _reduxForm.reduxForm)({
+	function validate(values) {
+		var errors = {};
+
+		if (!values.date) {
+			errors.date = 'Необходимо ввести дату';
+		} else if (values.date.length != 5) {
+			errors.date = 'Дата должна быть вида xx/xx';
+		}
+
+		if (!values.position) {
+			errors.position = 'Необходимо выбрать позицию';
+		}
+
+		if (!values.time) {
+			errors.time = 'Необходимо ввести время';
+		} else if (values.time.length <= 5 || values.time.length >= 14) {
+			errors.time = 'Время должно состоять минимум из 5 и максимум из 14 символов';
+		}
+
+		if (!values.name) {
+			errors.name = 'Необходимо ввести имя';
+		}
+
+		if (!values.number) {
+			errors.number = 'Необходимо ввести телефон';
+		}
+
+		if (!values.comments) {
+			errors.comments = 'а сюда что-нибудь написать;)';
+		}
+
+		return errors;
+	}
+
+	exports.default = ShiftCreate = (0, _reduxForm.reduxForm)({
 		form: 'create',
-		fields: ['date', 'position', 'time', 'name', 'number', 'comments']
-	}, null, { sendDate: _index.sendDate })(Create);
+		fields: ['date', 'position', 'time', 'name', 'number', 'comments'],
+		validate: validate
+	}, null, { sendDate: _index.sendDate })(ShiftCreate);
 
 /***/ },
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43204,15 +43330,15 @@
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _toastr = __webpack_require__(317);
+	var _reactRedux = __webpack_require__(160);
+
+	var _toastr = __webpack_require__(318);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
-	var _reactRedux = __webpack_require__(160);
-
 	var _index = __webpack_require__(252);
 
-	var _reduxForm = __webpack_require__(260);
+	var _reduxForm = __webpack_require__(261);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43222,19 +43348,19 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Suggest = function (_Component) {
-		_inherits(Suggest, _Component);
+	var ShiftSuggest = function (_Component) {
+		_inherits(ShiftSuggest, _Component);
 
-		function Suggest(props) {
-			_classCallCheck(this, Suggest);
+		function ShiftSuggest(props) {
+			_classCallCheck(this, ShiftSuggest);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Suggest).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ShiftSuggest).call(this, props));
 
-			_this.redirect = _this.redirect.bind(_this);
+			_this.handleFormSuccess = _this.handleFormSuccess.bind(_this);
 			return _this;
 		}
 
-		_createClass(Suggest, [{
+		_createClass(ShiftSuggest, [{
 			key: 'render',
 			value: function render() {
 				var _props = this.props;
@@ -43247,108 +43373,135 @@
 				var comments = _props$fields.comments;
 				var handleSubmit = _props.handleSubmit;
 
+
 				return _react2.default.createElement(
 					'div',
-					{ className: 'create' },
+					{ className: 'shift-suggest my-box' },
 					_react2.default.createElement(
-						'h2',
+						'h3',
 						null,
-						' Отдать смену '
+						' Предложить поработать '
 					),
 					_react2.default.createElement(
 						'form',
-						{ className: 'form-horizontal', onSubmit: handleSubmit(this.props.sendSuggest) },
+						{ className: 'form-horizontal', onSubmit: handleSubmit(this.handleFormSuccess) },
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (date.touched && date.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'date', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'date', className: 'col-sm-2 control-label' },
 								'Дата:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '05/08' }, date))
+							),
+							date.touched && date.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								date.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (position.touched && position.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'position', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'position', className: 'col-sm-2 control-label' },
 								'Позиции:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'position', placeholder: 'K, LL' }, position))
+							),
+							position.touched && position.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								position.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (time.touched && time.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'time', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'time', className: 'col-sm-2 control-label' },
 								'Время:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'time', placeholder: '07:00 - 24:00' }, time))
+							),
+							time.touched && time.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								time.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (name.touched && name.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'name', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'name', className: 'col-sm-2 control-label' },
 								'Имя:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'name', placeholder: 'Валера' }, name))
+							),
+							name.touched && name.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								name.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (number.touched && number.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'number', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'number', className: 'col-sm-2 control-label' },
 								'Телефон:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
 								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'number', placeholder: '375294444444' }, number))
+							),
+							number.touched && number.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								number.error
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (comments.touched && comments.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
 								'label',
-								{ 'for': 'comments', className: 'col-sm-2 control-label' },
+								{ htmlFor: 'comments', className: 'col-sm-2 control-label' },
 								'Комментарии:'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement(
-									'textarea',
-									_extends({ className: 'form-control', id: 'comments', placeholder: 'что нибудь' }, comments),
-									' '
-								)
+								_react2.default.createElement('textarea', _extends({ className: 'form-control', id: 'comments', placeholder: 'что нибудь' }, comments))
+							),
+							comments.touched && comments.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								comments.error
 							)
 						),
 						_react2.default.createElement(
 							'button',
-							{ type: 'submit', onClick: this.redirect, className: 'btn btn-info' },
+							{ type: 'submit', className: 'btn btn-info' },
 							' Создать замену '
 						),
 						_react2.default.createElement(
@@ -43360,32 +43513,63 @@
 				);
 			}
 		}, {
-			key: 'redirect',
-			value: function redirect() {
+			key: 'handleFormSuccess',
+			value: function handleFormSuccess(data) {
+				this.props.sendSuggest(data);
 				_toastr2.default.success('Предложение опубликовано!', 'Готово');
 				setTimeout(function () {
 					_reactRouter.browserHistory.push('/shift');
 				}, 2000);
 			}
-
-			/*back() {
-	  	browserHistory.push('/');
-	  }*/
-
 		}]);
 
-		return Suggest;
+		return ShiftSuggest;
 	}(_react.Component);
 
 	;
 
-	exports.default = Suggest = (0, _reduxForm.reduxForm)({
+	function validate(values) {
+		var errors = {};
+
+		if (!values.date) {
+			errors.date = 'Необходимо ввести дату';
+		} else if (values.date.length != 5) {
+			errors.date = 'Дата должна быть вида xx/xx';
+		}
+
+		if (!values.position) {
+			errors.position = 'Необходимо ввести позицию';
+		}
+
+		if (!values.time) {
+			errors.time = 'Необходимо ввести время';
+		} else if (values.time.length <= 5 || values.time.length >= 14) {
+			errors.time = 'Время должно состоять минимум из 5 и максимум из 14 символов';
+		}
+
+		if (!values.name) {
+			errors.name = 'Необходимо ввести имя';
+		}
+
+		if (!values.number) {
+			errors.number = 'Необходимо ввести телефон';
+		}
+
+		if (!values.comments) {
+			errors.comments = 'а сюда что-нибудь написать;)';
+		}
+
+		return errors;
+	}
+
+	exports.default = ShiftSuggest = (0, _reduxForm.reduxForm)({
 		form: 'suggest',
-		fields: ['date', 'position', 'time', 'name', 'number', 'comments']
-	}, null, { sendSuggest: _index.sendSuggest })(Suggest);
+		fields: ['date', 'position', 'time', 'name', 'number', 'comments'],
+		validate: validate
+	}, null, { sendSuggest: _index.sendSuggest })(ShiftSuggest);
 
 /***/ },
-/* 322 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43402,13 +43586,13 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _ScheduleSearch = __webpack_require__(323);
+	var _NewsForm = __webpack_require__(324);
 
-	var _ScheduleSearch2 = _interopRequireDefault(_ScheduleSearch);
+	var _NewsForm2 = _interopRequireDefault(_NewsForm);
 
-	var _ScheduleRow = __webpack_require__(324);
+	var _NewsList = __webpack_require__(325);
 
-	var _ScheduleRow2 = _interopRequireDefault(_ScheduleRow);
+	var _NewsList2 = _interopRequireDefault(_NewsList);
 
 	var _index = __webpack_require__(252);
 
@@ -43420,67 +43604,555 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Schedule = function (_Component) {
-		_inherits(Schedule, _Component);
+	var NewsContainer = function (_Component) {
+		_inherits(NewsContainer, _Component);
 
-		function Schedule(props) {
-			_classCallCheck(this, Schedule);
+		function NewsContainer(props) {
+			_classCallCheck(this, NewsContainer);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Schedule).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NewsContainer).call(this, props));
 
 			_this.state = {
-				currentSearch: ''
+				showingForm: false
 			};
+
+			_this.toggleForm = _this.toggleForm.bind(_this);
+			_this.showForm = _this.showForm.bind(_this);
 			return _this;
 		}
 
-		_createClass(Schedule, [{
+		_createClass(NewsContainer, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				this.props.loadShedule();
+				this.props.loadNews();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
-
-				var list = void 0;
-				if (this.props.loadSheduleData !== undefined) {
-					(function () {
-						var kkk = _this2.props.loadSheduleData['names']['Расписание'];
-
-						list = Object.keys(kkk).filter(function (item) {
-
-							if (kkk[item]['Имя'] == undefined) {
-								console.log(item);
-							};
-
-							var item2 = kkk[item]['Имя'].toLowerCase();
-
-							return item2.indexOf(_this2.state.currentSearch.toLowerCase()) != -1;
-						}).map(function (item) {
-
-							return _react2.default.createElement(_ScheduleRow2.default, {
-								name: kkk[item]['Имя'],
-
-								Monday: kkk[item]['пн 8'],
-								Tuesday: kkk[item]['вт 9'],
-								Wednesday: kkk[item]['ср 10'],
-								Thursday: kkk[item]['чт 11'],
-								Friday: kkk[item]['пт 12'],
-								Saturday: kkk[item]['сб 13'],
-								Sunday: kkk[item]['вс 14']
-							});
-						});
-					})();
-				}
 				return _react2.default.createElement(
 					'div',
-					{ className: 'schedule' },
+					{ className: 'news-container' },
+					_react2.default.createElement(
+						'h3',
+						null,
+						' Какие то новости '
+					),
+					_react2.default.createElement(
+						'h4',
+						null,
+						' короче можете сюда анонимно что нибудь писать) '
+					),
+					_react2.default.createElement(
+						'button',
+						{ onClick: this.toggleForm, className: 'btn btn-success' },
+						' Написать '
+					),
+					this.state.showingForm ? _react2.default.createElement(_NewsForm2.default, { showForm: this.showForm }) : null,
+					_react2.default.createElement(_NewsList2.default, { data: this.props.loadNewsData, 'delete': this.props.deleteNews })
+				);
+			}
+		}, {
+			key: 'toggleForm',
+			value: function toggleForm() {
+				this.setState({ showingForm: !this.state.showingForm });
+			}
+		}, {
+			key: 'showForm',
+			value: function showForm(bool) {
+				this.setState({ showingForm: bool });
+			}
+		}]);
+
+		return NewsContainer;
+	}(_react.Component);
+
+	function mapStateToProps(state) {
+		return {
+			loadNewsData: state.loadNews[0]
+
+		};
+	}
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadNews: _index.loadNews, deleteNews: _index.deleteNews })(NewsContainer);
+
+/***/ },
+/* 324 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reduxForm = __webpack_require__(261);
+
+	var _index = __webpack_require__(252);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var NewsForm = function (_Component) {
+		_inherits(NewsForm, _Component);
+
+		function NewsForm(props) {
+			_classCallCheck(this, NewsForm);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(NewsForm).call(this, props));
+		}
+
+		_createClass(NewsForm, [{
+			key: 'render',
+			value: function render() {
+				var _props = this.props;
+				var _props$fields = _props.fields;
+				var title = _props$fields.title;
+				var text = _props$fields.text;
+				var handleSubmit = _props.handleSubmit;
+
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'news-form my-box' },
+					_react2.default.createElement(
+						'form',
+						{ onSubmit: handleSubmit(this.props.sendNews) },
+						_react2.default.createElement(
+							'div',
+							{ className: 'form-group' },
+							_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: 'Название новости' }, title))
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'form-group' },
+							_react2.default.createElement('textarea', _extends({ className: 'form-control', placeholder: '' }, text))
+						),
+						_react2.default.createElement(
+							'button',
+							{ type: 'submit', onClick: this.getData.bind(this), className: 'btn btn-info' },
+							' Добавить '
+						)
+					)
+				);
+			}
+		}, {
+			key: 'getData',
+			value: function getData() {
+				setTimeout(function () {
+					this.props.showForm(false);
+				}, 2000);
+
+				var date = new Date();
+				console.log(date);
+			}
+		}]);
+
+		return NewsForm;
+	}(_react.Component);
+
+	exports.default = NewsForm = (0, _reduxForm.reduxForm)({
+		form: 'newsForm',
+		fields: ['title', 'text']
+	}, null, { sendNews: _index.sendNews })(NewsForm);
+
+/***/ },
+/* 325 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _NewsItem = __webpack_require__(326);
+
+	var _NewsItem2 = _interopRequireDefault(_NewsItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var NewsList = function (_Component) {
+		_inherits(NewsList, _Component);
+
+		function NewsList(props) {
+			_classCallCheck(this, NewsList);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(NewsList).call(this, props));
+		}
+
+		_createClass(NewsList, [{
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var data = this.props.data || {};
+				var news = Object.keys(data).reverse().map(function (news) {
+					var _data$news = data[news];
+					var title = _data$news.title;
+					var text = _data$news.text;
+
+					return _react2.default.createElement(_NewsItem2.default, { key: news, title: title, text: text, id: news, 'delete': _this2.props.delete });
+				});
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'news-list' },
+					news
+				);
+			}
+		}]);
+
+		return NewsList;
+	}(_react.Component);
+
+	exports.default = NewsList;
+
+/***/ },
+/* 326 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var NewsItem = function NewsItem(props) {
+		return _react2.default.createElement(
+			"div",
+			{ className: "news-item my-box" },
+			_react2.default.createElement(
+				"h5",
+				null,
+				" ",
+				props.title,
+				" "
+			),
+			_react2.default.createElement(
+				"p",
+				null,
+				" ",
+				props.text,
+				" "
+			)
+		);
+
+		function deleteItem() {
+			props.delete(props.id);
+		}
+	};
+
+	exports.default = NewsItem;
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(160);
+
+	var _ScheduleSearch = __webpack_require__(328);
+
+	var _ScheduleSearch2 = _interopRequireDefault(_ScheduleSearch);
+
+	var _ScheduleList = __webpack_require__(329);
+
+	var _ScheduleList2 = _interopRequireDefault(_ScheduleList);
+
+	var _index = __webpack_require__(252);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ScheduleContainer = function (_Component) {
+		_inherits(ScheduleContainer, _Component);
+
+		function ScheduleContainer(props) {
+			_classCallCheck(this, ScheduleContainer);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScheduleContainer).call(this, props));
+
+			_this.state = {
+				currentSearch: '',
+				selectedWeek: 0
+
+			};
+			return _this;
+		}
+
+		_createClass(ScheduleContainer, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				this.props.loadSchedule();
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'schedule-container' },
+					_react2.default.createElement(
+						'h3',
+						null,
+						' Расписание ',
+						this.state.selectedWeek == 0 ? ' на 15-21 ' : ' на 22-28 ',
+						' августа '
+					),
 					_react2.default.createElement(_ScheduleSearch2.default, { search: this.mySearch.bind(this) }),
 					_react2.default.createElement(
+						'button',
+						{ onClick: this.selectThisWeek.bind(this), className: 'btn btn-info' },
+						' На эту неделю '
+					),
+					_react2.default.createElement(
+						'button',
+						{ onClick: this.selectNextWeek.bind(this), className: 'btn btn-info' },
+						' На следующую неделю '
+					),
+					_react2.default.createElement(_ScheduleList2.default, { data: this.props.loadScheduleData, week: this.state.selectedWeek, currentSearch: this.state.currentSearch })
+				);
+			}
+		}, {
+			key: 'mySearch',
+			value: function mySearch(search) {
+				this.setState({ currentSearch: search });
+			}
+		}, {
+			key: 'selectThisWeek',
+			value: function selectThisWeek() {
+				this.setState({ selectedWeek: 0 });
+				console.log(this.state.selectedWeek);
+			}
+		}, {
+			key: 'selectNextWeek',
+			value: function selectNextWeek() {
+				this.setState({ selectedWeek: 1 });
+				console.log(this.state.selectedWeek);
+			}
+		}]);
+
+		return ScheduleContainer;
+	}(_react.Component);
+
+	function mapStateToProps(state) {
+		return {
+			loadScheduleData: state.loadSchedule
+		};
+	}
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadSchedule: _index.loadSchedule, sendSchedule: _index.sendSchedule })(ScheduleContainer);
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ScheduleSearch = function (_Component) {
+		_inherits(ScheduleSearch, _Component);
+
+		function ScheduleSearch(props) {
+			_classCallCheck(this, ScheduleSearch);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScheduleSearch).call(this, props));
+
+			_this.state = {
+				search: ''
+			};
+
+			_this.handleSearch = _this.handleSearch.bind(_this);
+			return _this;
+		}
+
+		_createClass(ScheduleSearch, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _this2 = this;
+
+				var urlName = window.location.href.substring(46);
+				urlName = decodeURIComponent(urlName);
+				this.setState({ search: urlName }, function () {
+					return _this2.props.search(_this2.state.search);
+				});
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'schedule-search' },
+					_react2.default.createElement('input', { value: this.state.search || this.props.bs, onChange: this.handleSearch, className: 'form-control', placeholder: 'Поиск' })
+				);
+			}
+		}, {
+			key: 'handleSearch',
+			value: function handleSearch(event) {
+				var _this3 = this;
+
+				this.setState({ search: event.target.value }, function () {
+					return _this3.props.search(_this3.state.search);
+				});
+			}
+		}]);
+
+		return ScheduleSearch;
+	}(_react.Component);
+
+	exports.default = ScheduleSearch;
+
+/***/ },
+/* 329 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _ScheduleItem = __webpack_require__(330);
+
+	var _ScheduleItem2 = _interopRequireDefault(_ScheduleItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ScheduleList = function (_Component) {
+		_inherits(ScheduleList, _Component);
+
+		function ScheduleList(props) {
+			_classCallCheck(this, ScheduleList);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(ScheduleList).call(this, props));
+		}
+
+		_createClass(ScheduleList, [{
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var schedule = void 0;
+				var data = this.props.data;
+
+				if (Object.keys(data).length != 0) {
+					console.log('week', this.props.week);
+					var one = Object.keys(data)[this.props.week];
+
+					console.log(data);
+					console.log(one);
+
+					data = data[one];
+
+					schedule = Object.keys(data).filter(function (item) {
+						console.log(data[item]);
+						var item2 = data[item]['name'].toLowerCase();
+
+						return item2.indexOf(_this2.props.currentSearch.toLowerCase()) != -1;
+					}).map(function (item) {
+						var /*name, mon, tue, wed, thu, fri, sat, sun*/lll = data[item];
+						/*console.log(data[item]);
+	     console.log(name);*/
+
+						return _react2.default.createElement(_ScheduleItem2.default, {
+							key: item,
+
+							name: lll['name'],
+
+							mon: lll['mon'],
+							tue: lll['tue'],
+							wed: lll['wed'],
+							thu: lll['thu'],
+							fri: lll['fri'],
+							sat: lll['sat'],
+							sun: lll['sun']
+						});
+					});
+				}
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'schedule-list' },
+					_react2.default.createElement(
 						'table',
-						{ className: 'table table-hover' },
+						{ className: 'table table-hover my-box' },
 						_react2.default.createElement(
 							'thead',
 							null,
@@ -43532,114 +44204,20 @@
 						_react2.default.createElement(
 							'tbody',
 							null,
-							list
+							schedule
 						)
 					)
 				);
 			}
-		}, {
-			key: 'mySearch',
-			value: function mySearch(search) {
-				this.setState({ currentSearch: search });
-			}
 		}]);
 
-		return Schedule;
+		return ScheduleList;
 	}(_react.Component);
 
-	function mapStateToProps(state) {
-		return {
-			loadSheduleData: state.loadShedule[0]
-		};
-	}
-
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadShedule: _index.loadShedule })(Schedule);
+	exports.default = ScheduleList;
 
 /***/ },
-/* 323 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ScheduleSearch = function (_Component) {
-		_inherits(ScheduleSearch, _Component);
-
-		function ScheduleSearch(props) {
-			_classCallCheck(this, ScheduleSearch);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScheduleSearch).call(this, props));
-
-			_this.state = {
-				search: ''
-			};
-
-			_this.handleSearch = _this.handleSearch.bind(_this);
-			return _this;
-		}
-
-		_createClass(ScheduleSearch, [{
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				var _this2 = this;
-
-				var urlName = window.location.href.substring(45);
-				urlName = decodeURIComponent(urlName);
-				console.log('lllll', urlName);
-				this.setState({ search: urlName }, function () {
-					return _this2.props.search(_this2.state.search);
-				});
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'schedule-search' },
-					_react2.default.createElement(
-						'h3',
-						null,
-						' Расписание на 15-21 августа '
-					),
-					_react2.default.createElement('input', { value: this.state.search || this.props.bs, onChange: this.handleSearch, className: 'form-control', placeholder: 'Поиск' })
-				);
-			}
-		}, {
-			key: 'handleSearch',
-			value: function handleSearch(event) {
-				var _this3 = this;
-
-				this.setState({ search: event.target.value }, function () {
-					return _this3.props.search(_this3.state.search);
-				});
-			}
-		}]);
-
-		return ScheduleSearch;
-	}(_react.Component);
-
-	exports.default = ScheduleSearch;
-
-/***/ },
-/* 324 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -43654,10 +44232,10 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var ScheduleRow = function ScheduleRow(props) {
+	var ScheduleItem = function ScheduleItem(props) {
 		return _react2.default.createElement(
 			"tr",
-			{ className: "schedule-row" },
+			{ className: "schedule-item" },
 			_react2.default.createElement(
 				"td",
 				null,
@@ -43669,58 +44247,58 @@
 				"td",
 				null,
 				" ",
-				props.Monday,
+				props.mon,
 				" "
 			),
 			_react2.default.createElement(
 				"td",
 				null,
 				" ",
-				props.Tuesday,
+				props.tue,
 				" "
 			),
 			_react2.default.createElement(
 				"td",
 				null,
 				" ",
-				props.Wednesday,
+				props.wed,
 				" "
 			),
 			_react2.default.createElement(
 				"td",
 				null,
 				" ",
-				props.Thursday,
+				props.thu,
 				" "
 			),
 			_react2.default.createElement(
 				"td",
 				null,
 				" ",
-				props.Friday,
+				props.fri,
 				" "
 			),
 			_react2.default.createElement(
 				"td",
 				null,
 				" ",
-				props.Saturday,
+				props.sat,
 				" "
 			),
 			_react2.default.createElement(
 				"td",
 				null,
 				" ",
-				props.Sunday,
+				props.sun,
 				" "
 			)
 		);
 	};
 
-	exports.default = ScheduleRow;
+	exports.default = ScheduleItem;
 
 /***/ },
-/* 325 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43737,13 +44315,13 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _NewsForm = __webpack_require__(326);
+	var _TimesList = __webpack_require__(332);
 
-	var _NewsForm2 = _interopRequireDefault(_NewsForm);
+	var _TimesList2 = _interopRequireDefault(_TimesList);
 
-	var _NewsList = __webpack_require__(327);
+	var _TimesForm = __webpack_require__(334);
 
-	var _NewsList2 = _interopRequireDefault(_NewsList);
+	var _TimesForm2 = _interopRequireDefault(_TimesForm);
 
 	var _index = __webpack_require__(252);
 
@@ -43755,52 +44333,45 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var NewsContainer = function (_Component) {
-		_inherits(NewsContainer, _Component);
+	var TimesContainer = function (_Component) {
+		_inherits(TimesContainer, _Component);
 
-		function NewsContainer(props) {
-			_classCallCheck(this, NewsContainer);
+		function TimesContainer(props) {
+			_classCallCheck(this, TimesContainer);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NewsContainer).call(this, props));
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TimesContainer).call(this, props));
 
 			_this.state = {
 				showingForm: false
 			};
 
 			_this.toggleForm = _this.toggleForm.bind(_this);
-			_this.showForm = _this.showForm.bind(_this);
 			return _this;
 		}
 
-		_createClass(NewsContainer, [{
+		_createClass(TimesContainer, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				this.props.loadNews();
+				this.props.loadTimes();
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				console.log(this.props.loadNews);
 				return _react2.default.createElement(
 					'div',
-					{ className: 'news-container' },
+					{ className: 'times-container' },
 					_react2.default.createElement(
 						'h3',
 						null,
-						' Какие то новости '
+						' Заказ выходных на следующую неделю '
 					),
-					_react2.default.createElement(
-						'h4',
-						null,
-						' или можно сделать чатик '
-					),
+					_react2.default.createElement(_TimesList2.default, { data: this.props.loadTimesData, 'delete': this.props.deleteTimes }),
 					_react2.default.createElement(
 						'button',
 						{ onClick: this.toggleForm, className: 'btn btn-success' },
-						' Написать '
+						' Заказать выходные '
 					),
-					this.state.showingForm ? _react2.default.createElement(_NewsForm2.default, { showForm: this.showForm }) : null,
-					_react2.default.createElement(_NewsList2.default, { data: this.props.loadNewsData, 'delete': this.props.deleteNews })
+					this.state.showingForm ? _react2.default.createElement(_TimesForm2.default, null) : null
 				);
 			}
 		}, {
@@ -43808,27 +44379,277 @@
 			value: function toggleForm() {
 				this.setState({ showingForm: !this.state.showingForm });
 			}
-		}, {
-			key: 'showForm',
-			value: function showForm(bool) {
-				this.setState({ showingForm: bool });
-			}
 		}]);
 
-		return NewsContainer;
+		return TimesContainer;
 	}(_react.Component);
 
 	function mapStateToProps(state) {
 		return {
-			loadNewsData: state.loadNews[0]
-
+			loadTimesData: state.loadTimes[0]
 		};
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadNews: _index.loadNews, deleteNews: _index.deleteNews, sendShedule: _index.sendShedule })(NewsContainer);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadTimes: _index.loadTimes, deleteTimes: _index.deleteTimes })(TimesContainer);
 
 /***/ },
-/* 326 */
+/* 332 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TimesItem = __webpack_require__(333);
+
+	var _TimesItem2 = _interopRequireDefault(_TimesItem);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TimesList = function (_Component) {
+		_inherits(TimesList, _Component);
+
+		function TimesList(props) {
+			_classCallCheck(this, TimesList);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(TimesList).call(this, props));
+		}
+
+		_createClass(TimesList, [{
+			key: 'render',
+			value: function render() {
+				var _this2 = this;
+
+				var data = this.props.data || {};
+
+				var list = Object.keys(data).map(function (item) {
+					var _data$item = data[item];
+					var name = _data$item.name;
+					var mon = _data$item.mon;
+					var tue = _data$item.tue;
+					var wed = _data$item.wed;
+					var thu = _data$item.thu;
+					var fri = _data$item.fri;
+					var sat = _data$item.sat;
+					var sun = _data$item.sun;
+					var comments = _data$item.comments;
+
+					return _react2.default.createElement(_TimesItem2.default, {
+						key: item,
+
+						name: name,
+						mon: mon,
+						tue: tue,
+						wed: wed,
+						thu: thu,
+						fri: fri,
+						sat: sat,
+						sun: sun,
+						comments: comments,
+
+						id: item,
+						'delete': _this2.props.delete
+					});
+				});
+
+				return _react2.default.createElement(
+					'div',
+					{ className: 'times-list' },
+					_react2.default.createElement(
+						'table',
+						{ className: 'table my-box' },
+						_react2.default.createElement(
+							'thead',
+							null,
+							_react2.default.createElement(
+								'tr',
+								null,
+								_react2.default.createElement(
+									'th',
+									null,
+									' Имя '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Понедельник '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Вторник '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Среда '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Четверг '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Пятница '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Суббота '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Воскресенье '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									' Комментарии '
+								),
+								_react2.default.createElement(
+									'th',
+									null,
+									'  '
+								)
+							)
+						),
+						_react2.default.createElement(
+							'tbody',
+							null,
+							list
+						)
+					)
+				);
+			}
+		}]);
+
+		return TimesList;
+	}(_react.Component);
+
+	exports.default = TimesList;
+
+/***/ },
+/* 333 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TimesItem = function TimesItem(props) {
+		return _react2.default.createElement(
+			"tr",
+			{ className: "times-item" },
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.name,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.mon,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.tue,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.wed,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.thu,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.fri,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.sat,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.sun,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.comments,
+				" "
+			),
+			_react2.default.createElement(
+				"td",
+				null,
+				" ",
+				_react2.default.createElement(
+					"button",
+					{ onClick: deleteItem, className: "btn btn-danger" },
+					" X "
+				),
+				" "
+			)
+		);
+
+		function deleteItem() {
+			props.delete(props.id);
+		}
+	};
+
+	exports.default = TimesItem;
+
+/***/ },
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43845,7 +44666,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reduxForm = __webpack_require__(260);
+	var _reduxForm = __webpack_require__(261);
 
 	var _index = __webpack_require__(252);
 
@@ -43857,180 +44678,249 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var NewsForm = function (_Component) {
-		_inherits(NewsForm, _Component);
+	var TimesForm = function (_Component) {
+		_inherits(TimesForm, _Component);
 
-		function NewsForm(props) {
-			_classCallCheck(this, NewsForm);
+		function TimesForm(props) {
+			_classCallCheck(this, TimesForm);
 
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(NewsForm).call(this, props));
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(TimesForm).call(this, props));
 		}
 
-		_createClass(NewsForm, [{
+		_createClass(TimesForm, [{
 			key: 'render',
 			value: function render() {
 				var _props = this.props;
 				var _props$fields = _props.fields;
-				var title = _props$fields.title;
-				var text = _props$fields.text;
+				var name = _props$fields.name;
+				var mon = _props$fields.mon;
+				var tue = _props$fields.tue;
+				var wed = _props$fields.wed;
+				var thu = _props$fields.thu;
+				var fri = _props$fields.fri;
+				var sat = _props$fields.sat;
+				var sun = _props$fields.sun;
+				var comments = _props$fields.comments;
 				var handleSubmit = _props.handleSubmit;
 
 
-				console.log(this.props.handleSubmit);
-
 				return _react2.default.createElement(
 					'div',
-					{ className: 'news-form' },
+					{ className: 'times-form my-box' },
 					_react2.default.createElement(
 						'form',
-						{ onSubmit: handleSubmit(this.props.sendNews) },
+						{ onSubmit: handleSubmit(this.props.sendTimes) },
 						_react2.default.createElement(
 							'div',
-							{ className: 'll' },
-							_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: 'Название новости' }, title))
+							{ className: 'form-group ' + (name.touched && name.invalid ? 'has-error' : '') },
+							_react2.default.createElement(
+								'label',
+								{ htmlFor: 'name', className: 'control-label' },
+								'Имя:'
+							),
+							_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'name', placeholder: '' }, name)),
+							name.touched && name.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								name.error
+							)
+						),
+						_react2.default.createElement(
+							'table',
+							{ className: 'table' },
+							_react2.default.createElement(
+								'thead',
+								null,
+								_react2.default.createElement(
+									'tr',
+									null,
+									_react2.default.createElement(
+										'th',
+										null,
+										' Понедельник '
+									),
+									_react2.default.createElement(
+										'th',
+										null,
+										' Вторник '
+									),
+									_react2.default.createElement(
+										'th',
+										null,
+										' Среда '
+									),
+									_react2.default.createElement(
+										'th',
+										null,
+										' Четверг '
+									),
+									_react2.default.createElement(
+										'th',
+										null,
+										' Пятница '
+									),
+									_react2.default.createElement(
+										'th',
+										null,
+										' Суббота '
+									),
+									_react2.default.createElement(
+										'th',
+										null,
+										' Воскресенье '
+									)
+								)
+							),
+							_react2.default.createElement(
+								'tbody',
+								null,
+								_react2.default.createElement(
+									'tr',
+									null,
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (mon.touched && mon.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, mon))
+										)
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (tue.touched && tue.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, tue))
+										)
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (wed.touched && wed.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, wed))
+										)
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (thu.touched && thu.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, thu))
+										)
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (fri.touched && fri.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, fri))
+										)
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (sat.touched && sat.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, sat))
+										)
+									),
+									_react2.default.createElement(
+										'td',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: 'form-group ' + (sun.touched && sun.invalid ? 'has-error' : '') },
+											_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', placeholder: '' }, sun))
+										)
+									)
+								)
+							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'form-group' },
+							{ className: 'form-group ' + (comments.touched && comments.invalid ? 'has-error' : '') },
 							_react2.default.createElement(
-								'textarea',
-								_extends({ className: 'form-control', placeholder: '' }, text),
-								' '
+								'label',
+								{ htmlFor: 'comments', className: 'control-label' },
+								'Комментарии:'
+							),
+							_react2.default.createElement('textarea', _extends({ type: 'text', className: 'form-control', id: 'comments', placeholder: '' }, comments)),
+							comments.touched && comments.error && _react2.default.createElement(
+								'div',
+								{ className: 'form-error' },
+								comments.error
 							)
 						),
 						_react2.default.createElement(
 							'button',
-							{ type: 'submit', onClick: this.getData.bind(this), className: 'btn btn-info' },
+							{ type: 'submit', className: 'btn btn-info' },
 							' Добавить '
 						)
 					)
 				);
 			}
-		}, {
-			key: 'getData',
-			value: function getData() {
-				setTimeout(function () {
-					this.props.showForm(false);
-				}, 2000);
-
-				var date = new Date();
-				console.log(date);
-			}
 		}]);
 
-		return NewsForm;
+		return TimesForm;
 	}(_react.Component);
 
-	exports.default = NewsForm = (0, _reduxForm.reduxForm)({
-		form: 'newsForm',
-		fields: ['title', 'text']
-	}, null, { sendNews: _index.sendNews })(NewsForm);
+	function validate(values) {
+		var errors = {};
 
-/***/ },
-/* 327 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _NewsItem = __webpack_require__(328);
-
-	var _NewsItem2 = _interopRequireDefault(_NewsItem);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var NewsList = function (_Component) {
-		_inherits(NewsList, _Component);
-
-		function NewsList(props) {
-			_classCallCheck(this, NewsList);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(NewsList).call(this, props));
+		if (!values.name) {
+			errors.name = 'Необходимо ввести имя и фамилию';
 		}
 
-		_createClass(NewsList, [{
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var data = this.props.data || {};
-				var news = Object.keys(data).reverse().map(function (news) {
-					return _react2.default.createElement(_NewsItem2.default, { title: data[news].title, text: data[news].text, id: news, 'delete': _this2.props.delete });
-				});
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'news-list' },
-					news
-				);
-			}
-		}]);
-
-		return NewsList;
-	}(_react.Component);
-
-	exports.default = NewsList;
-
-/***/ },
-/* 328 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var NewsItem = function NewsItem(props) {
-		function deleteItem() {
-			props.delete(props.id);
+		if (!values.mon) {
+			errors.mon = '-';
 		}
-		console.log(props.id);
-		return _react2.default.createElement(
-			"div",
-			{ className: "news-item" },
-			_react2.default.createElement(
-				"h5",
-				null,
-				" ",
-				props.title,
-				" "
-			),
-			_react2.default.createElement(
-				"p",
-				null,
-				" ",
-				props.text,
-				" "
-			)
-		);
-	};
 
-	exports.default = NewsItem;
+		if (!values.tue) {
+			errors.tue = '-';
+		}
+
+		if (!values.wed) {
+			errors.wed = '-';
+		}
+
+		if (!values.thu) {
+			errors.thu = '-';
+		}
+
+		if (!values.fri) {
+			errors.fri = '-';
+		}
+
+		if (!values.sat) {
+			errors.sat = '-';
+		}
+
+		if (!values.sun) {
+			errors.sun = '-';
+		}
+
+		if (!values.comments) {
+			errors.comments = 'и что-нибудь написать сюда;)';
+		}
+
+		return errors;
+	}
+
+	exports.default = TimesForm = (0, _reduxForm.reduxForm)({
+		form: 'timesForm',
+		fields: ['name', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'comments'],
+		validate: validate
+	}, null, { sendTimes: _index.sendTimes })(TimesForm);
 
 /***/ },
-/* 329 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44069,8 +44959,12 @@
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
-					null,
-					'Потерялся?',
+					{ className: 'not-found' },
+					_react2.default.createElement(
+						'h3',
+						null,
+						' Потерялся? '
+					),
 					_react2.default.createElement(
 						_reactRouter.Link,
 						{ to: '/' },

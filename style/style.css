@@ -6,8 +6,11 @@
 @import url(./components/topics/Shift.css);
 @import url(./components/topics/Schedule.css);
 @import url(./components/topics/News.css);
+@import url(./components/topics/Times.css);
 
-@import url(./components/topics/Create.css);
+
+@import 'https://fonts.googleapis.com/css?family=Neucha';
+
 
 
 body {
@@ -16,45 +19,106 @@ body {
 	background-size: cover;
 	background-repeat: no-repeat;
 	min-height: 1000px;
-
+	/* font-family: 'Neucha', cursive; */
 }
 
 .top {
 	margin: 125px 0;
 }
 
-h1, h2, h5 {
+.my-box {
+	background-color: rgba(255,255,255, 0.7);
 	text-align: center;
+	border: 1px solid orange;
+	border-radius: 5px !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-align: center;
+}
+
+h3 {
+	font-size: 30px;
+	margin-bottom: 50px;
+	color: #f3287b;
+	font-family: 'Neucha', cursive;
+}
+
+.container {
+	min-height: 960px;
+}
+
+footer h6 {
+	text-align: center;
+	font-size: 18px;
+	font-family: 'Neucha', cursive;
+	color: #ff084a;
 	font-weight: bold;
+	margin-bottom: 30px;
 }
 
-p {
-	font-size: 20px;
+.nav {
+	min-height: 68px;
 }
-
-a {
-	margin: 5px;
-}
-
-footer {
-	/* border-top: 2.5px solid gray;
-	margin-top: 50px; */
-}
-
-/* footer p {
-	margin-top: 10px;
-	font-size: 16px;
-} */
-
-footer h2 {
-	/* position: absolute;
-	left: 35%;
-	bottom: 10px;
-	font-size: 15px; */
-	font-size: 15px;
-}
-
 
 .navbar-link {
+	padding: 0px;
+	margin: 0px;
 	border-bottom: 2px solid orange;
+}
+
+.navbar a:hover {
+	border-bottom: 2px solid yellow;
+}
+
+.my-button {
+	height: 50px;
+	color: #ffffff;
+    display: inline-block;
+    background-color: #3498db;
+    border-color: #3498db;
+    margin: 0px 10px;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 10px 15px;
+    font-size: 15px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* background-color: #3498db;
+border-color: #3498db; */
+
+.my-button:hover {
+    color: #ffffff;
+    background-color: ;
+    text-decoration: none;
+    border: 1px solid transparent; 
+}
+
+
+
+.top a {
+	min-width: 150px;
+	margin: 25px 10px;
+}
+
+.top button {
+	min-width: 150px;
+	margin: 25px 10px;
+}
+
+.form-error {
+	color: red;
 }

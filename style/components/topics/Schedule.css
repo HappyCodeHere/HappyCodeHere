@@ -1,39 +1,28 @@
-.schedule table {
-	background-color: rgba(255,255,255, 0.7);
+.schedule-container {
 	text-align: center;
+}
+
+.schedule-container button {
+	width: 300px;
+	display: inline-block;
+	margin: 30px 20px;
+}
+
+
+
+.schedule-list table {
 	padding: 20px;
-	box-shadow: 10x 10px 5px black;
-	border: 1px solid orange;
 }
 
-.schedule table th {
+.schedule-list table th {
 	text-align: center;
 }
 
-.schedule table tbody tr:hover {
+.schedule-list table tbody tr:hover {
 	background-color: #7bec43;
 }
 
 
-/* .search-bar-div {
-	text-align: center;
-}
-
-.search-bar {
-	border-radius: 15px;
-	width: 200px;
-	color: white;
-	border: 1px solid #ea7b2c;
-	background-color: #eeef59;
-	height: 30px;
-	padding-left: 10px;
-	
-
-}
-
-.search-bar:focus {
-	border: none;
-} */
 
 .schedule-search {
 	text-align: center;
@@ -41,14 +30,5 @@
 
 .schedule-search input {
 	width: 400px;
-	/* margin-left: 30%; */
-	margin-bottom: 20px;
-	margin-top: 15px;
 	display: inline-block;
 }
-
-.schedule-search h3{
-	color: #fb317a;
-	font-size: 30px;
-}
-
