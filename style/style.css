@@ -1,4 +1,5 @@
 @import url(./toastr.min.css);
+@import url(./animate.css);
 
 
 @import url(./components/Main.css);
@@ -37,11 +38,25 @@ h1, h2, h3, h4, h5, h6 {
 	text-align: center;
 }
 
+.top {
+	-webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1.5s; /* Firefox < 16 */
+        -ms-animation: fadein 1.5s; /* Internet Explorer */
+         -o-animation: fadein 1.5s; /* Opera < 12.1 */
+            animation: fadein 1.5s;
+}
+
 h3 {
 	font-size: 30px;
 	margin-bottom: 50px;
 	color: #f3287b;
 	font-family: 'Neucha', cursive;
+	-webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1.5s; /* Firefox < 16 */
+        -ms-animation: fadein 1.5s; /* Internet Explorer */
+         -o-animation: fadein 1.5s; /* Opera < 12.1 */
+            animation: fadein 1.5s;
+	 
 }
 
 .container {

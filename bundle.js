@@ -43921,7 +43921,8 @@
 
 			_this.state = {
 				currentSearch: '',
-				selectedWeek: 0
+				selectedWeek: 0,
+				checkedCheckbox: false
 
 			};
 			return _this;
@@ -43943,8 +43944,8 @@
 						'h3',
 						null,
 						' Расписание ',
-						this.state.selectedWeek == 0 ? ' на 15-21 ' : ' на 22-28 ',
-						' августа '
+						this.state.selectedWeek == 0 ? ' на эту ' : ' на следующую ',
+						' неделю '
 					),
 					_react2.default.createElement(_ScheduleSearch2.default, { search: this.mySearch.bind(this) }),
 					_react2.default.createElement(
@@ -43957,7 +43958,17 @@
 						{ onClick: this.selectNextWeek.bind(this), className: 'btn btn-info' },
 						' На следующую неделю '
 					),
-					_react2.default.createElement(_ScheduleList2.default, { data: this.props.loadScheduleData, week: this.state.selectedWeek, currentSearch: this.state.currentSearch })
+					_react2.default.createElement(
+						'div',
+						{ className: 'my-checkbox' },
+						_react2.default.createElement(
+							'label',
+							null,
+							_react2.default.createElement('input', { type: 'checkbox', onChange: this.handleCheckbox.bind(this) }),
+							'Показать телефоны'
+						)
+					),
+					_react2.default.createElement(_ScheduleList2.default, { data: this.props.loadScheduleData, week: this.state.selectedWeek, currentSearch: this.state.currentSearch, checkbox: this.state.checkedCheckbox })
 				);
 			}
 		}, {
@@ -43969,13 +43980,16 @@
 			key: 'selectThisWeek',
 			value: function selectThisWeek() {
 				this.setState({ selectedWeek: 0 });
-				console.log(this.state.selectedWeek);
 			}
 		}, {
 			key: 'selectNextWeek',
 			value: function selectNextWeek() {
 				this.setState({ selectedWeek: 1 });
-				console.log(this.state.selectedWeek);
+			}
+		}, {
+			key: 'handleCheckbox',
+			value: function handleCheckbox() {
+				this.setState({ checkedCheckbox: !this.state.checkedCheckbox });
 			}
 		}]);
 
@@ -44113,38 +44127,71 @@
 				var data = this.props.data;
 
 				if (Object.keys(data).length != 0) {
-					console.log('week', this.props.week);
-					var one = Object.keys(data)[this.props.week];
+					/*console.log('week', this.props.week)*/
+					var one = void 0;
+					if (Object.keys(data)[this.props.week] !== undefined) {
+						one = Object.keys(data)[this.props.week];
+						data = data[one];
+					} else {
+						data = {};
+					}
 
-					console.log(data);
-					console.log(one);
+					/*console.log(data)*/
 
-					data = data[one];
+					/*console.log(data);
+	    console.log(one);*/
 
 					schedule = Object.keys(data).filter(function (item) {
-						console.log(data[item]);
+						/*console.log('hey')*/
+						/*console.log(data[item])*/
 						var item2 = data[item]['name'].toLowerCase();
 
 						return item2.indexOf(_this2.props.currentSearch.toLowerCase()) != -1;
 					}).map(function (item) {
-						var /*name, mon, tue, wed, thu, fri, sat, sun*/lll = data[item];
+						var _data$item = data[item];
+						var name = _data$item.name;
+						var number = _data$item.number;
+						var mon = _data$item.mon;
+						var tue = _data$item.tue;
+						var wed = _data$item.wed;
+						var thu = _data$item.thu;
+						var fri = _data$item.fri;
+						var sat = _data$item.sat;
+						var sun = _data$item.sun;
+
+						if (number == undefined) {
+							number = '-';
+						}
+
+						/*console.log('ll;l;', Object.keys(data).length);*/
 						/*console.log(data[item]);
 	     console.log(name);*/
 
 						return _react2.default.createElement(_ScheduleItem2.default, {
 							key: item,
 
-							name: lll['name'],
+							name: name,
 
-							mon: lll['mon'],
-							tue: lll['tue'],
-							wed: lll['wed'],
-							thu: lll['thu'],
-							fri: lll['fri'],
-							sat: lll['sat'],
-							sun: lll['sun']
+							number: _this2.props.checkbox ? number : null,
+
+							mon: mon,
+							tue: tue,
+							wed: wed,
+							thu: thu,
+							fri: fri,
+							sat: sat,
+							sun: sun
+
 						});
 					});
+
+					if (Object.keys(data).length == 0) {
+						/*schedule = <ScheduleItem data={true} />
+	     <td> Расписания пока нету:( </td>
+	     	data={Object.keys(data).length == 0 ? true : null}*/
+
+						schedule = 'lll';
+					}
 				}
 
 				return _react2.default.createElement(
@@ -44164,6 +44211,11 @@
 									null,
 									' Имя '
 								),
+								this.props.checkbox ? _react2.default.createElement(
+									'th',
+									null,
+									' Телефон '
+								) : null,
 								_react2.default.createElement(
 									'th',
 									null,
@@ -44204,7 +44256,23 @@
 						_react2.default.createElement(
 							'tbody',
 							null,
-							schedule
+							schedule == 'lll' ? _react2.default.createElement(
+								'tr',
+								null,
+								_react2.default.createElement(
+									'td',
+									{ className: 'colspan', colSpan: this.props.checkbox ? 9 : 8 },
+									' Расписания пока нету:( '
+								)
+							) : schedule ? schedule : _react2.default.createElement(
+								'tr',
+								null,
+								_react2.default.createElement(
+									'td',
+									{ className: 'colspan', colSpan: this.props.checkbox ? 9 : 8 },
+									' Расписание загружается... '
+								)
+							)
 						)
 					)
 				);
@@ -44243,6 +44311,13 @@
 				props.name,
 				" "
 			),
+			props.number ? _react2.default.createElement(
+				"td",
+				null,
+				" ",
+				props.number,
+				" "
+			) : null,
 			_react2.default.createElement(
 				"td",
 				null,

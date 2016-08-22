@@ -8,7 +8,22 @@
 	margin: 30px 20px;
 }
 
+.schedule-container .my-checkbox {
+	margin-bottom: 20px;
+}
 
+.schedule-container .my-checkbox label {
+	font-size: 20px;
+	color: #b61ae6;
+	font-weight: normal;
+}
+
+.schedule-container .my-checkbox input {
+	height: 18px;
+	width: 18px;
+	margin-right: 10px;
+	padding-top: 200px;
+}
 
 .schedule-list table {
 	padding: 20px;
@@ -24,6 +39,7 @@
 
 
 
+
 .schedule-search {
 	text-align: center;
 }
@@ -31,4 +47,9 @@
 .schedule-search input {
 	width: 400px;
 	display: inline-block;
+}
+
+
+.colspan {
+	font-size: 16px;
 }
