@@ -44550,9 +44550,10 @@
 		_createClass(ScheduleSearch, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				var urlName = window.location.href.substring(46);
-				urlName = decodeURIComponent(urlName);
-				/*this.setState({search: urlName},  () => this.props.search(this.state.search));*/
+				/*let urlName = window.location.href.substring(46, );
+	   urlName = decodeURIComponent(urlName);
+	   this.setState({search: urlName},  () => this.props.search(this.state.search));*/
+
 			}
 		}, {
 			key: 'render',
