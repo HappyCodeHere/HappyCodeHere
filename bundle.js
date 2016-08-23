@@ -44550,13 +44550,9 @@
 		_createClass(ScheduleSearch, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				var _this2 = this;
-
 				var urlName = window.location.href.substring(46);
 				urlName = decodeURIComponent(urlName);
-				this.setState({ search: urlName }, function () {
-					return _this2.props.search(_this2.state.search);
-				});
+				/*this.setState({search: urlName},  () => this.props.search(this.state.search));*/
 			}
 		}, {
 			key: 'render',
@@ -44571,10 +44567,10 @@
 		}, {
 			key: 'handleSearch',
 			value: function handleSearch(event) {
-				var _this3 = this;
+				var _this2 = this;
 
 				this.setState({ search: event.target.value }, function () {
-					return _this3.props.search(_this3.state.search);
+					return _this2.props.search(_this2.state.search);
 				});
 			}
 		}]);
