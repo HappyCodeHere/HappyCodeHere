@@ -83,6 +83,12 @@
 
 	var _routes2 = _interopRequireDefault(_routes);
 
+	var _reactRouterApplyMiddleware = __webpack_require__(340);
+
+	var _reactRouterApplyMiddleware2 = _interopRequireDefault(_reactRouterApplyMiddleware);
+
+	var _reactRouterRelativeLinks = __webpack_require__(313);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var logger = (0, _reduxLogger2.default)();
@@ -92,7 +98,7 @@
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
 	  { store: createStoreWithMiddleware(_reducers2.default) },
-	  _react2.default.createElement(_reactRouter.Router, { history: _reactRouter.browserHistory, routes: _routes2.default })
+	  _react2.default.createElement(_reactRouter.Router, { render: (0, _reactRouterApplyMiddleware2.default)((0, _reactRouterRelativeLinks.useRelativeLinks)()), history: _reactRouter.browserHistory, routes: _routes2.default })
 	), document.querySelector('.container'));
 
 /***/ },
@@ -27394,9 +27400,21 @@
 
 	firebase.initializeApp(config);
 
+	function getUrl() {
+		console.log(window.location.href);
+		var url = window.location.href;
+		var pathArray = window.location.pathname.split('/');
+		console.log(pathArray);
+		var secondLevelLocation = pathArray[1];
+		console.log(secondLevelLocation);
+
+		return secondLevelLocation;
+	}
+
 	function loadDate() {
+		var restaurantName = getUrl();
 		return function (dispatch) {
-			firebase.database().ref('shedule-app/shift/create').on('value', function (data) {
+			firebase.database().ref('shedule-app/' + restaurantName + '/shift/create').on('value', function (data) {
 				return dispatch({
 					type: _types.LOAD_DATE,
 					payload: data.val()
@@ -27406,7 +27424,8 @@
 	}
 
 	function sendDate(data) {
-		firebase.database().ref('shedule-app/shift/create').push(_extends({}, data));
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/shift/create').push(_extends({}, data));
 		return {
 			type: _types.SEND_DATE,
 			payload: data
@@ -27414,7 +27433,8 @@
 	}
 
 	function deleteDate(data) {
-		firebase.database().ref('shedule-app/shift/create/' + data).remove();
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/shift/create/' + data).remove();
 		return {
 			type: _types.DELETE_DATE,
 			payload: data
@@ -27422,8 +27442,9 @@
 	};
 
 	function loadSuggest() {
+		var restaurantName = getUrl();
 		return function (dispatch) {
-			firebase.database().ref('shedule-app/shift/suggest').on('value', function (data) {
+			firebase.database().ref('shedule-app/' + restaurantName + '/shift/suggest').on('value', function (data) {
 				return dispatch({
 					type: _types.LOAD_SUGGEST,
 					payload: data.val()
@@ -27433,7 +27454,8 @@
 	}
 
 	function sendSuggest(data) {
-		firebase.database().ref('shedule-app/shift/suggest').push(_extends({}, data));
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/shift/suggest').push(_extends({}, data));
 		return {
 			type: _types.SEND_SUGGEST,
 			payload: data
@@ -27441,7 +27463,8 @@
 	}
 
 	function deleteSuggest(data) {
-		firebase.database().ref('shedule-app/shift/suggest/' + data).remove();
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/shift/suggest/' + data).remove();
 		return {
 			type: _types.DELETE_SUGGEST,
 			payload: data
@@ -27449,6 +27472,7 @@
 	};
 
 	function loadNews() {
+		var restaurantName = getUrl();
 		return function (dispatch) {
 			firebase.database().ref('shedule-app/news').on('value', function (data) {
 				return dispatch({
@@ -27460,6 +27484,7 @@
 	}
 
 	function sendNews(news) {
+		var restaurantName = getUrl();
 		firebase.database().ref('shedule-app/news').push(_extends({}, news));
 		return {
 			type: _types.SEND_NEWS,
@@ -27468,7 +27493,8 @@
 	}
 
 	function deleteNews(data) {
-		firebase.database().ref('shedule-app/news/' + data).remove();
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/news/' + data).remove();
 		return {
 			type: _types.DELETE_NEWS,
 			payload: data
@@ -27476,8 +27502,9 @@
 	};
 
 	function loadSchedule() {
+		var restaurantName = getUrl();
 		return function (dispatch) {
-			firebase.database().ref('shedule-app/schedule').on('value', function (data) {
+			firebase.database().ref('shedule-app/' + restaurantName + '/schedule').on('value', function (data) {
 				return dispatch({
 					type: _types.LOAD_SCHEDULE,
 					payload: data.val()
@@ -27486,17 +27513,19 @@
 		};
 	}
 
-	function sendSchedule() {
-		firebase.database().ref('shedule-app/schedule').push(_extends({}, _schedule.schedule));
+	function sendSchedule(data) {
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/schedule').push(_extends({}, data));
 		return {
 			type: _types.SEND_SCHEDULE,
-			payload: _schedule.schedule
+			payload: data
 		};
 	}
 
 	function loadTimes() {
+		var restaurantName = getUrl();
 		return function (dispatch) {
-			firebase.database().ref('shedule-app/times').on('value', function (data) {
+			firebase.database().ref('shedule-app/' + restaurantName + '/times').on('value', function (data) {
 				console.log(data.val());
 				return dispatch({
 					type: _types.LOAD_TIMES,
@@ -27507,7 +27536,8 @@
 	}
 
 	function sendTimes(times) {
-		firebase.database().ref('shedule-app/times').push(_extends({}, times));
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/times').push(_extends({}, times));
 		return {
 			type: _types.SEND_TIMES,
 			payload: times
@@ -27515,7 +27545,8 @@
 	}
 
 	function deleteTimes(data) {
-		firebase.database().ref('shedule-app/times/' + data).remove();
+		var restaurantName = getUrl();
+		firebase.database().ref('shedule-app/' + restaurantName + '/times/' + data).remove();
 		return {
 			type: _types.DELETE_TIMES,
 			payload: data
@@ -32005,57 +32036,112 @@
 
 	var _Main2 = _interopRequireDefault(_Main);
 
-	var _ShiftContainer = __webpack_require__(314);
+	var _MainSelect = __webpack_require__(316);
+
+	var _MainSelect2 = _interopRequireDefault(_MainSelect);
+
+	var _SendScheduleContainer = __webpack_require__(317);
+
+	var _SendScheduleContainer2 = _interopRequireDefault(_SendScheduleContainer);
+
+	var _ShiftContainer = __webpack_require__(318);
 
 	var _ShiftContainer2 = _interopRequireDefault(_ShiftContainer);
 
-	var _ShiftList = __webpack_require__(315);
+	var _ShiftList = __webpack_require__(319);
 
 	var _ShiftList2 = _interopRequireDefault(_ShiftList);
 
-	var _ShiftInfo = __webpack_require__(317);
+	var _ShiftInfo = __webpack_require__(321);
 
 	var _ShiftInfo2 = _interopRequireDefault(_ShiftInfo);
 
-	var _ShiftCreate = __webpack_require__(321);
+	var _ShiftCreate = __webpack_require__(325);
 
 	var _ShiftCreate2 = _interopRequireDefault(_ShiftCreate);
 
-	var _ShiftSuggest = __webpack_require__(322);
+	var _ShiftSuggest = __webpack_require__(326);
 
 	var _ShiftSuggest2 = _interopRequireDefault(_ShiftSuggest);
 
-	var _NewsContainer = __webpack_require__(323);
+	var _NewsContainer = __webpack_require__(327);
 
 	var _NewsContainer2 = _interopRequireDefault(_NewsContainer);
 
-	var _ScheduleContainer = __webpack_require__(327);
+	var _ScheduleContainer = __webpack_require__(331);
 
 	var _ScheduleContainer2 = _interopRequireDefault(_ScheduleContainer);
 
-	var _TimesContainer = __webpack_require__(331);
+	var _TimesContainer = __webpack_require__(335);
 
 	var _TimesContainer2 = _interopRequireDefault(_TimesContainer);
 
-	var _NotFound = __webpack_require__(335);
+	var _NotFound = __webpack_require__(339);
 
 	var _NotFound2 = _interopRequireDefault(_NotFound);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	/*kamenka
+	puskari
+	nemiga
+	vokzal
+	airport*/
+
 	exports.default = _react2.default.createElement(
 			_reactRouter.Route,
 			{ path: '/', component: _App2.default },
-			_react2.default.createElement(_reactRouter.IndexRoute, { component: _Main2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift', component: _ShiftContainer2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift/select', component: _ShiftList2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift/create', component: _ShiftCreate2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift/suggest', component: _ShiftSuggest2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'shift/select/:id', component: _ShiftInfo2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'news', component: _NewsContainer2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'schedule', component: _ScheduleContainer2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: 'times', component: _TimesContainer2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.IndexRoute, { component: _MainSelect2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka', component: _Main2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/shift', component: _ShiftContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/shift/select', component: _ShiftList2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/shift/create', component: _ShiftCreate2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/shift/suggest', component: _ShiftSuggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/shift/select/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/news', component: _NewsContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/schedule', component: _ScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/times', component: _TimesContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'kamenka/sendschedule', component: _SendScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari', component: _Main2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/shift', component: _ShiftContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/shift/select', component: _ShiftList2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/shift/create', component: _ShiftCreate2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/shift/suggest', component: _ShiftSuggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/shift/select/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/news', component: _NewsContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/schedule', component: _ScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/times', component: _TimesContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'puskari/sendschedule', component: _SendScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga', component: _Main2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/shift', component: _ShiftContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/shift/select', component: _ShiftList2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/shift/create', component: _ShiftCreate2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/shift/suggest', component: _ShiftSuggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/shift/select/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/news', component: _NewsContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/schedule', component: _ScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/times', component: _TimesContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'nemiga/sendschedule', component: _SendScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal', component: _Main2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/shift', component: _ShiftContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/shift/select', component: _ShiftList2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/shift/create', component: _ShiftCreate2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/shift/suggest', component: _ShiftSuggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/shift/select/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/news', component: _NewsContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/schedule', component: _ScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/times', component: _TimesContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'vokzal/sendschedule', component: _SendScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport', component: _Main2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/shift', component: _ShiftContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/shift/select', component: _ShiftList2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/shift/create', component: _ShiftCreate2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/shift/suggest', component: _ShiftSuggest2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/shift/select/:id', component: _ShiftInfo2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/news', component: _NewsContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/schedule', component: _ScheduleContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/times', component: _TimesContainer2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'airport/sendschedule', component: _SendScheduleContainer2.default }),
 			_react2.default.createElement(_reactRouter.Route, { path: '*', component: _NotFound2.default })
 	);
 
@@ -32081,7 +32167,7 @@
 
 	var _reactRouter = __webpack_require__(186);
 
-	var _NavBar = __webpack_require__(313);
+	var _NavBar = __webpack_require__(315);
 
 	var _NavBar2 = _interopRequireDefault(_NavBar);
 
@@ -32139,7 +32225,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(186);
+	var _reactRouterRelativeLinks = __webpack_require__(313);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32161,26 +32247,32 @@
 		_createClass(Main, [{
 			key: 'render',
 			value: function render() {
+				console.log(this.props.location.pathname);
 				return _react2.default.createElement(
 					'div',
-					{ className: 'main' },
+					{ className: 'main my-box' },
 					_react2.default.createElement(
-						_reactRouter.Link,
+						'h2',
+						null,
+						' Что будешь смотреть? '
+					),
+					_react2.default.createElement(
+						_reactRouterRelativeLinks.RelativeLink,
 						{ to: 'shift', className: 'my-button shift' },
 						' Замены '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
+						_reactRouterRelativeLinks.RelativeLink,
 						{ to: 'times', className: 'my-button times' },
 						' Заказ выходных '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
+						_reactRouterRelativeLinks.RelativeLink,
 						{ to: 'schedule', className: 'my-button schedule' },
 						' Расписание '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
+						_reactRouterRelativeLinks.RelativeLink,
 						{ to: 'news', className: 'my-button news' },
 						' Новости '
 					)
@@ -32202,16 +32294,241 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.RelativeLink = exports.useRelativeLinks = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(186);
+	var _Link = __webpack_require__(225);
+
+	var _Link2 = _interopRequireDefault(_Link);
+
+	var _PatternUtils = __webpack_require__(193);
+
+	var _resolvePathname = __webpack_require__(314);
+
+	var _resolvePathname2 = _interopRequireDefault(_resolvePathname);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var useRelativeLinks = exports.useRelativeLinks = function useRelativeLinks() {
+	  return {
+	    renderContainer: function renderContainer(Component, props) {
+	      return _react2.default.createElement(RelativeLinksContainer, { Component: Component, routerProps: props });
+	    }
+	  };
+	};
+
+	var _React$PropTypes = _react2.default.PropTypes;
+	var oneOfType = _React$PropTypes.oneOfType;
+	var shape = _React$PropTypes.shape;
+	var object = _React$PropTypes.object;
+	var string = _React$PropTypes.string;
+	var func = _React$PropTypes.func;
+	var array = _React$PropTypes.array;
+
+
+	var relativeLinksContextType = {
+	  relativeLinks: shape({
+	    params: object.isRequired,
+	    route: object.isRequired,
+	    routes: array.isRequired
+	  }).isRequired
+	};
+
+	var RelativeLinksContainer = _react2.default.createClass({
+	  displayName: 'RelativeLinksContainer',
+
+
+	  propTypes: {
+	    Component: func.isRequired,
+	    routerProps: shape({
+	      route: object.isRequired,
+	      params: object.isRequired
+	    }).isRequired
+	  },
+
+	  childContextTypes: relativeLinksContextType,
+
+	  getChildContext: function getChildContext() {
+	    var _props$routerProps = this.props.routerProps;
+	    var params = _props$routerProps.params;
+	    var routes = _props$routerProps.routes;
+	    var route = _props$routerProps.route;
+
+	    return { relativeLinks: { params: params, route: route, routes: routes } };
+	  },
+	  render: function render() {
+	    var _props = this.props;
+	    var createElement = _props.createElement;
+	    var Component = _props.Component;
+	    var routerProps = _props.routerProps;
+
+	    return createElement(Component, routerProps);
+	  }
+	});
+
+	var isAbsolute = function isAbsolute(to) {
+	  return to.match(/^\//);
+	};
+
+	var constructRoutePattern = function constructRoutePattern(currentRoute, routes) {
+	  var fullPath = '';
+
+	  var _iteratorNormalCompletion = true;
+	  var _didIteratorError = false;
+	  var _iteratorError = undefined;
+
+	  try {
+	    for (var _iterator = routes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	      var route = _step.value;
+	      var path = route.path;
+
+
+	      if (path) {
+	        if (path[0] === '/') {
+	          fullPath = path;
+	        } else {
+	          // If the first path-ed route has no leading slash, then this will add it.
+	          if (fullPath[fullPath.length - 1] !== '/') {
+	            fullPath += '/';
+	          }
+
+	          fullPath += path;
+	        }
+	      }
+
+	      if (route === currentRoute) {
+	        break;
+	      }
+	    }
+	  } catch (err) {
+	    _didIteratorError = true;
+	    _iteratorError = err;
+	  } finally {
+	    try {
+	      if (!_iteratorNormalCompletion && _iterator.return) {
+	        _iterator.return();
+	      }
+	    } finally {
+	      if (_didIteratorError) {
+	        throw _iteratorError;
+	      }
+	    }
+	  }
+
+	  return fullPath;
+	};
+
+	var resolvePathname = function resolvePathname(_ref) {
+	  var relativePath = _ref.relativePath;
+	  var route = _ref.route;
+	  var routes = _ref.routes;
+	  var params = _ref.params;
+
+	  var patternUpToRoute = constructRoutePattern(route, routes);
+	  // TODO: remove trailing slash hack
+	  // we add a slash cause it's SUPER WEIRD if we don't, should add an option
+	  // to history to always use trailing slashes to not do this and cause
+	  // confusion for people who actually know how browsers resolve urls :P
+	  var specialCase = relativePath.trim() === '';
+	  var slash = specialCase ? '' : '/';
+	  var resolvedPattern = (0, _resolvePathname2.default)('' + relativePath + slash, patternUpToRoute + '/');
+	  var withoutSlash = resolvedPattern.substring(0, resolvedPattern.length - 1);
+	  return (0, _PatternUtils.formatPattern)(withoutSlash, params);
+	};
+
+	var RelativeLink = exports.RelativeLink = _react2.default.createClass({
+	  displayName: 'RelativeLink',
+
+
+	  propTypes: {
+	    to: oneOfType([string, object]).isRequired
+	  },
+
+	  contextTypes: relativeLinksContextType,
+
+	  getInitialState: function getInitialState() {
+	    return { to: this.calculateTo(this.props) };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    if (nextProps.to !== this.props.to) {
+	      this.setState({ to: this.calculateTo(nextProps) });
+	    }
+	  },
+	  calculateTo: function calculateTo(props) {
+	    var to = props.to;
+	    var _context$relativeLink = this.context.relativeLinks;
+	    var route = _context$relativeLink.route;
+	    var routes = _context$relativeLink.routes;
+	    var params = _context$relativeLink.params;
+
+	    var isLocationDescriptor = (typeof to === 'undefined' ? 'undefined' : _typeof(to)) === 'object';
+	    var relativePath = isLocationDescriptor ? to.pathname || '' : to;
+	    var resolved = isAbsolute(relativePath) ? relativePath : resolvePathname({ relativePath: relativePath, route: route, routes: routes, params: params });
+	    return isLocationDescriptor ? _extends({}, to, { pathname: resolved }) : resolved;
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(_Link2.default, _extends({}, this.props, { to: this.state.to }));
+	  }
+	});
+
+/***/ },
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.resolvePathname=e():t.resolvePathname=e()}(this,function(){return function(t){function e(n){if(r[n])return r[n].exports;var o=r[n]={exports:{},id:n,loaded:!1};return t[n].call(o.exports,o,o.exports,e),o.loaded=!0,o.exports}var r={};return e.m=t,e.c=r,e.p="",e(0)}([function(t,e){"use strict";var r=function(t){return"/"===t.charAt(0)},n=function(t,e){for(var r=e,n=r+1,o=t.length;o>n;r+=1,n+=1)t[r]=t[n];t.pop()},o=function(t){var e=arguments.length<=1||void 0===arguments[1]?"":arguments[1],o=t&&t.split("/")||[],i=e&&e.split("/")||[],f=t&&r(t),s=e&&r(e),u=f||s;if(t&&r(t)?i=o:o.length&&(i.pop(),i=i.concat(o)),!i.length)return"/";var p=void 0;if(i.length){var a=i[i.length-1];p="."===a||".."===a||""===a}else p=!1;for(var c=0,l=i.length;l>=0;l--){var v=i[l];"."===v?n(i,l):".."===v?(n(i,l),c++):c&&(n(i,l),c--)}if(!u)for(;c--;c)i.unshift("..");!u||""===i[0]||i[0]&&r(i[0])||i.unshift("");var d=i.join("/");return p&&"/"!==d.substr(-1)&&(d+="/"),d};t.exports=o}])});
+
+/***/ },
+/* 315 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouterRelativeLinks = __webpack_require__(313);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var NavBar = function NavBar() {
+	  function checkUrl() {
+	    console.log(window.location.href);
+	    var url = window.location.href;
+	    var pathArray = window.location.pathname.split('/');
+	    console.log(pathArray);
+	    var secondLevelLocation = pathArray[1];
+	    console.log(secondLevelLocation);
+	    if (secondLevelLocation == 'kamenka' || secondLevelLocation == 'puskari' || secondLevelLocation == 'nemiga' || secondLevelLocation == 'vokzal' || secondLevelLocation == 'airport') {
+	      console.log(secondLevelLocation);
+	      return true;
+	    }
+	    return false;
+	  }
+
+	  function checkUrl2() {
+	    console.log(window.location.href);
+	    var url = window.location.href;
+	    var pathArray = window.location.pathname.split('/');
+	    console.log(pathArray);
+	    var secondLevelLocation = pathArray[1];
+	    console.log(secondLevelLocation);
+	    return secondLevelLocation;
+	  }
+
+	  console.log('func', checkUrl());
+
 	  return _react2.default.createElement(
 	    'nav',
 	    { className: 'navbar navbar-default' },
@@ -32229,7 +32546,7 @@
 	          _react2.default.createElement('span', { className: 'icon-bar' })
 	        ),
 	        _react2.default.createElement(
-	          _reactRouter.Link,
+	          _reactRouterRelativeLinks.RelativeLink,
 	          { to: '/', className: 'navbar-brand' },
 	          ' На главную '
 	        )
@@ -32244,8 +32561,8 @@
 	            'li',
 	            null,
 	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/shift', activeClassName: 'navbar-link' },
+	              _reactRouterRelativeLinks.RelativeLink,
+	              { to: checkUrl() ? checkUrl2() + '/shift' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Замены '
 	            )
 	          ),
@@ -32253,8 +32570,8 @@
 	            'li',
 	            null,
 	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/times', activeClassName: 'navbar-link' },
+	              _reactRouterRelativeLinks.RelativeLink,
+	              { to: checkUrl() ? checkUrl2() + '/times' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Заказать выходные '
 	            )
 	          ),
@@ -32262,8 +32579,8 @@
 	            'li',
 	            null,
 	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/schedule', activeClassName: 'navbar-link' },
+	              _reactRouterRelativeLinks.RelativeLink,
+	              { to: checkUrl() ? checkUrl2() + '/schedule' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Расписание '
 	            )
 	          ),
@@ -32271,8 +32588,8 @@
 	            'li',
 	            null,
 	            _react2.default.createElement(
-	              _reactRouter.Link,
-	              { to: '/news', activeClassName: 'navbar-link' },
+	              _reactRouterRelativeLinks.RelativeLink,
+	              { to: checkUrl() ? checkUrl2() + '/news' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Новости '
 	            )
 	          )
@@ -32285,7 +32602,7 @@
 	exports.default = NavBar;
 
 /***/ },
-/* 314 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32301,6 +32618,180 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var _reactRouter = __webpack_require__(186);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MainSelect = function (_Component) {
+		_inherits(MainSelect, _Component);
+
+		function MainSelect(props) {
+			_classCallCheck(this, MainSelect);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(MainSelect).call(this, props));
+		}
+
+		_createClass(MainSelect, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'main-select my-box' },
+					_react2.default.createElement(
+						'h1',
+						null,
+						' Привет! '
+					),
+					_react2.default.createElement(
+						'h1',
+						null,
+						' Выбери свой ресторан: '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'kamenka', className: 'my-button kamenka' },
+						' Каменка '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'puskari', className: 'my-button puskari' },
+						' Пушкари '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'nemiga', className: 'my-button nemiga' },
+						' Немига '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'vokzal', className: 'my-button vokzal' },
+						' Вокзал '
+					),
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'airport', className: 'my-button airport' },
+						' Аэропорт '
+					)
+				);
+			}
+		}]);
+
+		return MainSelect;
+	}(_react.Component);
+
+	exports.default = MainSelect;
+
+/***/ },
+/* 317 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(160);
+
+	var _index = __webpack_require__(252);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SendScheduleContainer = function (_Component) {
+		_inherits(SendScheduleContainer, _Component);
+
+		function SendScheduleContainer(props) {
+			_classCallCheck(this, SendScheduleContainer);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SendScheduleContainer).call(this, props));
+
+			_this.state = {
+				schedule: '',
+				password: ''
+			};
+
+			_this.handleTextarea = _this.handleTextarea.bind(_this);
+			_this.handleButtonClick = _this.handleButtonClick.bind(_this);
+			_this.handleInput = _this.handleInput.bind(_this);
+
+			return _this;
+		}
+
+		_createClass(SendScheduleContainer, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'send-schedule-container' },
+					_react2.default.createElement('input', { value: this.state.password, onChange: this.handleInput }),
+					this.state.password == 123 ? _react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement('textarea', { value: this.state.schedule, onChange: this.handleTextarea }),
+						_react2.default.createElement(
+							'button',
+							{ onClick: this.handleButtonClick },
+							' Отправить расписание '
+						)
+					) : null
+				);
+			}
+		}, {
+			key: 'handleInput',
+			value: function handleInput(event) {
+				this.setState({ password: event.target.value });
+			}
+		}, {
+			key: 'handleTextarea',
+			value: function handleTextarea(event) {
+				this.setState({ schedule: event.target.value });
+			}
+		}, {
+			key: 'handleButtonClick',
+			value: function handleButtonClick() {
+				this.props.sendSchedule(JSON.parse(this.state.schedule));
+			}
+		}]);
+
+		return SendScheduleContainer;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(null, { sendSchedule: _index.sendSchedule })(SendScheduleContainer);
+
+/***/ },
+/* 318 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouterRelativeLinks = __webpack_require__(313);
 
 	var _reactRedux = __webpack_require__(160);
 
@@ -32341,18 +32832,18 @@
 						' Я хочу... '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: 'shift/select', className: 'btn btn-warning select-button' },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: 'select', className: 'btn btn-warning select-button' },
 						' Найти смену '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: 'shift/create', className: 'btn btn-info select-button' },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: 'create', className: 'btn btn-info select-button' },
 						' Отдать смену '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: 'shift/suggest', className: 'btn btn-success select-button' },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: 'suggest', className: 'btn btn-success select-button' },
 						' Предложить поработать '
 					)
 				);
@@ -32367,7 +32858,7 @@
 	exports.default = (0, _reactRedux.connect)(null, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(ShiftContainer);
 
 /***/ },
-/* 315 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32382,11 +32873,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(186);
+	var _reactRouterRelativeLinks = __webpack_require__(313);
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _ShiftItem = __webpack_require__(316);
+	var _ShiftItem = __webpack_require__(320);
 
 	var _ShiftItem2 = _interopRequireDefault(_ShiftItem);
 
@@ -32421,10 +32912,11 @@
 				var load = this.props.load || {};
 
 				var list = Object.keys(load).map(function (value) {
+
 					console.log(value);
 					return _react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/shift/select/' + value, params: { name: load[value].name } },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: value, params: { name: load[value].name } },
 						' ',
 						_react2.default.createElement(_ShiftItem2.default, { date: load[value].date, position: load[value].position, time: load[value].time }),
 						' '
@@ -32436,8 +32928,8 @@
 				var suggest2 = Object.keys(suggest).map(function (value) {
 					console.log(value);
 					return _react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/shift/select/' + value, params: { name: suggest[value].name } },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: value, params: { name: suggest[value].name } },
 						' ',
 						_react2.default.createElement(_ShiftItem2.default, { date: suggest[value].date, position: suggest[value].position, time: suggest[value].time }),
 						' '
@@ -32481,8 +32973,8 @@
 						' И давайте активнее =) '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/shift', className: 'btn btn-danger' },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: '..', className: 'btn btn-danger' },
 						' Назад '
 					)
 				);
@@ -32504,7 +32996,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, loadSuggest: _index.loadSuggest })(ShiftList);
 
 /***/ },
-/* 316 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -32553,7 +33045,7 @@
 	exports.default = ShiftItem;
 
 /***/ },
-/* 317 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32568,11 +33060,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouterRelativeLinks = __webpack_require__(313);
+
 	var _reactRouter = __webpack_require__(186);
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _toastr = __webpack_require__(318);
+	var _toastr = __webpack_require__(322);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -32715,8 +33209,8 @@
 						' Удалить '
 					),
 					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/shift/select', className: 'btn btn-danger' },
+						_reactRouterRelativeLinks.RelativeLink,
+						{ to: '..', className: 'btn btn-danger' },
 						' Назад '
 					)
 				);
@@ -32728,7 +33222,7 @@
 				this.props.deleteDate(this.props.params.id);
 				this.props.deleteSuggest(this.props.params.id);
 				setTimeout(function () {
-					_reactRouter.browserHistory.push('/shift');
+					_reactRouter.browserHistory.push('/');
 				}, 2000);
 			}
 		}]);
@@ -32748,7 +33242,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadDate: _index.loadDate, deleteDate: _index.deleteDate, deleteSuggest: _index.deleteSuggest, loadSuggest: _index.loadSuggest })(ShiftInfo);
 
 /***/ },
-/* 318 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -32765,7 +33259,7 @@
 	 */
 	/* global define */
 	; (function (define) {
-	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(319)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(323)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
 	        return (function () {
 	            var $container;
 	            var listener;
@@ -33179,11 +33673,11 @@
 
 	        })();
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	}(__webpack_require__(320)));
+	}(__webpack_require__(324)));
 
 
 /***/ },
-/* 319 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -43003,14 +43497,14 @@
 
 
 /***/ },
-/* 320 */
+/* 324 */
 /***/ function(module, exports) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 321 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43027,11 +43521,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(186);
+	var _reactRouterRelativeLinks = __webpack_require__(313);
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _toastr = __webpack_require__(318);
+	var _reactRouter = __webpack_require__(186);
+
+	var _toastr = __webpack_require__(322);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -43095,7 +43591,7 @@
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '17/08' }, date))
+								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '23/08' }, date))
 							),
 							date.touched && date.error && _react2.default.createElement(
 								'div',
@@ -43247,8 +43743,8 @@
 							' Создать замену '
 						),
 						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/shift', className: 'btn btn-danger' },
+							_reactRouterRelativeLinks.RelativeLink,
+							{ to: '..', className: 'btn btn-danger' },
 							' Назад '
 						)
 					)
@@ -43260,7 +43756,7 @@
 				this.props.sendDate(data);
 				_toastr2.default.success('Смена опубликована!', 'Готово');
 				setTimeout(function () {
-					_reactRouter.browserHistory.push('/shift');
+					_reactRouter.browserHistory.push('/');
 				}, 2000);
 			}
 		}]);
@@ -43311,7 +43807,7 @@
 	}, null, { sendDate: _index.sendDate })(ShiftCreate);
 
 /***/ },
-/* 322 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43328,11 +43824,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(186);
+	var _reactRouterRelativeLinks = __webpack_require__(313);
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _toastr = __webpack_require__(318);
+	var _reactRouter = __webpack_require__(186);
+
+	var _toastr = __webpack_require__(322);
 
 	var _toastr2 = _interopRequireDefault(_toastr);
 
@@ -43396,7 +43894,7 @@
 							_react2.default.createElement(
 								'div',
 								{ className: 'col-sm-10' },
-								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '05/08' }, date))
+								_react2.default.createElement('input', _extends({ type: 'text', className: 'form-control', id: 'date', placeholder: '23/08' }, date))
 							),
 							date.touched && date.error && _react2.default.createElement(
 								'div',
@@ -43505,8 +44003,8 @@
 							' Создать замену '
 						),
 						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/shift', className: 'btn btn-danger' },
+							_reactRouterRelativeLinks.RelativeLink,
+							{ to: '..', className: 'btn btn-danger' },
 							' Назад '
 						)
 					)
@@ -43518,7 +44016,7 @@
 				this.props.sendSuggest(data);
 				_toastr2.default.success('Предложение опубликовано!', 'Готово');
 				setTimeout(function () {
-					_reactRouter.browserHistory.push('/shift');
+					_reactRouter.browserHistory.push('/');
 				}, 2000);
 			}
 		}]);
@@ -43569,7 +44067,7 @@
 	}, null, { sendSuggest: _index.sendSuggest })(ShiftSuggest);
 
 /***/ },
-/* 323 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43586,11 +44084,11 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _NewsForm = __webpack_require__(324);
+	var _NewsForm = __webpack_require__(328);
 
 	var _NewsForm2 = _interopRequireDefault(_NewsForm);
 
-	var _NewsList = __webpack_require__(325);
+	var _NewsList = __webpack_require__(329);
 
 	var _NewsList2 = _interopRequireDefault(_NewsList);
 
@@ -43643,6 +44141,11 @@
 						' короче можете сюда анонимно что нибудь писать) '
 					),
 					_react2.default.createElement(
+						'h4',
+						null,
+						' пока это общее для всех ресторанов, дальше решим =) '
+					),
+					_react2.default.createElement(
 						'button',
 						{ onClick: this.toggleForm, className: 'btn btn-success' },
 						' Написать '
@@ -43676,7 +44179,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadNews: _index.loadNews, deleteNews: _index.deleteNews })(NewsContainer);
 
 /***/ },
-/* 324 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43769,7 +44272,7 @@
 	}, null, { sendNews: _index.sendNews })(NewsForm);
 
 /***/ },
-/* 325 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43784,7 +44287,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NewsItem = __webpack_require__(326);
+	var _NewsItem = __webpack_require__(330);
 
 	var _NewsItem2 = _interopRequireDefault(_NewsItem);
 
@@ -43833,7 +44336,7 @@
 	exports.default = NewsList;
 
 /***/ },
-/* 326 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -43876,7 +44379,7 @@
 	exports.default = NewsItem;
 
 /***/ },
-/* 327 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -43893,11 +44396,11 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _ScheduleSearch = __webpack_require__(328);
+	var _ScheduleSearch = __webpack_require__(332);
 
 	var _ScheduleSearch2 = _interopRequireDefault(_ScheduleSearch);
 
-	var _ScheduleList = __webpack_require__(329);
+	var _ScheduleList = __webpack_require__(333);
 
 	var _ScheduleList2 = _interopRequireDefault(_ScheduleList);
 
@@ -44005,7 +44508,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadSchedule: _index.loadSchedule, sendSchedule: _index.sendSchedule })(ScheduleContainer);
 
 /***/ },
-/* 328 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44082,7 +44585,7 @@
 	exports.default = ScheduleSearch;
 
 /***/ },
-/* 329 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44097,7 +44600,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ScheduleItem = __webpack_require__(330);
+	var _ScheduleItem = __webpack_require__(334);
 
 	var _ScheduleItem2 = _interopRequireDefault(_ScheduleItem);
 
@@ -44285,7 +44788,7 @@
 	exports.default = ScheduleList;
 
 /***/ },
-/* 330 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -44373,7 +44876,7 @@
 	exports.default = ScheduleItem;
 
 /***/ },
-/* 331 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44390,11 +44893,11 @@
 
 	var _reactRedux = __webpack_require__(160);
 
-	var _TimesList = __webpack_require__(332);
+	var _TimesList = __webpack_require__(336);
 
 	var _TimesList2 = _interopRequireDefault(_TimesList);
 
-	var _TimesForm = __webpack_require__(334);
+	var _TimesForm = __webpack_require__(338);
 
 	var _TimesForm2 = _interopRequireDefault(_TimesForm);
 
@@ -44468,7 +44971,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, { loadTimes: _index.loadTimes, deleteTimes: _index.deleteTimes })(TimesContainer);
 
 /***/ },
-/* 332 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44483,7 +44986,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _TimesItem = __webpack_require__(333);
+	var _TimesItem = __webpack_require__(337);
 
 	var _TimesItem2 = _interopRequireDefault(_TimesItem);
 
@@ -44621,7 +45124,7 @@
 	exports.default = TimesList;
 
 /***/ },
-/* 333 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -44724,7 +45227,7 @@
 	exports.default = TimesItem;
 
 /***/ },
-/* 334 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44995,7 +45498,7 @@
 	}, null, { sendTimes: _index.sendTimes })(TimesForm);
 
 /***/ },
-/* 335 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45054,6 +45557,105 @@
 
 	exports.default = NotFound;
 	;
+
+/***/ },
+/* 340 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _RouterContext = __webpack_require__(222);
+
+	var _RouterContext2 = _interopRequireDefault(_RouterContext);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var applyMiddleware = function applyMiddleware() {
+	  for (var _len = arguments.length, middleware = Array(_len), _key = 0; _key < _len; _key++) {
+	    middleware[_key] = arguments[_key];
+	  }
+
+	  // middleware looks like: { renderContainer, renderRootContainer }
+	  var withRootContainer = middleware.filter(function (m) {
+	    return m.renderRootContainer;
+	  });
+	  var withContainer = middleware.filter(function (m) {
+	    return m.renderContainer;
+	  });
+
+	  var finalCreateElement = function finalCreateElement(Component, props) {
+	    return _react2.default.createElement(Component, props);
+	  };
+
+	  var createElement = withContainer.reduceRight(function (previous, _ref) {
+	    var renderContainer = _ref.renderContainer;
+	    return function (RouteComponent, props) {
+	      return (0, _react.cloneElement)(renderContainer(RouteComponent, props), { createElement: previous });
+	    };
+	  }, finalCreateElement);
+
+	  var finalRenderRootContainer = function finalRenderRootContainer(renderProps) {
+	    return _react2.default.createElement(_RouterContext2.default, _extends({}, renderProps, { createElement: createElement }));
+	  };
+
+	  return withRootContainer.reduceRight(function (previous, _ref2) {
+	    var renderRootContainer = _ref2.renderRootContainer;
+	    return function (renderProps) {
+	      return (0, _react.cloneElement)(renderRootContainer(renderProps), { render: previous });
+	    };
+	  }, finalRenderRootContainer);
+	};
+
+	exports.default = applyMiddleware;
+
+	/*
+
+	`applyMiddleware` turns this:
+
+	```js
+	const render = applyMiddleware(
+	  useAsyncProps({ loadContext: { token } }),
+	  useNamedRoutes(),
+	  useRelativeLinks()
+	)
+	```
+
+	into this:
+
+	```js
+	<Router
+	  render={(props) => (
+	    <AsyncProps {...props}
+	      render={(props) => (
+	        <NamedRoutes {...props}
+	          render={(props) => (
+	            <RelativeLinks {...props}
+	              createElement={(Component, props) => (
+	                <AsyncPropsContainer Component={Component} routerProps={props} token={token}
+	                  createElement={(Component, props) => (
+	                    <RelativeLinksContainer Component={Component} routerProps={props}/>
+	                  )}
+	                />
+	              )}
+	            />
+	          )}
+	        />
+	      )}
+	    />
+	  )}
+	/>
+	```
+	*/
 
 /***/ }
 /******/ ]);
