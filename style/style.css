@@ -137,3 +137,8 @@ border-color: #3498db; */
 .form-error {
 	color: red;
 }
+
+::selection {
+	background-color: #31F283;
+	color: white;
+}

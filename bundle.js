@@ -27401,12 +27401,9 @@
 	firebase.initializeApp(config);
 
 	function getUrl() {
-		console.log(window.location.href);
 		var url = window.location.href;
 		var pathArray = window.location.pathname.split('/');
-		console.log(pathArray);
 		var secondLevelLocation = pathArray[1];
-		console.log(secondLevelLocation);
 
 		return secondLevelLocation;
 	}
@@ -27485,7 +27482,24 @@
 
 	function sendNews(news) {
 		var restaurantName = getUrl();
-		firebase.database().ref('shedule-app/news').push(_extends({}, news));
+		var date = new Date();
+		var options = {
+			era: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			weekday: 'long',
+			timezone: 'UTC',
+			hour: 'numeric',
+			minute: 'numeric',
+			second: 'numeric'
+		};
+		var need = {
+			date: date.toLocaleString("ru", options.day)
+		};
+		/*console.log(news);
+	 console.log(date);*/
+		firebase.database().ref('shedule-app/news').push(_extends({}, news, need));
 		return {
 			type: _types.SEND_NEWS,
 			payload: news
@@ -32193,11 +32207,11 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'app' },
 	        _react2.default.createElement(_NavBar2.default, null),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'top' },
+	          { className: 'top mdl-card mdl-shadow--2dp' },
 	          this.props.children
 	        )
 	      );
@@ -32247,7 +32261,6 @@
 		_createClass(Main, [{
 			key: 'render',
 			value: function render() {
-				console.log(this.props.location.pathname);
 				return _react2.default.createElement(
 					'div',
 					{ className: 'main my-box' },
@@ -32504,30 +32517,24 @@
 
 	var NavBar = function NavBar() {
 	  function checkUrl() {
-	    console.log(window.location.href);
 	    var url = window.location.href;
 	    var pathArray = window.location.pathname.split('/');
-	    console.log(pathArray);
 	    var secondLevelLocation = pathArray[1];
-	    console.log(secondLevelLocation);
 	    if (secondLevelLocation == 'kamenka' || secondLevelLocation == 'puskari' || secondLevelLocation == 'nemiga' || secondLevelLocation == 'vokzal' || secondLevelLocation == 'airport') {
-	      console.log(secondLevelLocation);
+	      /*console.log(secondLevelLocation);*/
 	      return true;
 	    }
 	    return false;
 	  }
 
 	  function checkUrl2() {
-	    console.log(window.location.href);
 	    var url = window.location.href;
 	    var pathArray = window.location.pathname.split('/');
-	    console.log(pathArray);
 	    var secondLevelLocation = pathArray[1];
-	    console.log(secondLevelLocation);
 	    return secondLevelLocation;
 	  }
 
-	  console.log('func', checkUrl());
+	  /*console.log('func', checkUrl())*/
 
 	  return _react2.default.createElement(
 	    'nav',
@@ -32562,7 +32569,7 @@
 	            null,
 	            _react2.default.createElement(
 	              _reactRouterRelativeLinks.RelativeLink,
-	              { to: checkUrl() ? checkUrl2() + '/shift' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
+	              { to: checkUrl() ? checkUrl2() + '/shift' : '/', className: 'mdl-layout__tab is-active', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Замены '
 	            )
 	          ),
@@ -32571,7 +32578,7 @@
 	            null,
 	            _react2.default.createElement(
 	              _reactRouterRelativeLinks.RelativeLink,
-	              { to: checkUrl() ? checkUrl2() + '/times' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
+	              { to: checkUrl() ? checkUrl2() + '/times' : '/', className: 'mdl-layout__tab is-active', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Заказать выходные '
 	            )
 	          ),
@@ -32580,7 +32587,7 @@
 	            null,
 	            _react2.default.createElement(
 	              _reactRouterRelativeLinks.RelativeLink,
-	              { to: checkUrl() ? checkUrl2() + '/schedule' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
+	              { to: checkUrl() ? checkUrl2() + '/schedule' : '/', className: 'mdl-layout__tab is-active', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Расписание '
 	            )
 	          ),
@@ -32589,7 +32596,7 @@
 	            null,
 	            _react2.default.createElement(
 	              _reactRouterRelativeLinks.RelativeLink,
-	              { to: checkUrl() ? checkUrl2() + '/news' : '/', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
+	              { to: checkUrl() ? checkUrl2() + '/news' : '/', className: 'mdl-layout__tab is-active', activeClassName: window.location.pathname == '/' ? '' : 'navbar-link' },
 	              ' Новости '
 	            )
 	          )
@@ -32654,27 +32661,27 @@
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'kamenka', className: 'my-button kamenka' },
+						{ to: 'kamenka', className: 'my-button kamenka hvr-pulse-grow' },
 						' Каменка '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'puskari', className: 'my-button puskari' },
+						{ to: 'puskari', className: 'my-button puskari hvr-pulse-grow' },
 						' Пушкари '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'nemiga', className: 'my-button nemiga' },
+						{ to: 'nemiga', className: 'my-button nemiga hvr-pulse-grow' },
 						' Немига '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'vokzal', className: 'my-button vokzal' },
+						{ to: 'vokzal', className: 'my-button vokzal hvr-pulse-grow' },
 						' Вокзал '
 					),
 					_react2.default.createElement(
 						_reactRouter.Link,
-						{ to: 'airport', className: 'my-button airport' },
+						{ to: 'airport', className: 'my-button airport hvr-pulse-grow' },
 						' Аэропорт '
 					)
 				);
@@ -44245,21 +44252,20 @@
 						),
 						_react2.default.createElement(
 							'button',
-							{ type: 'submit', onClick: this.getData.bind(this), className: 'btn btn-info' },
+							{ type: 'submit', onClick: this.getDate.bind(this), className: 'btn btn-info' },
 							' Добавить '
 						)
 					)
 				);
 			}
 		}, {
-			key: 'getData',
-			value: function getData() {
-				setTimeout(function () {
-					this.props.showForm(false);
-				}, 2000);
+			key: 'getDate',
+			value: function getDate() {
+				/*setTimeout(function() {this.props.showForm(false);}, 2000);*/
 
-				var date = new Date();
-				console.log(date);
+				/*const date = new Date();
+	   		this.setState({ date: date})
+	   console.log(date);*/
 			}
 		}]);
 
@@ -44319,7 +44325,8 @@
 					var title = _data$news.title;
 					var text = _data$news.text;
 
-					return _react2.default.createElement(_NewsItem2.default, { key: news, title: title, text: text, id: news, 'delete': _this2.props.delete });
+					var date = data[news].date;
+					return _react2.default.createElement(_NewsItem2.default, { key: news, title: title, text: text, date: date, id: news, 'delete': _this2.props.delete });
 				});
 
 				return _react2.default.createElement(
@@ -44425,9 +44432,11 @@
 			_this.state = {
 				currentSearch: '',
 				selectedWeek: 0,
-				checkedCheckbox: false
+				showNumber: false
 
 			};
+
+			_this.handleNumberButton = _this.handleNumberButton.bind(_this);
 			return _this;
 		}
 
@@ -44463,15 +44472,18 @@
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'my-checkbox' },
-						_react2.default.createElement(
-							'label',
-							null,
-							_react2.default.createElement('input', { type: 'checkbox', onChange: this.handleCheckbox.bind(this) }),
-							'Показать телефоны'
+						{ className: 'number-select' },
+						!this.state.showNumber ? _react2.default.createElement(
+							'button',
+							{ className: 'btn btn-warning', onClick: this.handleNumberButton },
+							' Показать телефоны '
+						) : _react2.default.createElement(
+							'button',
+							{ className: 'btn btn-success', onClick: this.handleNumberButton },
+							' Скрыть телефоны '
 						)
 					),
-					_react2.default.createElement(_ScheduleList2.default, { data: this.props.loadScheduleData, week: this.state.selectedWeek, currentSearch: this.state.currentSearch, checkbox: this.state.checkedCheckbox })
+					_react2.default.createElement(_ScheduleList2.default, { data: this.props.loadScheduleData, week: this.state.selectedWeek, currentSearch: this.state.currentSearch, checkbox: this.state.showNumber })
 				);
 			}
 		}, {
@@ -44490,9 +44502,9 @@
 				this.setState({ selectedWeek: 1 });
 			}
 		}, {
-			key: 'handleCheckbox',
-			value: function handleCheckbox() {
-				this.setState({ checkedCheckbox: !this.state.checkedCheckbox });
+			key: 'handleNumberButton',
+			value: function handleNumberButton() {
+				this.setState({ showNumber: !this.state.showNumber });
 			}
 		}]);
 
@@ -44550,10 +44562,13 @@
 		_createClass(ScheduleSearch, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				/*let urlName = window.location.href.substring(46, );
-	   urlName = decodeURIComponent(urlName);
-	   this.setState({search: urlName},  () => this.props.search(this.state.search));*/
+				var _this2 = this;
 
+				var urlName = window.location.search.substring(6);
+				urlName = decodeURIComponent(urlName);
+				this.setState({ search: urlName }, function () {
+					return _this2.props.search(_this2.state.search);
+				});
 			}
 		}, {
 			key: 'render',
@@ -44568,10 +44583,10 @@
 		}, {
 			key: 'handleSearch',
 			value: function handleSearch(event) {
-				var _this2 = this;
+				var _this3 = this;
 
 				this.setState({ search: event.target.value }, function () {
-					return _this2.props.search(_this2.state.search);
+					return _this3.props.search(_this3.state.search);
 				});
 			}
 		}]);
@@ -44644,23 +44659,23 @@
 					schedule = Object.keys(data).filter(function (item) {
 						/*console.log('hey')*/
 						/*console.log(data[item])*/
-						var item2 = data[item]['name'].toLowerCase();
+						var item2 = data[item]['Имя'].toLowerCase();
 
 						return item2.indexOf(_this2.props.currentSearch.toLowerCase()) != -1;
 					}).map(function (item) {
 						var _data$item = data[item];
-						var name = _data$item.name;
-						var number = _data$item.number;
-						var mon = _data$item.mon;
-						var tue = _data$item.tue;
-						var wed = _data$item.wed;
-						var thu = _data$item.thu;
-						var fri = _data$item.fri;
-						var sat = _data$item.sat;
-						var sun = _data$item.sun;
+						var Имя = _data$item.Имя;
+						var Номер = _data$item.Номер;
+						var пн = _data$item.пн;
+						var вт = _data$item.вт;
+						var ср = _data$item.ср;
+						var чт = _data$item.чт;
+						var пт = _data$item.пт;
+						var сб = _data$item.сб;
+						var вс = _data$item.вс;
 
-						if (number == undefined) {
-							number = '-';
+						if (Номер == undefined) {
+							Номер = '-';
 						}
 
 						/*console.log('ll;l;', Object.keys(data).length);*/
@@ -44670,17 +44685,17 @@
 						return _react2.default.createElement(_ScheduleItem2.default, {
 							key: item,
 
-							name: name,
+							name: Имя,
 
-							number: _this2.props.checkbox ? number : null,
+							number: _this2.props.checkbox ? Номер : null,
 
-							mon: mon,
-							tue: tue,
-							wed: wed,
-							thu: thu,
-							fri: fri,
-							sat: sat,
-							sun: sun
+							mon: пн,
+							tue: вт,
+							wed: ср,
+							thu: чт,
+							fri: пт,
+							sat: сб,
+							sun: вс
 
 						});
 					});
