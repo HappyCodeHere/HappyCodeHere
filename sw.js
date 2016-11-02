@@ -15,7 +15,7 @@ const precacheFiles = [
     './404.html',
     './bundle.js',
     './style/style.css',
-    'http://www.mannersmentor.com/wp-content/uploads/2016/01/Monthly-Goals-Page-1024x683-1024x683.jpg'
+    'http://www.mannersmentor.com/wp-content/uploads/2016/01/Monthly-Goals-Page-1024x683-1024x683.jpg',
 
     'assets/images/logo.png',
     'assets/images/main.jpg'
