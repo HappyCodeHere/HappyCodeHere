@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  	<title> Schedule Progressive App </title>
+
+    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/images/favicon.png">
+
+    <link rel="stylesheet" href="%PUBLIC_URL%/style/libs/bootstrap/css/bootstrap.min.css">
+  	<!-- <link rel="stylesheet" href="%PUBLIC_URL%/style/style.css"> -->
+
+    <!-- Progressive app settings -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+
+    <!-- Add to home screen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Schedule Progressive App">
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/images/icons/icon-152x152.png">
+
+    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/images/icons/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#2F3BA2">
+
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search) {
+          var q = {};
+          l.search.slice(1).split('&').forEach(function(v) {
+            var a = v.split('=');
+            q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+          });
+          if (q.p !== undefined) {
+            window.history.replaceState(null, null,
+              (q.p || '') +
+              (q.q ? ('?' + q.q) : '') +
+              l.hash
+            );
+          }
+        }
+      }(window.location))
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+    <style type="text/css">
+    html {
+          font-size: 62.5% !important;
+      }
+
+      body {
+        
+          font-family: 'Proxima Nova', Arial, sans-serif;
+          height: 100%;
+      }
+
+      ::-webkit-scrollbar {
+          -width: 100px;
+          -background: transparent;
+      }
+      
+
+      body::-webkit-scrollbar {
+    width: 0.7em;
+}
+ 
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+    </style>
+  </head>
+
+
+
+  <body>
+    <div class="container"></div>
+
+    <footer>
+      <h6> Copyright © 2016 Schedule App. All rights reserved. Делается с любовью ❤ </h6>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="%PUBLIC_URL%/style/libs/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- <script src="./bundle.js"></script> -->
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+                try {
+                    w.yaCounter38898380 = new Ya.Metrika({
+                        id:38898380,
+                        clickmap:true,
+                        trackLinks:true,
+                        accurateTrackBounce:true,
+                        webvisor:true,
+                        trackHash:true
+                    });
+                } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                s = d.createElement("script"),
+                f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else { f(); }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/38898380" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+  </body>
+</html>
