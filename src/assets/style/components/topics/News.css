@@ -1,0 +1,21 @@
+.news-container {
+	text-align: center;
+}
+
+.news-form {
+	padding: 30px 20px 20px 20px;
+}
+
+.news-form form input {
+	width: 50%;
+	display: inline-block;
+}
+
+.news-list {
+	margin-top: 50px;
+}
+
+.news-item {
+	padding: 10px;
+	margin-top: 20px;
+}
