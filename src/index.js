@@ -6,7 +6,8 @@ import { Router, browserHistory } from 'react-router';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import './assets/style/style.css';
+import './assets/style/style.scss';
+
 
 import reducers from './reducers';
 import routes from './routes';
@@ -14,7 +15,7 @@ import routes from './routes';
 import applyMiddlewar from 'react-router-apply-middleware'
 import { useRelativeLinks, RelativeLink } from 'react-router-relative-links'
 
-const logger = createLogger();
+const logger = createLogger({ collapsed: true });
 
 const createStoreWithMiddleware = applyMiddleware(logger, thunk)(createStore);
 

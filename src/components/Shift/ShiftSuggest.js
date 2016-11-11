@@ -23,6 +23,11 @@ class ShiftSuggest extends Component {
 	      fields: { date, position, time, name, number, comments },
 	      handleSubmit } = this.props;
 
+	    let dateObj = new Date();
+	    let day = dateObj.getDate();
+		let month = dateObj.getMonth() + 1;
+		let fullDate = day + "/" + month;
+
 		return (
 			<div className="shift-suggest my-box">
 				<h3> Предложить поработать </h3>
@@ -32,7 +37,7 @@ class ShiftSuggest extends Component {
 				  <div className={`form-group ${date.touched && date.invalid ? 'has-error' : ''}`}>
 				    <label htmlFor="date" className="col-sm-2 control-label">Дата:</label>
 				    <div className="col-sm-10">
-				      <input type="text" className="form-control" id="date" placeholder="23/08" {...date}/>
+				      <input type="text" className="form-control" id="date" placeholder={fullDate} {...date}/>
 				    </div>
 				    {date.touched && date.error && <div className="form-error">{date.error}</div>}
 				  </div>
