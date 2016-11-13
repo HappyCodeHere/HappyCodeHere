@@ -1,0 +1,36 @@
+.shift-container {
+	padding: 30px 20px 20px 20px;
+}
+
+.shift-container .select-button {
+	margin-top: 50px;
+	width: 200px;
+}
+
+.shift-list {
+	padding: 30px 20px 20px 20px;
+}
+
+.shift-list h4 {
+	margin-bottom: -5px;
+}
+
+.shift-item ul {
+	margin-top: 0px;
+	margin-left: -50px;
+	margin-bottom: -10px;
+}
+
+.shift-item ul li {
+	list-style: none;
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.shift-info {
+	padding: 30px 20px 20px 20px;
+}
+
+.shift-create, .shift-suggest {
+	padding: 30px 20px 20px 20px;
+}
