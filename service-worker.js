@@ -8,14 +8,17 @@ const VERSION = '1';
 // We are pretending that our actual page content is
 // dynamic and can’t be cached statically.
 const ASSETS = [
-  '/static/app.js',
-  '/static/sc-view.js',
-  '/static/sc-router.js',
-  '/static/superstyles.css',
-  '/static/images/spinner.png',
+  './index.html',
+  './404.html',
+  './favicon.png',
+  '/static/css/main.f5271caa.css',
+  '/static/media/OgymhdA.a500be7b.png',
+  '/static/js/main.d961b572.js',
 
-  '/header.partial.html',
-  '/footer.partial.html'
+
+
+//   '/header.partial.html',
+//   '/footer.partial.html'
 ];
 
 // On install, load all our assets into a 'static' cache
