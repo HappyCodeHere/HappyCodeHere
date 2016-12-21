@@ -1,137 +1,101 @@
-// Load our templating engine
-/*importScripts('/node_modules/dot/doT.min.js');
-doT.templateSettings.strip = false;*/
+// Service Worker Toolbox
+/*import trolbox from 'sw-toolbox';*/
+/*console.log(trolbox);*/
 
-const VERSION = '1';
+var cacheName = 'ScheduleApp-2';
+var dataCacheName = 'ScheduleApp-v1';
+importScripts('./sw-toolbox.js');
 
-// All the assets that don’t change and our templates.
-// We are pretending that our actual page content is
-// dynamic and can’t be cached statically.
-const ASSETS = [
-  './index.html',
-  './404.html',
-  './favicon.png',
-  '/static/css/main.f5271caa.css',
-  '/static/media/OgymhdA.a500be7b.png',
-  '/static/js/main.d961b572.js',
+/*console.log(trolbox);*/
 
+// Offline Google Analytics
+/*importScripts('js/lib/sw-offline-google-analytics.js');
+goog.offlineGoogleAnalytics.initialize();*/
 
+// Files to precache
+const precacheFiles = [
+    './',
+    './index.html',
+    './404.html',
+    './bundle.js',
+    './style/style.css',
 
-//   '/header.partial.html',
-//   '/footer.partial.html'
+    'assets/images/logo.png',
+    'assets/images/main.jpg'
+
+    /*'./css/main.css',
+    'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css',
+    'https://fonts.googleapis.com/css?family=Inconsolata|Lora:400,400i,700|Source+Sans+Pro:400,700',
+
+    './js/bundle.js',
+
+    './img/profile.png'*/
 ];
+toolbox.precache(precacheFiles);
 
-// On install, load all our assets into a 'static' cache
-self.oninstall = event => event.waitUntil(async function () {
-  const cache = await caches.open('static');
-  await cache.addAll(ASSETS);
-  return self.skipWaiting();
-}());
+// Install and Activate events
+/*self.addEventListener('install', (event) => event.waitUntil(self.skipWaiting()));*/
 
-self.onactivate = event => event.waitUntil(self.clients.claim());
-
-// Matches paths like `/`, `/index.html`, `/about/` or `/about/index.html`.
-// So when this regexp matches, we know we have to _build_ a response.
-const toplevelSection = /([^/]*)(\/|\/index.html)$/;
-self.onfetch = event => {
-  // Parse the request URL so we can separate domain, path and query.
-  event.parsedUrl = new URL(event.request.url);
-
-  const matches = toplevelSection.exec(event.parsedUrl.pathname);
-  // If this regexp matches, build a response
-  if (matches) {
-    event.request.item = matches[1];
-    return buildSite(event);
-  // If it’s a request for /static/, just go to cache
-  } else if (event.parsedUrl.pathname.startsWith('/static/')) {
-    event.respondWith(caches.match(event.request));
-    return;
-  }
-  // Otherwise, use our dynamic caching strategy
-  staleWhileRevalidate(event);
-};
-
-function buildSite(event) {
-  // Check if we are supposed to build a partial response or a full document
-  const isPartial = event.parsedUrl.searchParams.get('partial') !== null;
-  // But either case, only request the partial of the content, as we
-  // already have header and footer in our cache.
-  event.parsedUrl.searchParams.set('partial', '');
-
-  // This is a little hack as you can’t call waitUntil inside respondWith
-  // or vice versa.
-  let myWaitUntil;
-  event.waitUntil(new Promise(resolve => {
-    myWaitUntil = resolve;
-  }));
-
-  /*event.respondWith(async function () {
-    // Get our 3 fragments for the response. Header, content and footer.
-    const files = await Promise.all([
-      !isPartial ? caches.match('/header.partial.html') : new Response(null),
-      staleWhileRevalidateWrapper(event.parsedUrl.toString(), myWaitUntil),
-      !isPartial ? caches.match('/footer.partial.html') : new Response(null)
-    ]);
-    // All of those are Response objects. Grab the file contents as strings.
-    const contents = await Promise.all(files.map(f => f.text()));
-    // ... and concatenate them.
-    const content = contents.join('');
-    // Compile the template
-    const template = doT.template(content);
-    // ... and execute the template as the body of the response
-    return new Response(template(event.request), {headers: {'Content-Type': 'text/html'}});
-  }());*/
-}
-
-// This function builds a temporary pseudo-event object so we can
-// grab the response as the value of the returned promise.
-function staleWhileRevalidateWrapper(request, waitUntil) {
-  return new Promise(resolve => {
-    staleWhileRevalidate({
-      request,
-      respondWith: resolve,
-      waitUntil
+self.addEventListener('install', function(event) {
+  console.log('[ServiceWorker] Install');
+  event.waitUntil(
+    caches.open(cacheName).then(function(cache) {
+      console.log('[ServiceWorker] Caching app shell');
+      return cache.addAll(precacheFiles);
     })
-  });
-}
+  );
+});
 
-// staleWhileRevalidate is a caching strategy. It responds with
-// whatever it got cached (if anything), while updating the cache
-// in the background.
-function staleWhileRevalidate(event) {
-  const fetchedVersion = fetch(event.request);
-  // Since we _might_ be responding with the fetched response
-  // and also using it to populate the cache, we need to make a copy.
-  const fetchedCopy = fetchedVersion.then(response => response.clone());
-  const cachedVersion = caches.match(event.request);
+self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
 
-  event.respondWith(async function () {
-    try {
-      // Respond with whatever is ready first, fetched or cached version.
-      // Since fetch() will reject when offline, resolve to cachedVersion
-      // on reject so we always resolve to something.
-      const response = await Promise.race([
-        fetchedVersion.catch(_ => cachedVersion),
-        cachedVersion
-      ]);
-      // However, caches.match() will resolve to `undefined` if there’s
-      // nothing in cache. If that’s the case, wait for the network response.
-      if (!response) {
-        return await fetchedVersion;
+
+
+// Fetch events
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => response || fetch(event.request))
+    );
+});
+
+
+/*self.addEventListener('push', function(event) {
+  console.log('Push message', event);
+
+  var title = 'Push message';
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+     body: 'The Message',
+     icon: 'images/icon.png',
+     tag: 'my-tag'
+   }));
+});*/
+
+self.addEventListener('notificationclick', function(event) {
+  console.log('Notification click: tag', event.notification.tag);
+  // Android doesn't close the notification when you click it
+  // See http://crbug.com/463146
+  event.notification.close();
+  var url = 'https://youtu.be/gYMkEMCHtJ4';
+  // Check if there's already a tab open with this URL.
+  // If yes: focus on the tab.
+  // If no: open a tab with the URL.
+  event.waitUntil(
+    clients.matchAll({
+      type: 'window'
+    })
+    .then(function(windowClients) {
+      console.log('WindowClients', windowClients);
+      for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        console.log('WindowClient', client);
+        if (client.url === url && 'focus' in client) {
+          return client.focus();
+        }
       }
-      return response;
-    } catch(_) {
-      // If nothing returns a valid response (rejects or is undefined),
-      // we just return 404.
-      return new Response(null, {status: 404});
-    }
-  }());
-
-  event.waitUntil(async function () {
-    try {
-      const response = await fetchedCopy;
-      const cache = await caches.open('dynamic');
-      return cache.put(event.request, response);
-    } catch(_) {/* eat errors */}
-  }());
-}
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
+  );
+});
