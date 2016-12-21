@@ -2,7 +2,7 @@
 /*import trolbox from 'sw-toolbox';*/
 /*console.log(trolbox);*/
 
-var cacheName = 'ScheduleApp-1';
+var cacheName = 'ScheduleApp-2';
 var dataCacheName = 'ScheduleApp-v1';
 importScripts('./sw-toolbox.js');
 
@@ -36,9 +36,9 @@ toolbox.precache(precacheFiles);
 // Install and Activate events
 /*self.addEventListener('install', (event) => event.waitUntil(self.skipWaiting()));*/
 
-self.addEventListener('install', function(e) {
+self.addEventListener('install', function(event) {
   console.log('[ServiceWorker] Install');
-  e.waitUntil(
+  event.waitUntil(
     caches.open(cacheName).then(function(cache) {
       console.log('[ServiceWorker] Caching app shell');
       return cache.addAll(precacheFiles);

@@ -6,7 +6,8 @@ import { Router, browserHistory } from 'react-router';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import './assets/style/style.css';
+
+import './assets/style/index.css';
 
 
 import reducers from './reducers';
@@ -14,6 +15,7 @@ import routes from './routes';
 
 import applyMiddlewar from 'react-router-apply-middleware'
 import { useRelativeLinks, RelativeLink } from 'react-router-relative-links'
+
 
 const logger = createLogger({ collapsed: true });
 
@@ -27,7 +29,7 @@ const createStoreWithMiddleware = applyMiddleware(logger, thunk)(createStore);
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-             .register('./service-worker.js')
+             .register('./service-worker3.js')
              /*.then(function(reg) { subscribe(reg) })*/
              .then(function() { console.log('Service Worker Registered'); });
 }

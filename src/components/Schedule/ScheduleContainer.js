@@ -43,8 +43,8 @@ class ScheduleContainer extends Component {
 				
 				<ScheduleSearch search={this.mySearch.bind(this)} />
 
-				<button onClick={this.selectThisWeek.bind(this)} className="btn btn-info"> На эту неделю </button>
-				<button onClick={this.selectNextWeek.bind(this)} className="btn btn-info"> На следующую неделю </button>
+				<button onClick={this.selectThisWeek.bind(this)} className="btn btn-danger"> На эту неделю </button>
+				<button onClick={this.selectNextWeek.bind(this)} className="btn btn-danger"> На следующую неделю </button>
 				
 
 				<div className="number-select">

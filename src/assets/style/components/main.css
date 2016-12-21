@@ -7,6 +7,8 @@
 	margin-bottom: 20px;
 }
 
+
+
 /* .main a {
 	display: inline-block;
 	height: 50px;
@@ -24,12 +26,14 @@
 }
 
 .main { 
-	.shift:hover {
+	
+}
+
+.shift:hover {
 	// background-color: #CA219A;
 	opacity: 0.9;
 	opacity: 0.9;
 	}
-}
 
 .main  .schedule {
 	background-color: #E29F1D;
