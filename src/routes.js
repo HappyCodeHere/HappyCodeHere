@@ -7,7 +7,7 @@ import Main from './components/Main.js';
 
 import MainSelect from './components/MainSelect.js';
 
-import SendScheduleContainer from './components/SendScheduleContainer.js';
+import SendScheduleContainer from './components/Schedule/SendScheduleContainer.js';
 
 import ShiftContainer from './components/Shift/ShiftContainer.js';
 import ShiftList from './components/Shift/ShiftList.js';
@@ -117,6 +117,38 @@ export default (
 		<Route path="airport/times" component={TimesContainer} />
 
 		<Route path="airport/sendschedule" component={SendScheduleContainer} />
+
+
+
+		<Route path="stolitsa" component={Main} /> 
+		<Route path="stolitsa/shift" component={ShiftContainer} /> 
+		<Route path="stolitsa/shift/select" component={ShiftList} />
+		<Route path="stolitsa/shift/create" component={ShiftCreate} />
+		<Route path="stolitsa/shift/suggest" component={ShiftSuggest} />
+		<Route path="stolitsa/shift/select/:id" component={ShiftInfo} />
+
+
+		<Route path="stolitsa/news" component={NewsContainer} />
+		<Route path="stolitsa/schedule" component={ScheduleContainer} />
+		<Route path="stolitsa/times" component={TimesContainer} />
+
+		<Route path="stolitsa/sendschedule" component={SendScheduleContainer} />
+
+
+
+		<Route path="prostore" component={Main} /> 
+		<Route path="prostore/shift" component={ShiftContainer} /> 
+		<Route path="prostore/shift/select" component={ShiftList} />
+		<Route path="prostore/shift/create" component={ShiftCreate} />
+		<Route path="prostore/shift/suggest" component={ShiftSuggest} />
+		<Route path="prostore/shift/select/:id" component={ShiftInfo} />
+
+
+		<Route path="prostore/news" component={NewsContainer} />
+		<Route path="prostore/schedule" component={ScheduleContainer} />
+		<Route path="prostore/times" component={TimesContainer} />
+
+		<Route path="prostore/sendschedule" component={SendScheduleContainer} />
 
 
 

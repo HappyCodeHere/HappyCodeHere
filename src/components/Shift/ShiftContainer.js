@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { loadDate, loadSuggest } from '../../actions/index.js';
 
+import './Shift.scss';
+
 class ShiftContainer extends Component {
 	constructor(props) {
 		super(props);

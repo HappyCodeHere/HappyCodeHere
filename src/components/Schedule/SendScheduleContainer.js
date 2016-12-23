@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-import { sendSchedule } from '../actions/index.js';
+import { sendSchedule } from '../../actions/index.js';
 
 class SendScheduleContainer extends Component {
 	constructor(props) {

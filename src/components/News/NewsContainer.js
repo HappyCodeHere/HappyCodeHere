@@ -6,6 +6,8 @@ import NewsList from './NewsList.js';
 
 import { loadNews, deleteNews } from '../../actions/index.js';
 
+import './News.scss';
+
 class NewsContainer extends Component {
 	constructor(props) {
 		super(props)

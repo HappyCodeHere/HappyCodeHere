@@ -6,6 +6,8 @@ import TimesForm from './TimesForm.js';
 
 import { loadTimes, deleteTimes } from '../../actions/index.js';
 
+import './Times.scss';
+
 class TimesContainer extends Component {
 	constructor(props) {
 		super(props)

@@ -10,7 +10,9 @@ const NavBar = () => {
       secondLevelLocation == 'puskari' ||
       secondLevelLocation == 'nemiga'  ||
       secondLevelLocation == 'vokzal'  ||
-      secondLevelLocation == 'airport' ) {
+      secondLevelLocation == 'airport' ||
+      secondLevelLocation == 'stolitsa'  ||
+      secondLevelLocation == 'prostore' ) {
       /*console.log(secondLevelLocation);*/
       return true
     }

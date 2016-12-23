@@ -65,10 +65,10 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "firebase": "^3.5.3",
+    "jquery": "^2.2.4",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
-    "firebase": "^3.5.3",
-    "jquery": "^3.1.1",
     "react-redux": "^4.0.0",
     "react-router": "^2.0.1",
     "react-router-apply-middleware": "0.0.2",

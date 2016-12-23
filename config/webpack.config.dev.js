@@ -118,15 +118,15 @@ module.exports = {
         test: /\.css$/,
         loader: 'style!css?importLoaders=1!postcss'
       },
-      /*{
-        test: /\.scss$/,
-        include: paths.appSrc,
-        loaders: ["style", "css", "scss"]
-      },*/
       {
         test: /\.scss$/,
-        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'
+        include: paths.appSrc,
+        loaders: ["style", "css", "sass"]
       },
+      /*{
+        test: /\.scss$/,
+        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'
+      },*/
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
       {
@@ -196,6 +196,7 @@ module.exports = {
     // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules)
   ],
+
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {

@@ -6,6 +6,8 @@ import ScheduleList from './ScheduleList.js';
 
 import { loadSchedule, sendSchedule } from '../../actions/index.js';
 
+import './Schedule.scss';
+
 class ScheduleContainer extends Component {
 	constructor(props) {
 		super(props)

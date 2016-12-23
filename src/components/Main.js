@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { RelativeLink } from 'react-router-relative-links';
 
-
+import './Main.scss';
 
 class Main extends Component {
 	constructor(props) {

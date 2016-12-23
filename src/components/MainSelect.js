@@ -18,6 +18,8 @@ class MainSelect extends Component {
 				<Link to="nemiga" className="my-button nemiga hvr-wobble-top"> Немига </Link>
 				<Link to="vokzal" className="my-button vokzal hvr-wobble-top"> Вокзал </Link>
 				<Link to="airport" className="my-button airport hvr-wobble-top"> Аэропорт </Link>
+				<Link to="stolitsa" className="my-button stolitsa hvr-wobble-top"> Столица </Link>
+				<Link to="prostore" className="my-button prostore hvr-wobble-top"> Простор </Link>
 			</div>
 			
 			
