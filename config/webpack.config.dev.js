@@ -194,7 +194,8 @@ module.exports = {
     // to restart the development server for Webpack to discover it. This plugin
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new webpack.IgnorePlugin(/cptable/)
   ],
 
   // Some libraries import Node modules but don't use them in the browser.
@@ -203,5 +204,8 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty'
-  }
+  },
+  externals: [
+        {  "./cptable": "var cptable",  "./jszip": "jszip" }
+    ]
 };

@@ -78,7 +78,8 @@
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.1.0",
     "sw-toolbox": "^3.4.0",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "xlsx": "^0.8.0"
   },
   "jest": {
     "moduleFileExtensions": [
