@@ -20,7 +20,6 @@ class ScheduleSearch extends Component {
 
 
 	render() {
-		
 		return (
 			<div className="schedule-search">
 				<input value={this.state.search || this.props.bs} onChange={this.handleSearch} className="form-control" placeholder="Поиск"/>

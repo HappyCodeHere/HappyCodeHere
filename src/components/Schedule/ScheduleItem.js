@@ -1,21 +1,34 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
+// const propTypes = {
+// 	name: PropTypes.string.isRequired,
+// 	number: PropTypes.string,
+// 	mon: PropTypes.string.isRequired,
+// 	tue: PropTypes.string.isRequired,
+// 	wed: PropTypes.string.isRequired,
+// 	thu: PropTypes.string.isRequired,
+// 	fri: PropTypes.string.isRequired,
+// 	sat: PropTypes.string.isRequired,
+// 	sun: PropTypes.string.isRequired
+// };
 
 const ScheduleItem = (props) => {
+	const { name, number, mon, tue, wed, thu, fri, sat, sun } = props;
 	return (
 		<tr className="schedule-item"> 
-			<td> {props.name} </td>
-			{props.number ? <td> {props.number} </td> : null}
-			<td> {props.mon} </td>
-			<td> {props.tue} </td>
-			<td> {props.wed} </td>
-			<td> {props.thu} </td>
-			<td> {props.fri} </td>
-			<td> {props.sat} </td>
-			<td> {props.sun} </td> 
+			<td>{name}</td>
+			{number ? <td>{number}</td> : null}
+			<td>{mon}</td>
+			<td>{tue}</td>
+			<td>{wed}</td>
+			<td>{thu}</td>
+			<td>{fri}</td>
+			<td>{sat}</td>
+			<td>{sun}</td> 
 		</tr>
 	)
 }
 
+// ScheduleItem.propTypes = propTypes;
 
 export default ScheduleItem;

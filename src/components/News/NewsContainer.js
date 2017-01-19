@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import NewsForm from './NewsForm.js';
 import NewsList from './NewsList.js';
 
-import { loadNews, deleteNews } from '../../actions/index.js';
+import { loadNews, deleteNews } from '../../actions/news.js';
 
 import './News.scss';
 

@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   loadSuggest: SuggestReducer,
 
   loadNews: NewsReducer,
-  loadSchedule: ScheduleReducer,
+  schedule: ScheduleReducer,
   loadTimes: TimesReducer,
 
   form: formReducer,
