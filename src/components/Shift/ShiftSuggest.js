@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 
 import toastr from 'toastr';
 
-import { sendSuggest } from '../../actions/index.js';
+import { sendSuggest } from '../../actions/shift.js';
 
 
 import {reduxForm} from 'redux-form';

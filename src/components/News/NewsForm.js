@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 
-import { sendNews } from '../../actions/index.js';
+import { sendNews } from '../../actions/news.js';
 
 class NewsForm extends Component {
 	constructor(props) {
@@ -13,7 +13,7 @@ class NewsForm extends Component {
 		let { fields: { title, text }, handleSubmit } = this.props;
 
 		return (
-			<div className="news-form my-box"> 
+			<div className="news-form my-box">
 				<form onSubmit={handleSubmit(this.props.sendNews)}>
 					<div className="form-group">
 						<input type="text" className="form-control" placeholder="Название новости" {...title} />
@@ -31,7 +31,7 @@ class NewsForm extends Component {
 
 	getDate() {
 		/*setTimeout(function() {this.props.showForm(false);}, 2000);*/
-		
+
 		/*const date = new Date();
 
 		this.setState({ date: date})

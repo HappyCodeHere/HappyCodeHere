@@ -3,6 +3,8 @@ import { getUrl } from './index';
 
 import firebase from 'firebase';
 
+import { reset } from 'redux-form';
+
 
 export function loadTimes() {
 	let restaurantName = getUrl();
@@ -18,14 +20,18 @@ export function loadTimes() {
 }
 
 export function sendTimes(times) {
-	let restaurantName = getUrl();
-	firebase.database().ref(`shedule-app/${restaurantName}/times`).push({
-		...times
-	});
-	return {
-		type: types.SEND_TIMES,
-		payload: times
+	return dispatch => {
+		dispatch(reset('timesForm'));
+		let restaurantName = getUrl();
+		firebase.database().ref(`shedule-app/${restaurantName}/times`).push({
+			...times
+		});
+		dispatch({
+			type: types.SEND_TIMES,
+			payload: times
+		});
 	}
+
 }
 
 export function deleteTimes(data) {

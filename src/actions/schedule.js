@@ -6,12 +6,15 @@ import firebase from 'firebase';
 
 export function loadSchedule() {
 	let restaurantName = getUrl();
-	return function(dispatch) {
-    	firebase.database().ref(`shedule-app/${restaurantName}/schedule`).on('value', function(data) {
-			return dispatch ({
-				type: types.LOAD_SCHEDULE,
-				payload: data.val()
-			});
+	return dispatch => {
+			dispatch({ type: types.LOAD_SCHEDULE_START });
+				firebase.database().ref(`shedule-app/${restaurantName}/schedule`).on('value', function(data) {
+				setTimeout(()=> {
+					dispatch ({
+						type: types.LOAD_SCHEDULE_SUCCESS,
+						payload: data.val()
+					});
+				}, 1200);
  		});
 	}
 }

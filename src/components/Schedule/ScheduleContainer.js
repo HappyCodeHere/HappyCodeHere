@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import ScheduleSearch from './ScheduleSearch';
 import ScheduleList from './ScheduleList';
 
+
 import { loadSchedule } from '../../actions/schedule';
+
+import CircularProgress from 'material-ui/CircularProgress';
 
 import './Schedule.scss';
 
@@ -20,77 +23,84 @@ class ScheduleContainer extends Component {
 		this.state = {
 			currentSearch: '',
 			isShowNumber: false,
+			selectedWeek: 0,
 
 		}
+
+		this.handleSearch = this.handleSearch.bind(this);
+
+		this.selectThisWeek = this.selectThisWeek.bind(this);
+		this.selectNextWeek = this.selectNextWeek.bind(this);
 
 		this.handleNumberButton = this.handleNumberButton.bind(this);
 	}
 
 	componentWillMount() {
-		this.props.loadSchedule()
+		this.props.loadSchedule();
 	}
 
 	handleSearch(search) {
 		this.setState({currentSearch: search});
 	}
 
+	selectThisWeek() {
+		this.setState({selectedWeek: 0});
+	}
+
+	selectNextWeek() {
+		this.setState({selectedWeek: 1});
+	}
+
 	handleNumberButton() {
-		this.setState({showNumber: !this.state.showNumber})
+		this.setState({isShowNumber: !this.state.isShowNumber});
 	}
 
 	selectSchedule() {
 		const { schedule } = this.props;
 
-		console.log('fucn', schedule['-KacRYgUwzHhGJ4dV-89']);
+		let week = Object.keys(schedule.data)[this.state.selectedWeek];
 
-
-		return schedule['-KacRYgUwzHhGJ4dV-89'];
+		return schedule.data[week];
 	}
 
 
-
 	render() {
-		const { ...rest } = this.props;
-		
 		return (
 			<div className="schedule-container">
-				<h3> Расписание {this.state.selectedWeek == 0 ? ' на эту ' : ' на следующую '} неделю </h3>
-				
+				<h3> Расписание {this.state.selectedWeek === 0 ? ' на эту ' : ' на следующую '} неделю </h3>
+
 				<ScheduleSearch search={this.handleSearch} />
 
-				<button onClick={this.selectThisWeek.bind(this)} className="btn btn-danger">На эту неделю</button>
-				<button onClick={this.selectNextWeek.bind(this)} className="btn btn-danger">На следующую неделю</button>
-				
+				{Object.keys(this.props.schedule.data).length > 1 ?
+					<div>
+						<button onClick={this.selectThisWeek} className="btn btn-info">На эту неделю</button>
+						<button onClick={this.selectNextWeek} className="btn btn-info">На следующую неделю</button>
+					</div> : null }
 
 				<div className="number-select">
-					{!this.state.showNumber ? 
-						<button className="btn btn-warning" onClick={this.handleNumberButton}>Показать телефоны</button> : 
+					{!this.state.isShowNumber ?
+						<button className="btn btn-warning" onClick={this.handleNumberButton}>Показать телефоны</button> :
 						<button className="btn btn-success" onClick={this.handleNumberButton}>Скрыть телефоны</button>
 					}
 				</div>
 
-				<ScheduleList
-					currentSearch={this.state.currentSearch}
-					showNumber={this.state.isShowNumber}
-					schedule={this.selectSchedule()}
-				/>
+				{this.props.schedule.loading ?
+					<CircularProgress size={60} thickness={4} color={'rgb(136, 76, 235)'} style={{'marginTop': '30px'}}/> :
+
+					Object.keys(this.props.schedule.data).length !== 0 ?
+
+					<ScheduleList
+						currentSearch={this.state.currentSearch}
+						showNumber={this.state.isShowNumber}
+						schedule={this.selectSchedule()}
+					/> :
+
+					<p> Расписания нету:( </p>
+				}
+
 			</div>
 		)
 	}
-
-	
-
-	selectThisWeek() {
-		this.setState({selectedWeek: 0})
-	}
-
-	selectNextWeek() {
-		this.setState({selectedWeek: 1})
-	}
-
-	
-
-	
 }
 
 ScheduleContainer.propTypes = propTypes;

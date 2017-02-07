@@ -4,26 +4,28 @@ import React, { Component, PropTypes } from 'react';
 import ScheduleItem from './ScheduleItem.js';
 
 const propTypes = {
-	schedule: PropTypes.array.isRequired
+	schedule: PropTypes.array.isRequired,
+	showNumber: PropTypes.bool.isRequired
 }
 
 class ScheduleList extends Component {
-	constructor(props) {
-		super(props)
-	}
 
 	renderTableHead() {
 		const { schedule } = this.props;
 
-		const { пн, вт, ср, чт, пт, сб, вс } = schedule[1].fullDate;
+		// console.log(schedule);
 
-		console.log(schedule[2].fullDate)
+
+		const { пн, вт, ср, чт, пт, сб, вс } = schedule[7].fullDate;
+
+
+		// console.log(schedule[2].fullDate)
 
 		return (
 			<thead>
 		 		<tr>
 		 			<th>Имя</th>
-		 			{this.props.checkbox ? <th>Телефон</th> : null}
+		 			{this.props.showNumber ? <th>Телефон</th> : null}
 
 			 		<th>{пн}</th>
 			 		<th>{вт}</th>
@@ -55,18 +57,33 @@ class ScheduleList extends Component {
 		// })
 
 		.map((item, i) => {
-			console.log(item);
+			// console.log(item);
 			let { Имя, Телефон, пн, вт, ср, чт, пт, сб, вс } = item;
-			if (Телефон === undefined) {
-				Телефон =  '-'
+			let newNumber = Телефон;
+
+			if (newNumber === undefined) {
+				newNumber =  '-'
 			}
 
-			return <ScheduleItem 
-				key ={i}
+			else {
+				while(newNumber.indexOf('-') >= 0) {
+					newNumber = newNumber.replace('-', '');
+				}
+
+				newNumber = newNumber.slice(-9);
+
+				newNumber = `(${newNumber[0] + [newNumber[1]]}) ${newNumber.slice(2, 5)}-${newNumber.slice(5, 7)}-${newNumber.slice(7, 9)}`;
+			}
+
+
+
+
+			return <ScheduleItem
+				key={i}
 
 				name={Имя}
 
-				number={this.props.checkbox ? Телефон : null}
+				number={this.props.showNumber ? newNumber : null}
 
 				mon={пн}
 				tue={вт}

@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 
 import toastr from 'toastr';
 
-import { sendDate } from '../../actions/index.js';
+import { sendDate } from '../../actions/shift.js';
 
 
 import {reduxForm} from 'redux-form';
@@ -93,7 +93,7 @@ class ShiftCreate extends Component {
 
 				  <button type="submit" onClick={this.redirect} className="btn btn-info"> Создать замену </button>
 				  <RelativeLink to=".." className="btn btn-danger"> Назад </RelativeLink>
-				  
+
 				</form>
 			</div>
 		)

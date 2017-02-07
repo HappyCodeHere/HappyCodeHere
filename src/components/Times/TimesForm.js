@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 
-import { sendTimes } from '../../actions/index.js';
+import { sendTimes } from '../../actions/times.js';
 
 class TimesForm extends Component {
 	constructor(props) {
 		super(props)
+
+		this.handleFormSubmit = this.handleFormSubmit.bind(this);
+	}
+
+
+	handleFormSubmit(data) {
+		this.props.sendTimes(data);
 	}
 
 	render() {
@@ -13,7 +20,7 @@ class TimesForm extends Component {
 
 		return (
 			<div className="times-form my-box">
-				<form onSubmit={handleSubmit(this.props.sendTimes)}>
+				<form onSubmit={handleSubmit(this.handleFormSubmit)}>
 					<div className={`form-group ${name.touched && name.invalid ? 'has-error' : ''}`}>
 						<label htmlFor="name" className="control-label">Имя:</label>
 						<input type="text" className="form-control" id="name" placeholder="" {...name} />
@@ -33,23 +40,23 @@ class TimesForm extends Component {
 							</tr>
 						</thead>
 						<tbody>
-							<tr> 
+							<tr>
 								<td>
 									<div className={`form-group ${mon.touched && mon.invalid ? 'has-error' : ''}`}>
 										<input type="text" className="form-control" placeholder="" {...mon} />
 									</div>
 								</td>
-								<td>			
+								<td>
 									<div className={`form-group ${tue.touched && tue.invalid ? 'has-error' : ''}`}>
 										<input type="text" className="form-control" placeholder="" {...tue} />
 									</div>
 								</td>
-								<td>				
+								<td>
 									<div className={`form-group ${wed.touched && wed.invalid ? 'has-error' : ''}`}>
 										<input type="text" className="form-control" placeholder="" {...wed} />
 									</div>
 								</td>
-								<td>				
+								<td>
 									<div className={`form-group ${thu.touched && thu.invalid ? 'has-error' : ''}`}>
 										<input type="text" className="form-control" placeholder="" {...thu} />
 									</div>
@@ -59,18 +66,18 @@ class TimesForm extends Component {
 										<input type="text" className="form-control" placeholder="" {...fri} />
 									</div>
 								</td>
-								<td>								
+								<td>
 									<div className={`form-group ${sat.touched && sat.invalid ? 'has-error' : ''}`}>
 										<input type="text" className="form-control" placeholder="" {...sat} />
 									</div>
 								</td>
-								<td>				
+								<td>
 									<div className={`form-group ${sun.touched && sun.invalid ? 'has-error' : ''}`}>
 										<input type="text" className="form-control" placeholder="" {...sun} />
 									</div>
 								</td>
-							</tr> 
-						</tbody> 
+							</tr>
+						</tbody>
 					</table>
 
 					<div className={`form-group ${comments.touched && comments.invalid ? 'has-error' : ''}`}>

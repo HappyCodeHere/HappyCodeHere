@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import ShiftItem from './ShiftItem.js';
 
-import { loadDate, loadSuggest } from '../../actions/index.js';
+import { loadDate, loadSuggest } from '../../actions/shift.js';
 
 class ShiftList extends Component {
 	constructor(props) {
@@ -15,12 +15,12 @@ class ShiftList extends Component {
 		this.props.loadDate();
 		this.props.loadSuggest();
 	}
-	
+
 	render() {
 		let load = this.props.load || {};
 
 		const list = Object.keys(load).map((value) => {
-			
+
 			console.log(value)
 			return <RelativeLink to={value} params={{ name: load[value].name }}> <ShiftItem date={load[value].date} position={load[value].position} time={load[value].time} /> </RelativeLink>
 		});
@@ -45,7 +45,7 @@ class ShiftList extends Component {
 						{suggest2}
 					</div>
 				</div>
-				<h4> И давайте активнее =) </h4>
+				<h4 style={{'display': 'none'}}> И давайте активнее =) </h4>
 
 				<RelativeLink to=".." className="btn btn-danger"> Назад </RelativeLink>
 			</div>

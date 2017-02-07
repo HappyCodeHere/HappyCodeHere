@@ -1,20 +1,24 @@
 import * as types from '../actions/types.js';
 
 const initialState = {
-	'-KacRYgUwzHhGJ4dV-89': [
-		{ Имя: 'Вася', Телефон: '2323', fullDate: {} },
-		{ Имя: 'Вася', Телефон: '2323', fullDate: {} },
-		{ Имя: 'Вася', Телефон: '2323', fullDate: {} }
-	]
+	'data': {
+		'id': [
+			{ Имя: '', Телефон: '', fullDate: {} }
+		]
+	},
+	'loading': true,
+	'error': null
 };
 
 export default function(state = initialState, action) {
 	switch(action.type) {
-		case types.LOAD_SCHEDULE:
-		console.log(action.payload);
-			return {...action.payload};
-		
-	}
+		case types.LOAD_SCHEDULE_START:
+			return {...state, loading: true};
 
-	return state;
+		case types.LOAD_SCHEDULE_SUCCESS:
+			return {...state, data: action.payload, loading: false};
+
+		default:
+			return state;
+	}
 }

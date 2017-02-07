@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import TimesList from './TimesList.js';
 import TimesForm from './TimesForm.js';
 
-import { loadTimes, deleteTimes } from '../../actions/index.js';
+import { loadTimes, deleteTimes } from '../../actions/times.js';
 
 import './Times.scss';
 

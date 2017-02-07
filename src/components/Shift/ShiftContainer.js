@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { RelativeLink } from 'react-router-relative-links';
 import { connect } from 'react-redux';
 
-import { loadDate, loadSuggest } from '../../actions/index.js';
+import { loadDate, loadSuggest } from '../../actions/shift.js';
 
 import './Shift.scss';
 

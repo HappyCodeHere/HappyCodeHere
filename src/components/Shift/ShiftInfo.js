@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import toastr from 'toastr';
 
-import { loadDate, deleteDate, deleteSuggest, loadSuggest } from '../../actions/index.js';
+import { loadDate, deleteDate, deleteSuggest, loadSuggest } from '../../actions/shift.js';
 
 
 class ShiftInfo extends Component {
@@ -21,7 +21,8 @@ class ShiftInfo extends Component {
 	render() {
 		let id = this.props.params.id;
 		console.log(id);
-		let info = this.props.loading[id] || this.props.loadingSuggest[id] 
+		console.log(this.props.loading);
+		let info = ( this.props.loading && this.props.loading[id] ) || this.props.loadingSuggest[id]
 		return (
 			<div className="shift-info my-box">
 				<h3> Подробная информация </h3>
@@ -65,7 +66,7 @@ class ShiftInfo extends Component {
 		this.props.deleteDate(this.props.params.id);
 		this.props.deleteSuggest(this.props.params.id);
 		setTimeout( () => { browserHistory.push('/') }, 2000);
-		
+
 	}
 };
 
