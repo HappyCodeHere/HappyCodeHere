@@ -7,8 +7,8 @@ var cacheFiles = [
 	'./index.html',
 	'./404.html',
 
-	'./static/js/main.03a8db4b.js',
-	'./static/css/main.4f997a47.css',
+	'./static/js/main.js',
+	'./static/css/main.css',
 	'./static/media/OgymhdA.a500be7b.png',
 
 	'./images/favicon.png'
