@@ -31,15 +31,6 @@ injectTapEventPlugin();
     .then(function(sub) { console.log('endpoint:', sub.endpoint); });
 }*/
 
-/*if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-             .register('./service-worker3.js')
-             .then(function(reg) { subscribe(reg) })
-             .then(function() { console.log('Service Worker Registered'); });
-}
-*/
-
-
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
     <Router render={applyMiddlewar(useRelativeLinks())} history={browserHistory} routes={routes} />
