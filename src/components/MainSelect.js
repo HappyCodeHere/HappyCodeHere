@@ -20,9 +20,10 @@ class MainSelect extends Component {
 				<Link to="airport" className="my-button airport hvr-wobble-top"> Аэропорт </Link>
 				<Link to="stolitsa" className="my-button stolitsa hvr-wobble-top"> Столица </Link>
 				<Link to="prostore" className="my-button prostore hvr-wobble-top"> Простор </Link>
+				<Link to="uruche" className="my-button uruche hvr-wobble-top"> Уручье </Link>
 			</div>
-			
-			
+
+
 		)
 	}
 }

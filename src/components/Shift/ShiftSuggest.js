@@ -92,8 +92,6 @@ class ShiftSuggest extends Component {
 
 	handleFormSuccess(data) {
 		this.props.sendSuggest(data);
-		toastr.success( 'Предложение опубликовано!', 'Готово');
-		setTimeout( () => { browserHistory.push('/') }, 2000)
 	}
 };
 

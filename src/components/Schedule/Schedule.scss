@@ -47,3 +47,64 @@
 .colspan {
 	font-size: 16px;
 }
+
+.send-schedule-container {
+	text-align: center;
+
+	background-color: white;
+
+	box-shadow: 1px 1px 5px black;
+	padding: 40px 40px;
+
+	.password {
+		width: 300px;
+		display: block;
+		margin: 0 auto;
+
+		input {
+			margin-top: 25px;
+		}
+	}
+
+	.current-schedules {
+		width: 250px;
+		margin: 0 auto;
+
+		h4 {
+			margin-bottom: 40px;
+		}
+	}
+
+	.add-schedule {
+		margin: 30px;
+
+		label {
+			display: inline-block;
+		}
+
+		input {
+			display: inline-block;
+			width: 300px;
+			margin: 20px 0 0 20px;
+		}
+	}
+}
+
+.send-schedule-container-item {
+	display: flex;
+	justify-content: space-between;
+	margin: 20px 0;
+
+	& > button {
+		width: 30px;
+		height: 30px;
+		min-width: 0;
+		margin: 0;
+		margin-top: -5px;
+		margin-right: 20px;
+		padding: 0;
+		text-align: center;
+		vertical-align: middle;
+
+	}
+}

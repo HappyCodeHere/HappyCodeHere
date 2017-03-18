@@ -16,7 +16,9 @@ export default function(state = initialState, action) {
 			return {...state, loading: true};
 
 		case types.LOAD_SCHEDULE_SUCCESS:
-			return {...state, data: action.payload, loading: false};
+			let schedule = action.payload;
+			if(!action.payload) { schedule = initialState.data}
+			return {...state, data: schedule, loading: false};
 
 		default:
 			return state;

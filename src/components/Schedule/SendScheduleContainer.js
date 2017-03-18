@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import XLSX  from 'xlsx';
 
+import SendScheduleItem from './SendScheduleItem';
 
-import { sendSchedule } from '../../actions/schedule.js';
+
+import { sendSchedule, loadSchedule, deleteSchedule } from '../../actions/schedule.js';
 
 class SendScheduleContainer extends Component {
 	constructor(props) {
@@ -18,27 +20,52 @@ class SendScheduleContainer extends Component {
 		this.handleButtonClick = this.handleButtonClick.bind(this);
 		this.handleInput = this.handleInput.bind(this);
 		this.handleInputFile = this.handleInputFile.bind(this);
+		this.renderScheduleList = this.renderScheduleList.bind(this);
 
 
+	}
+
+	componentWillMount() {
+		this.props.loadSchedule();
+	}
+
+	renderScheduleList() {
+		return Object.keys(this.props.schedule.data).map((item, i) => {
+			// const schedule = this.props.schedule.data[item];
+			return <SendScheduleItem key={i} id={i} scheduleId={item} delete={this.props.deleteSchedule}/>
+		})
 	}
 
 	render() {
 		return (
 			<div className="send-schedule-container">
-				<input value={this.state.password} onChange={this.handleInput} />
-				{this.state.password == '' ? 
+				<h3>Редактирование расписания</h3>
+				{this.state.password === '123' ?
 					<div>
-						<textarea value={JSON.stringify(this.state.schedule2)} onChange={this.handleTextarea}/>
-						<input type="file" onChange={this.handleInputFile}/>
-						<button onClick={this.handleButtonClick}> Отправить расписание </button> 
-					</div> : null}
+						{/*<textarea value={JSON.stringify(this.state.schedule2)} onChange={this.handleTextarea}/> */}
+						<div className="current-schedules">
+							<h4>Текущие расписания:</h4>
+							<div>
+								{this.renderScheduleList()}
+							</div>
+						</div>
+						<div className="add-schedule">
+							<label htmlFor="file">Добавить расписание:</label>
+							<input type="file" id="file" className="" onChange={this.handleInputFile}/>
+						</div>
+						<button className="btn btn-success" onClick={this.handleButtonClick}>Отправить расписание</button>
+					</div> :
+					<div className="form-group password">
+						<h4>Привет, введи пароль)</h4>
+						<input value={this.state.password} onChange={this.handleInput} className="form-control" />
+				</div>}
 			</div>
 		)
 	}
 
 	handleInput(event) {
 		this.setState({ password: event.target.value});
-		
+
 	}
 
 	handleTextarea(event) {
@@ -71,7 +98,7 @@ class SendScheduleContainer extends Component {
 				let exelJSON = XLSX.utils.sheet_to_json(worksheet);
 
 				let totalSchedule = [];
-			
+
 				exelJSON.map((item)=> {
 					let obj = {};
 					obj.fullDate = {};
@@ -104,4 +131,11 @@ class SendScheduleContainer extends Component {
 	}
 }
 
-export default connect(null, { sendSchedule })(SendScheduleContainer);
+function mapStateToProps(state) {
+	const { schedule } = state;
+	return {
+		schedule
+	}
+}
+
+export default connect(mapStateToProps, { sendSchedule, loadSchedule, deleteSchedule })(SendScheduleContainer);

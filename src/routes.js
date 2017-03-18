@@ -32,11 +32,11 @@ airport*/
 
 export default (
 	<Route path="/" component={App}>
-		<IndexRoute component={MainSelect} /> 
+		<IndexRoute component={MainSelect} />
 
 
-		<Route path="kamenka" component={Main} /> 
-		<Route path="kamenka/shift" component={ShiftContainer} /> 
+		<Route path="kamenka" component={Main} />
+		<Route path="kamenka/shift" component={ShiftContainer} />
 		<Route path="kamenka/shift/select" component={ShiftList} />
 		<Route path="kamenka/shift/create" component={ShiftCreate} />
 		<Route path="kamenka/shift/suggest" component={ShiftSuggest} />
@@ -53,8 +53,8 @@ export default (
 
 
 
-		<Route path="puskari" component={Main} /> 
-		<Route path="puskari/shift" component={ShiftContainer} /> 
+		<Route path="puskari" component={Main} />
+		<Route path="puskari/shift" component={ShiftContainer} />
 		<Route path="puskari/shift/select" component={ShiftList} />
 		<Route path="puskari/shift/create" component={ShiftCreate} />
 		<Route path="puskari/shift/suggest" component={ShiftSuggest} />
@@ -70,8 +70,8 @@ export default (
 
 
 
-		<Route path="nemiga" component={Main} /> 
-		<Route path="nemiga/shift" component={ShiftContainer} /> 
+		<Route path="nemiga" component={Main} />
+		<Route path="nemiga/shift" component={ShiftContainer} />
 		<Route path="nemiga/shift/select" component={ShiftList} />
 		<Route path="nemiga/shift/create" component={ShiftCreate} />
 		<Route path="nemiga/shift/suggest" component={ShiftSuggest} />
@@ -88,8 +88,8 @@ export default (
 
 
 
-		<Route path="vokzal" component={Main} /> 
-		<Route path="vokzal/shift" component={ShiftContainer} /> 
+		<Route path="vokzal" component={Main} />
+		<Route path="vokzal/shift" component={ShiftContainer} />
 		<Route path="vokzal/shift/select" component={ShiftList} />
 		<Route path="vokzal/shift/create" component={ShiftCreate} />
 		<Route path="vokzal/shift/suggest" component={ShiftSuggest} />
@@ -104,8 +104,8 @@ export default (
 
 
 
-		<Route path="airport" component={Main} /> 
-		<Route path="airport/shift" component={ShiftContainer} /> 
+		<Route path="airport" component={Main} />
+		<Route path="airport/shift" component={ShiftContainer} />
 		<Route path="airport/shift/select" component={ShiftList} />
 		<Route path="airport/shift/create" component={ShiftCreate} />
 		<Route path="airport/shift/suggest" component={ShiftSuggest} />
@@ -120,8 +120,8 @@ export default (
 
 
 
-		<Route path="stolitsa" component={Main} /> 
-		<Route path="stolitsa/shift" component={ShiftContainer} /> 
+		<Route path="stolitsa" component={Main} />
+		<Route path="stolitsa/shift" component={ShiftContainer} />
 		<Route path="stolitsa/shift/select" component={ShiftList} />
 		<Route path="stolitsa/shift/create" component={ShiftCreate} />
 		<Route path="stolitsa/shift/suggest" component={ShiftSuggest} />
@@ -136,8 +136,8 @@ export default (
 
 
 
-		<Route path="prostore" component={Main} /> 
-		<Route path="prostore/shift" component={ShiftContainer} /> 
+		<Route path="prostore" component={Main} />
+		<Route path="prostore/shift" component={ShiftContainer} />
 		<Route path="prostore/shift/select" component={ShiftList} />
 		<Route path="prostore/shift/create" component={ShiftCreate} />
 		<Route path="prostore/shift/suggest" component={ShiftSuggest} />
@@ -149,6 +149,22 @@ export default (
 		<Route path="prostore/times" component={TimesContainer} />
 
 		<Route path="prostore/sendschedule" component={SendScheduleContainer} />
+		
+
+
+		<Route path="uruche" component={Main} />
+		<Route path="uruche/shift" component={ShiftContainer} />
+		<Route path="uruche/shift/select" component={ShiftList} />
+		<Route path="uruche/shift/create" component={ShiftCreate} />
+		<Route path="uruche/shift/suggest" component={ShiftSuggest} />
+		<Route path="uruche/shift/select/:id" component={ShiftInfo} />
+
+
+		<Route path="uruche/news" component={NewsContainer} />
+		<Route path="uruche/schedule" component={ScheduleContainer} />
+		<Route path="uruche/times" component={TimesContainer} />
+
+		<Route path="uruche/sendschedule" component={SendScheduleContainer} />
 
 
 

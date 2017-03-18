@@ -101,10 +101,7 @@ class ShiftCreate extends Component {
 
 	handleFormSuccess(data) {
 		this.props.sendDate(data);
-		toastr.success( 'Смена опубликована!', 'Готово');
-		setTimeout( () => { browserHistory.push('/') }, 2000);
 	}
-
 };
 
 

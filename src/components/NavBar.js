@@ -6,12 +6,15 @@ const NavBar = () => {
     var url = window.location.href;
     var pathArray = window.location.pathname.split( '/' );
     var secondLevelLocation = pathArray[1];
-    if (secondLevelLocation == 'kamenka'  || 
+    if (secondLevelLocation == 'kamenka'  ||
       secondLevelLocation == 'puskari' ||
       secondLevelLocation == 'nemiga'  ||
       secondLevelLocation == 'vokzal'  ||
       secondLevelLocation == 'airport' ||
       secondLevelLocation == 'stolitsa'  ||
+
+      secondLevelLocation == 'uruche'  ||
+
       secondLevelLocation == 'prostore' ) {
       /*console.log(secondLevelLocation);*/
       return true
