@@ -53,7 +53,7 @@ class SendScheduleContainer extends Component {
 							<label htmlFor="file">Добавить расписание:</label>
 							<input type="file" id="file" className="" onChange={this.handleInputFile}/>
 						</div>
-						<button className="btn btn-success" onClick={this.handleButtonClick}>Отправить расписание</button>
+						<button className="btn btn-success" disabled={!this.state.schedule} onClick={this.handleButtonClick}>Отправить расписание</button>
 					</div> :
 					<div className="form-group password">
 						<h4>Привет, введи пароль)</h4>
@@ -79,6 +79,7 @@ class SendScheduleContainer extends Component {
 	}
 
 	handleInputFile(e) {
+		this.setState({schedule: ''});
 		var files = e.target.files;
 		var i,f;
 		var z;

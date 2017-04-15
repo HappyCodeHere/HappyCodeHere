@@ -42,19 +42,17 @@ class ScheduleList extends Component {
 
 	renderTableBody() {
 		const { schedule } = this.props;
+		// console.log(this.props.currentSearch);
 
 		let list = schedule
 
-		// .filter(item => {
-		// 	console.log('ll;l;', item);
-		// 	console.log(schedule[item]);
-		// 	window.myObj = schedule[item];
-		// 	console.log(schedule[item]['Имя']);
-		// 	let item2 = schedule[item]['Имя'].toLowerCase();
-		// 	// let item2 = schedule[item]['Имя'];
+		.filter(item => {
+			// let item2 = schedule[item]['Имя'].toLowerCase();
+			// if(!schedule[item]) return item;
+			let item2 = item['Имя'].toLowerCase();
 
-		// 	return item2.indexOf(this.props.currentSearch.toLowerCase()) !=-1;
-		// })
+			return item2.indexOf(this.props.currentSearch.toLowerCase()) !=-1;
+		})
 
 		.map((item, i) => {
 			// console.log(item);

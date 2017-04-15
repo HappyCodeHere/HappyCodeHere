@@ -1,5 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
+
+const propTypes = {
+
+}
 
 class ScheduleSearch extends Component {
 	constructor(props) {
@@ -13,9 +17,19 @@ class ScheduleSearch extends Component {
 	}
 
 	componentWillMount() {
+		let local = localStorage.getItem('search');
+		// console.log(local);
+		if(local) {
+			this.setState({search: local},  () => this.props.search(this.state.search));
+		}
+
 		let urlName = window.location.search.substring(6, );
 		urlName = decodeURIComponent(urlName);
-		this.setState({search: urlName},  () => this.props.search(this.state.search));
+		if(urlName) {
+			this.setState({search: urlName},  () => this.props.search(this.state.search));
+			localStorage.setItem('search', urlName);
+		}
+
 	}
 
 
@@ -23,16 +37,17 @@ class ScheduleSearch extends Component {
 		return (
 			<div className="schedule-search">
 				<input value={this.state.search || this.props.bs} onChange={this.handleSearch} className="form-control" placeholder="Поиск"/>
+				<p>Поиск сохраняет данные ;) </p>
 			</div>
 		)
 	}
 
 	handleSearch(event) {
+		localStorage.setItem('search', event.target.value);
 		this.setState({search: event.target.value}, () => this.props.search(this.state.search));
-		
 	}
-
 }
 
+ScheduleSearch.propTypes = propTypes;
 
 export default ScheduleSearch;

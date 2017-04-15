@@ -15,16 +15,16 @@ import React, { PropTypes } from 'react';
 const ScheduleItem = (props) => {
 	const { name, number, mon, tue, wed, thu, fri, sat, sun } = props;
 	return (
-		<tr className="schedule-item"> 
+		<tr className="schedule-item">
 			<td>{name}</td>
 			{number ? <td>{number}</td> : null}
-			<td>{mon}</td>
-			<td>{tue}</td>
-			<td>{wed}</td>
-			<td>{thu}</td>
-			<td>{fri}</td>
-			<td>{sat}</td>
-			<td>{sun}</td> 
+			<td className={mon === 'вых' || mon ==='off' ? 'off' : ''}>{mon}</td>
+			<td className={tue === 'вых' || tue ==='off' ? 'off' : ''}>{tue}</td>
+			<td className={wed === 'вых' || wed ==='off' ? 'off' : ''}>{wed}</td>
+			<td className={thu === 'вых' || thu ==='off' ? 'off' : ''}>{thu}</td>
+			<td className={fri === 'вых' || fri ==='off' ? 'off' : ''}>{fri}</td>
+			<td className={sat === 'вых' || sat ==='off' ? 'off' : ''}>{sat}</td>
+			<td className={sun === 'вых' || sun ==='off' ? 'off' : ''}>{sun}</td>
 		</tr>
 	)
 }

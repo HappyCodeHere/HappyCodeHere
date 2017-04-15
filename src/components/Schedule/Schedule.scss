@@ -2,6 +2,23 @@
 	text-align: center;
 }
 
+.off {
+	color: rgba(131, 43, 231, 0.8);
+	font-weight: bold;
+	// z-index: -1;
+	// border-radius: 5px;
+}
+
+.schedule-search {
+	p {
+		font-size: 15px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		font-style: italic;
+		color: #d28f4a;
+	}
+}
+
 .schedule-container button {
 	width: 300px;
 	display: inline-block;
@@ -24,6 +41,11 @@
 
 .schedule-list table tbody tr:hover {
 	background-color: #7bec43;
+
+	.off {
+		background-color: #7bec43;
+
+	}
 }
 
 
